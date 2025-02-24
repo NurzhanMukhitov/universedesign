@@ -175,50 +175,54 @@ for (var i = 0; i < sections.length; i++) {
     });
 }
 
+function handleStart(x, y) {
+    drag = true;
+    oldX = x;
+    oldY = y;
+}
+
+function handleMove(x, y) {
+    if (drag) {
+        rotationY += (x - oldX) * 0.01;
+        rotationX += (y - oldY) * 0.01;
+        oldX = x;
+        oldY = y;
+    }
+}
+
+function handleEnd() {
+    drag = false;
+}
+
 canvas.addEventListener('mousedown', function(e) {
     if (!activePopup) {
-        console.log("Mouse down on canvas");
-        drag = true;
-        oldX = e.pageX;
-        oldY = e.pageY;
+        handleStart(e.pageX, e.pageY);
     }
 });
 
 canvas.addEventListener('mousemove', function(e) {
-    if (drag) {
-        console.log("Mouse move while dragging");
-        rotationY += (e.pageX - oldX) * .01;
-        rotationX += (e.pageY - oldY) * .01;
-        oldX = e.pageX;
-        oldY = e.pageY;
-    }
+    handleMove(e.pageX, e.pageY);
 });
 
-canvas.addEventListener('mouseup', function() {
-    console.log("Mouse up");
-    drag = false;
-});
+canvas.addEventListener('mouseup', handleEnd);
 
 canvas.addEventListener('touchstart', function(e) {
-    console.log("Touch start on canvas");
-    drag = true;
-    oldX = e.touches[0].pageX;
-    oldY = e.touches[0].pageY;
+    e.preventDefault();
+    if (!activePopup) {
+        var touch = e.touches[0];
+        handleStart(touch.pageX, touch.pageY);
+    }
 });
 
 canvas.addEventListener('touchmove', function(e) {
-    if (drag) {
-        console.log("Touch move while dragging");
-        rotationY += (e.touches[0].pageX - oldX) * .01;
-        rotationX += (e.touches[0].pageY - oldY) * .01;
-        oldX = e.touches[0].pageX;
-        oldY = e.touches[0].pageY;
-    }
+    e.preventDefault();
+    var touch = e.touches[0];
+    handleMove(touch.pageX, touch.pageY);
 });
 
-canvas.addEventListener('touchend', function() {
-    console.log("Touch end");
-    drag = false;
+canvas.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    handleEnd();
 });
 
 window.addEventListener('resize', function() {
