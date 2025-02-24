@@ -1,432 +1,321 @@
-console.log("JavaScript is running!");
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("JavaScript is running!");
 
-var ww = window.innerWidth,
-    wh = window.innerHeight;
+    // Размеры экрана
+    var ww = window.innerWidth, wh = window.innerHeight;
 
-var canvas = document.getElementById("c");
-var menuBtn = document.querySelector('.menu-btn');
-var logoText = document.querySelector('.logo-text');
-var overlayMask = document.querySelector('.overlay-mask');
-var projectsGrid = document.getElementById("projects-grid");
+    // Получаем DOM элементы
+    var canvas = document.getElementById("c");
+    var menuBtn = document.querySelector('.menu-btn');
+    var logoText = document.querySelector('.logo-text');
+    var overlayMask = document.querySelector('.overlay-mask');
+    var activePopup = null;
 
-var activePopup = null;
+    // Настройка canvas с учётом devicePixelRatio для чёткости
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = ww * dpr;
+    canvas.height = wh * dpr;
+    var ctx = canvas.getContext("2d");
+    ctx.scale(dpr, dpr);
+    canvas.style.width = ww + "px";
+    canvas.style.height = wh + "px";
 
-console.log("DOM elements:", canvas, menuBtn, logoText, overlayMask, projectsGrid);
+    // Параметры куба
+    var linesX = 14, linesY = 14, pointsPerLine = 10;
+    var tParam = 1; // 1 = хаос, 0 = собранный куб
+    var rotationX = 0, rotationY = 0;
+    var letters = "UNIVERSEDESIGN";
+    var focale = 500;
+    var defaultRotationX = -0.4, defaultRotationY = 0.5;
+    var autoRotateSpeed = 0.002;
 
-canvas.width = ww;
-canvas.height = wh;
-var ctx = canvas.getContext("2d");
+    // Переменные для управления жестами
+    var drag = false, oldX = 0, oldY = 0;
+    var scrollThreshold = (ww < 768) ? 50 : 100;
+    var scrollAccumulator = 0;
+    var touchStartY = 0;
 
-var points = [],
-    linesX = 6, // Минимальная плотность для мобильных
-    linesY = 6, // Минимальная плотность для мобильных
-    pointsPerLine = 4; // Минимальное количество точек на линии
-var tParam = 1; // 0 - куб, 1 - хаос
-var rotationX = 0,
-    rotationY = 0;
-var drag = false,
-    oldX, oldY;
-var PI = Math.PI,
-    cos = Math.cos,
-    sin = Math.sin;
-var letters = "UNIVERSEDESIGN";
+    // Класс Point
+    function Point(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.originalX = x;
+        this.originalY = y;
+        this.originalZ = z;
+        this.scatterX = Math.random() * 2000 - 1000;
+        this.scatterY = Math.random() * 2000 - 1000;
+        this.scatterZ = Math.random() * 2000 - 1000;
+    }
+    Point.prototype.rotateX = function(angle) {
+        var cosA = Math.cos(angle), sinA = Math.sin(angle);
+        var y = this.y * cosA - this.z * sinA;
+        var z = this.y * sinA + this.z * cosA;
+        this.y = y; this.z = z;
+    };
+    Point.prototype.rotateY = function(angle) {
+        var cosA = Math.cos(angle), sinA = Math.sin(angle);
+        var x = this.x * cosA + this.z * sinA;
+        var z = -this.x * sinA + this.z * cosA;
+        this.x = x; this.z = z;
+    };
+    Point.prototype.draw = function(i, j) {
+        var scale = focale / (focale + this.z);
+        if (j === linesY - 1 && tParam <= 0.1) {
+            ctx.font = "bold 14px OneDay";
+            ctx.fillStyle = "#ffffff";
+        } else {
+            ctx.font = "14px OneDay";
+            var bf = 1 - (this.z + 1000) / 2000;
+            bf = Math.max(0, Math.min(1, bf));
+            var shade = Math.floor(128 + bf * 127);
+            ctx.fillStyle = "rgb(" + shade + "," + shade + "," + shade + ")";
+        }
+        var xPos = ww / 2 + this.x * scale;
+        var yPos = wh / 2 + this.y * scale;
+        var text = letters[i % letters.length];
+        ctx.fillText(text, xPos, yPos);
+    };
 
-var defaultRotationX = -0.4;
-var defaultRotationY = 0.5;
-
-var lastFrameTime = 0;
-var targetFPS = 30; // Ограничение FPS для плавности на мобильных
-var frameInterval = 1000 / targetFPS;
-
-function Point(x, y, z) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.originalX = x;
-    this.originalY = y;
-    this.originalZ = z;
-    this.scatterX = Math.random() * 400 - 200; // Уменьшаем разброс для мобильных
-    this.scatterY = Math.random() * 400 - 200; // Уменьшаем разброс для мобильных
-    this.scatterZ = Math.random() * 400 - 200; // Уменьшаем разброс для мобильных
-}
-var focale = 250; // Уменьшаем фокусное расстояние для мобильных
-
-Point.prototype.rotateX = function(angle) {
-    var cos = Math.cos(angle);
-    var sin = Math.sin(angle);
-    var y = this.y * cos - this.z * sin;
-    var z = this.y * sin + this.z * cos;
-    this.y = y;
-    this.z = z;
-}
-Point.prototype.rotateY = function(angle) {
-    var cos = Math.cos(angle);
-    var sin = Math.sin(angle);
-    var x = this.x * cos + this.z * sin;
-    var z = -this.x * sin + this.z * cos;
-    this.x = x;
-    this.z = z;
-}
-Point.prototype.draw = function(i, j) {
-    var x = this.x,
-        y = this.y,
-        z = this.z;
-    var scale = focale / (focale + z);
-    ctx.beginPath();
-    var fontSize = Math.max(6, ww / 100); // Еще меньший динамический размер шрифта для мобильных
-    ctx.font = `${fontSize}px OneDay`;
-    ctx.fillStyle = "rgba(255, 255, 255, 0.5)"; // Больше прозрачности для читаемости
-    var text = letters[i % letters.length];
-    var xPos = ww / 2 + x * scale + (i % 2 === 0 ? 1 : -1); // Минимальный сдвиг для чередования
-    var yPos = wh / 2 + y * scale;
-    ctx.fillText(text, xPos, yPos);
-}
-
-function getCubeSize() {
-    var w = window.innerWidth;
-    if (w < 576) return 80; // Очень маленький размер для мобильных
-    if (w < 768) return 120; // Меньший размер для мобильных
-    if (w < 992) return 160; // Средний размер для планшетов
-    if (w < 1200) return 200; // Больший размер для планшетов/малых десктопов
-    if (w < 1400) return 240; // Средний десктоп
-    return 280; // Большой десктоп
-}
-
-function createPoints() {
-    points = [];
-    var cubeSize = getCubeSize();
-    var spaceX = cubeSize / linesX;
-    var spaceY = cubeSize / linesY;
-    var topZ = cubeSize / 2;
-    var botZ = -cubeSize / 2;
-    for (var j = 0; j < linesY; j++) {
-        for (var i = 0; i < linesX; i++) {
-            var x = -cubeSize / 2 + i * spaceX;
-            var y = -cubeSize / 2 + j * spaceY;
-            for (var k = 0; k < pointsPerLine; k++) {
-                var z = topZ + (botZ - topZ) / pointsPerLine * k;
-                var point = new Point(x, y, z);
-                points.push(point);
+    var pointsArray = [];
+    function getCubeSize() {
+        var w = window.innerWidth;
+        if (w < 576) return 180;
+        if (w < 768) return 220;
+        if (w < 992) return 260;
+        if (w < 1200) return 300;
+        if (w < 1400) return 340;
+        return 360;
+    }
+    function createPoints() {
+        pointsArray = [];
+        var cubeSize = getCubeSize();
+        var spaceX = cubeSize / linesX;
+        var spaceY = cubeSize / linesY;
+        var topZ = cubeSize / 2;
+        var botZ = -cubeSize / 2;
+        for (var j = 0; j < linesY; j++) {
+            for (var i = 0; i < linesX; i++) {
+                var x = -cubeSize / 2 + i * spaceX;
+                var y = -cubeSize / 2 + j * spaceY;
+                for (var k = 0; k < pointsPerLine; k++) {
+                    var z = topZ + (botZ - topZ) / pointsPerLine * k;
+                    var point = new Point(x, y, z);
+                    pointsArray.push(point);
+                }
             }
         }
     }
-}
+    createPoints();
 
-function drawPoints() {
-    for (var i = 0; i < points.length; i++) {
-        var point = points[i];
-        point.x = (1 - tParam) * point.originalX + tParam * point.scatterX;
-        point.y = (1 - tParam) * point.originalY + tParam * point.scatterY;
-        point.z = (1 - tParam) * point.originalZ + tParam * point.scatterZ;
-        point.rotateX(rotationX);
-        point.rotateY(rotationY);
-        point.draw(i % linesX, Math.floor(i / linesX));
+    function drawPoints() {
+        for (var i = 0; i < linesX; i++) {
+            for (var j = 0; j < linesY; j++) {
+                for (var k = 0; k < pointsPerLine; k++) {
+                    var idx = i * linesY * pointsPerLine + j * pointsPerLine + k;
+                    var point = pointsArray[idx];
+                    point.x = (1 - tParam) * point.originalX + tParam * point.scatterX;
+                    point.y = (1 - tParam) * point.originalY + tParam * point.scatterY;
+                    point.z = (1 - tParam) * point.originalZ + tParam * point.scatterZ;
+                    point.rotateX(rotationX);
+                    point.rotateY(rotationY);
+                    point.draw(i, j);
+                }
+            }
+        }
     }
-}
-createPoints();
 
-function render(time) {
-    if (time - lastFrameTime < frameInterval) {
-        requestAnimationFrame(render);
-        return;
+    var lastTime = 0;
+    function render(time) {
+        var deltaTime = time - lastTime;
+        lastTime = time;
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0, 0, ww, wh);
+        drawPoints();
+        // Всегда вращаем куб, даже если popup открыт
+        if (!drag) {
+            rotationY += 0.0002 * deltaTime;
+        }
+        // Показываем меню и логотип, если куб собран (tParam <= 0.1)
+        if (tParam <= 0.1) {
+            menuBtn.style.display = "block";
+            logoText.style.display = "block";
+        } else {
+            menuBtn.style.display = "none";
+            logoText.style.display = "none";
+            // Скрываем overlay-меню и popups, если куб в хаосе
+            var overlays = document.querySelectorAll('.overlay-menu, .popup-block, .overlay-mask');
+            overlays.forEach(function(el) {
+                el.style.display = "none";
+            });
+        }
+        window.requestAnimationFrame(render);
     }
-    lastFrameTime = time;
+    window.requestAnimationFrame(render);
 
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(0, 0, ww, wh);
-    drawPoints();
-    if (!drag) {
-        rotationY += 0.0001 * (time - lastFrameTime); // Уменьшаем скорость вращения для плавности
-    }
-    if (tParam < 0.1) {
-        document.querySelector('.menu').style.display = 'block';
-        document.querySelector('.logo-text').style.display = 'block';
-    } else {
-        document.querySelector('.menu').style.display = 'none';
-        document.querySelector('.logo-text').style.display = 'none';
-        document.querySelector('.overlay-menu').style.display = 'none';
-    }
-    requestAnimationFrame(render);
-}
-
-requestAnimationFrame(render);
-
-if (menuBtn) {
-    menuBtn.addEventListener('click', function() {
-        console.log("Menu button clicked!");
-        document.querySelector('.overlay-menu').style.display = 'block';
+    // Обработка событий мыши
+    canvas.addEventListener('mousedown', function(e) {
+        handleStart(e.pageX, e.pageY);
     });
-}
-
-if (logoText) {
-    logoText.addEventListener('click', function() {
-        console.log("Logo clicked!");
-        animateGather();
+    canvas.addEventListener('mousemove', function(e) {
+        handleMove(e.pageX, e.pageY);
     });
-}
+    canvas.addEventListener('mouseup', handleEnd);
+    canvas.addEventListener('mouseleave', handleEnd);
 
-var sections = document.querySelectorAll('.overlay-menu a');
-for (var i = 0; i < sections.length; i++) {
-    sections[i].addEventListener('click', function(e) {
+    // Обработка touch-событий
+    canvas.addEventListener('touchstart', function(e) {
+        console.log("Touch start");
         e.preventDefault();
-        console.log("Section clicked:", this.dataset.section);
-        var section = this.dataset.section;
-        overlayMask.style.display = 'block';
-        activePopup = document.getElementById(section);
-        activePopup.style.display = 'block';
-    });
-}
+        var touch = e.touches[0];
+        handleStart(touch.pageX, touch.pageY);
+        touchStartY = touch.pageY;
+        oldY = touch.pageY;
+    }, { passive: false });
+    canvas.addEventListener('touchmove', function(e) {
+        console.log("Touch move");
+        e.preventDefault();
+        var touch = e.touches[0];
+        handleMove(touch.pageX, touch.pageY);
+        var deltaY = touchStartY - touch.pageY;
+        handleScroll(deltaY);
+        touchStartY = touch.pageY;
+    }, { passive: false });
+    canvas.addEventListener('touchend', function(e) {
+        console.log("Touch end");
+        e.preventDefault();
+        handleEnd();
+    }, { passive: false });
 
-// Управление вращением
-function handleStart(x, y) {
-    console.log("Handle start:", x, y);
-    drag = true;
-    oldX = x;
-    oldY = y;
-}
-
-function handleMove(x, y) {
-    if (drag) {
-        console.log("Handle move:", x, y);
-        rotationY += (x - oldX) * 0.002; // Еще меньшая скорость вращения для плавности
-        rotationX += (y - oldY) * 0.002; // Еще меньшая скорость вращения для плавности
+    function handleStart(x, y) {
+        drag = true;
         oldX = x;
         oldY = y;
     }
-}
-
-function handleEnd() {
-    console.log("Handle end");
-    drag = false;
-}
-
-// Анимации перехода
-function animateGather() {
-    console.log("Animating gather");
-    var startTime = performance.now();
-    var startParam = tParam;
-    var startRotationX = rotationX;
-    var startRotationY = rotationY;
-    var duration = 300; // Уменьшаем до 0.3 секунды для быстрого и плавного перехода
-
-    function step(currentTime) {
-        var elapsed = currentTime - startTime;
-        var progress = Math.min(elapsed / duration, 1);
-        tParam = startParam * (1 - progress);
-        rotationX = startRotationX + (defaultRotationX - startRotationX) * progress;
-        rotationY = startRotationY + (defaultRotationY - startRotationY) * progress;
-        
-        if (progress < 1) {
-            requestAnimationFrame(step);
-        } else {
-            tParam = 0;
-            rotationX = defaultRotationX;
-            rotationY = defaultRotationY;
+    function handleMove(x, y) {
+        if (drag) {
+            rotationY += (x - oldX) * 0.01;
+            rotationX += (y - oldY) * 0.01;
+            oldX = x;
+            oldY = y;
         }
     }
-
-    requestAnimationFrame(step);
-}
-
-function animateScatter() {
-    console.log("Animating scatter");
-    var startTime = performance.now();
-    var startParam = tParam;
-    var duration = 300; // Уменьшаем до 0.3 секунды для быстрого и плавного перехода
-
-    function step(currentTime) {
-        var elapsed = currentTime - startTime;
-        var progress = Math.min(elapsed / duration, 1);
-        tParam = startParam + (1 - startParam) * progress;
-        
-        if (progress < 1) {
-            requestAnimationFrame(step);
-        } else {
-            tParam = 1;
-        }
+    function handleEnd() {
+        drag = false;
     }
 
-    requestAnimationFrame(step);
-}
-
-// Управление жестами и скроллингом
-var touchStartY = 0;
-var swipeThreshold = 30; // Уменьшаем порог свайпа для мобильных
-
-canvas.addEventListener('mousedown', function(e) {
-    if (!activePopup) {
-        handleStart(e.pageX, e.pageY);
-    }
-});
-
-canvas.addEventListener('mousemove', function(e) {
-    handleMove(e.pageX, e.pageY);
-});
-
-canvas.addEventListener('mouseup', handleEnd);
-
-canvas.addEventListener('touchstart', function(e) {
-    console.log("Touch start event");
-    e.preventDefault();
-    if (!activePopup) {
-        var touch = e.touches[0];
-        handleStart(touch.pageX, touch.pageY);
-        touchStartY = touch.pageY; // Запоминаем начальную позицию для свайпа
-    }
-});
-
-canvas.addEventListener('touchmove', function(e) {
-    console.log("Touch move event");
-    e.preventDefault();
-    var touch = e.touches[0];
-    handleMove(touch.pageX, touch.pageY);
-});
-
-canvas.addEventListener('touchend', function(e) {
-    console.log("Touch end event");
-    e.preventDefault();
-    var touch = e.changedTouches[0];
-    var deltaY = touchStartY - touch.pageY; // Вычисляем разницу для свайпа
-    if (Math.abs(deltaY) > swipeThreshold) {
-        if (deltaY > 0) {
-            console.log("Swipe up - gathering");
-            animateGather();
-        } else {
-            console.log("Swipe down - scattering");
+    // Обработка скролла для сборки/разброса
+    function handleScroll(deltaY) {
+        scrollAccumulator += deltaY;
+        if (scrollAccumulator > scrollThreshold) {
             animateScatter();
-        }
-    }
-    handleEnd();
-});
-
-// Скроллинг для проектов на мобильных и десктопе
-projectsGrid.addEventListener('wheel', function(e) {
-    e.preventDefault();
-    projectsGrid.scrollTop += e.deltaY;
-});
-
-projectsGrid.addEventListener('touchmove', function(e) {
-    e.preventDefault();
-    var touch = e.touches[0];
-    var deltaY = touch.pageY - oldY;
-    projectsGrid.scrollTop -= deltaY;
-    oldY = touch.pageY;
-});
-
-window.addEventListener('resize', function() {
-    console.log("Window resized");
-    ww = window.innerWidth;
-    wh = window.innerHeight;
-    canvas.width = ww;
-    canvas.height = wh;
-    createPoints();
-    adjustDensity(); // Адаптация плотности
-    adjustProjectsGrid(); // Адаптация размера сетки проектов
-});
-
-// Новая функция для адаптации плотности точек
-function adjustDensity() {
-    var w = window.innerWidth;
-    if (w < 576) {
-        linesX = 4;
-        linesY = 4;
-        pointsPerLine = 3;
-        focale = 200;
-    } else if (w < 768) {
-        linesX = 6;
-        linesY = 6;
-        pointsPerLine = 4;
-        focale = 250;
-    } else if (w < 992) {
-        linesX = 8;
-        linesY = 8;
-        pointsPerLine = 6;
-        focale = 300;
-    } else if (w < 1200) {
-        linesX = 10;
-        linesY = 10;
-        pointsPerLine = 8;
-        focale = 350;
-    } else if (w < 1400) {
-        linesX = 12;
-        linesY = 12;
-        pointsPerLine = 10;
-        focale = 400;
-    } else {
-        linesX = 14;
-        linesY = 14;
-        pointsPerLine = 12;
-        focale = 450;
-    }
-    createPoints(); // Пересоздаем точки с новыми параметрами
-}
-
-// Новая функция для адаптации размера сетки проектов
-function adjustProjectsGrid() {
-    var w = window.innerWidth;
-    if (w >= 1400) {
-        projectsGrid.style.maxHeight = '70vh';
-    } else if (w >= 1200) {
-        projectsGrid.style.maxHeight = '70vh';
-    } else if (w >= 992) {
-        projectsGrid.style.maxHeight = '65vh';
-    } else if (w >= 768) {
-        projectsGrid.style.maxHeight = '60vh';
-    } else if (w >= 576) {
-        projectsGrid.style.maxHeight = '55vh';
-    } else {
-        projectsGrid.style.maxHeight = '50vh';
-    }
-}
-
-// Поддержка мыши для десктопа
-canvas.addEventListener('wheel', function(e) {
-    e.preventDefault();
-    if (!activePopup) {
-        if (e.deltaY > 0) {
-            animateScatter();
-        } else {
+            scrollAccumulator = 0;
+        } else if (scrollAccumulator < -scrollThreshold) {
             animateGather();
+            scrollAccumulator = 0;
         }
     }
-});
-
-// Закрытие попапа при клике в любой области
-document.addEventListener('click', function(event) {
-    if (activePopup) {
-        console.log("Closing popup");
-        activePopup.style.display = 'none';
-        overlayMask.style.display = 'none';
-        activePopup = null;
-    }
-});
-
-// Закрытие попапа через клавишу Escape (только для десктопа)
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape' && activePopup) {
-        console.log("Closing popup with Escape key");
-        activePopup.style.display = 'none';
-        overlayMask.style.display = 'none';
-        activePopup = null;
-        event.preventDefault();
-    }
-});
-
-// Предотвращение закрытия при клике на меню
-menuBtn.addEventListener('click', function(event) {
-    event.stopPropagation();
-});
-
-// Предотвращение закрытия при клике на пункты меню
-var menuItems = document.querySelectorAll('.overlay-menu a');
-menuItems.forEach(function(item) {
-    item.addEventListener('click', function(event) {
-        event.stopPropagation();
+    canvas.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        handleScroll(e.deltaY);
     });
+
+    // Анимация сборки (Gather)
+    function animateGather() {
+        console.log("Animating gather");
+        var startTime = performance.now();
+        var initT = tParam;
+        var duration = 1500;
+        function step(currentTime) {
+            var elapsed = currentTime - startTime;
+            var progress = Math.min(elapsed / duration, 1);
+            tParam = initT * (1 - progress);
+            rotationX = rotationX + (defaultRotationX - rotationX) * progress;
+            rotationY = rotationY + (defaultRotationY - rotationY) * progress;
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                tParam = 0;
+                rotationX = defaultRotationX;
+                rotationY = defaultRotationY;
+            }
+        }
+        requestAnimationFrame(step);
+    }
+
+    // Анимация разброса (Scatter)
+    function animateScatter() {
+        console.log("Animating scatter");
+        var startTime = performance.now();
+        var initT = tParam;
+        var duration = 1500;
+        function step(currentTime) {
+            var elapsed = currentTime - startTime;
+            var progress = Math.min(elapsed / duration, 1);
+            tParam = initT + (1 - initT) * progress;
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                tParam = 1;
+            }
+        }
+        requestAnimationFrame(step);
+    }
+
+    // Обработка меню и popup-ов
+    var menuOverlay = document.querySelector('.overlay-menu');
+    var popupAbout = document.getElementById("about");
+    var popupContacts = document.getElementById("contacts");
+    var popupProjects = document.getElementById("projects");
+
+    // Гамбургер – переключение меню
+    menuBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (menuOverlay.style.display === "block") {
+            menuOverlay.style.display = "none";
+        } else {
+            menuOverlay.style.display = "block";
+        }
+    });
+
+    // Логотип – при клике запускается сборка куба
+    logoText.addEventListener('click', function(e) {
+        e.stopPropagation();
+        animateGather();
+    });
+
+    // Обработка кликов по пунктам меню
+    var menuLinks = document.querySelectorAll('.overlay-menu a');
+    menuLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var section = this.dataset.section;
+            overlayMask.style.display = 'block';
+            activePopup = document.getElementById(section);
+            if (activePopup) {
+                activePopup.style.display = 'block';
+            }
+        });
+    });
+
+    // Закрытие popup-ов при клике вне
+    document.addEventListener('click', function(e) {
+        if (activePopup) {
+            activePopup.style.display = 'none';
+            overlayMask.style.display = 'none';
+            activePopup = null;
+        }
+    });
+
+    // Закрытие popup-ов по Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && activePopup) {
+            activePopup.style.display = 'none';
+            overlayMask.style.display = 'none';
+            activePopup = null;
+        }
+    });
+
+    console.log("All event listeners attached");
 });
-
-console.log("All event listeners attached");
-
-// Вызываем адаптацию при загрузке
-adjustDensity();
-adjustProjectsGrid();

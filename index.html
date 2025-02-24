@@ -1,68 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>UNIVERSE design</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <!-- Адаптивность -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>UNIVERSEDESIGN - Adaptive Cube with Touch</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <canvas id="c"></canvas>
-    <div class="menu">
-        <div class="menu-btn">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <div class="logo-text">UNIVERSE<br>design</div>
+  <canvas id="c"></canvas>
+  <div class="menu">
+    <div class="menu-btn">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
+    <div class="logo-text">UNIVERSE<br>design</div>
+  </div>
 
-    <div class="overlay-menu">
-        <ul>
-            <li><a data-section="about">ABOUT</a></li>
-            <li><a data-section="projects">PROJECTS</a></li>
-            <li><a data-section="contacts">CONTACTS</a></li>
-        </ul>
+  <div class="overlay-menu">
+    <ul>
+      <li><a data-section="about">ABOUT</a></li>
+      <li><a data-section="projects">PROJECTS</a></li>
+      <li><a data-section="contacts">CONTACTS</a></li>
+    </ul>
+  </div>
+
+  <div class="overlay-mask"></div>
+
+  <div class="popup-block" id="about">
+    <div class="popup-content">
+      <p>We are a design studio passionate about technology research, media art, and installation/exhibition design.</p>
     </div>
+  </div>
 
-    <div class="overlay-mask"></div>
-
-    <div class="popup-block" id="about">
-        <div class="popup-content">
-            <p>We are a design studio passionate about technology research, media art, and installation/exhibition design.</p>
-        </div>
+  <div class="popup-block" id="contacts">
+    <div class="popup-content">
+      <p>
+        <a href="https://www.behance.net/dimahoc" target="_blank" style="color: #ccc !important;">BEHANCE</a><br>
+        <a href="https://www.instagram.com/universe_design_studio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" style="color: #ccc !important;">INSTAGRAM</a>
+      </p>
     </div>
+  </div>
 
-    <div class="popup-block" id="contacts">
-        <div class="popup-content">
-            <p>
-                <a href="https://www.behance.net/dimahoc" target="_blank">BEHANCE</a><br>
-                <a href="https://www.instagram.com/universe_design_studio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">INSTAGRAM</a>
-            </p>
-        </div>
+  <div class="popup-block" id="projects">
+    <div class="popup-content">
+      <h2>Projects</h2>
+      <div class="projects-grid">
+        <div class="project-item">Project 1</div>
+        <div class="project-item">Project 2</div>
+        <div class="project-item">Project 3</div>
+        <div class="project-item">Project 4</div>
+        <div class="project-item">Project 5</div>
+        <div class="project-item">Project 6</div>
+      </div>
     </div>
-
-    <div class="popup-block" id="projects">
-        <div class="popup-content">
-            <div class="projects-grid" id="projects-grid">
-                <div class="project-item">Project 1</div>
-                <div class="project-item">Project 2</div>
-                <div class="project-item">Project 3</div>
-                <div class="project-item">Project 4</div>
-                <div class="project-item">Project 5</div>
-                <div class="project-item">Project 6</div>
-                <div class="project-item">Project 7</div>
-                <div class="project-item">Project 8</div>
-                <div class="project-item">Project 9</div>
-                <div class="project-item">Project 10</div>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+  </div>
+  <script src="script.js" defer></script>
 </body>
-
 </html>
