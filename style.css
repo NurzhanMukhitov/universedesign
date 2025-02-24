@@ -52,18 +52,18 @@ canvas {
     transition: all 0.3s ease;
 }
 
-/* Логотип – вынесен отдельно, чтобы всегда быть в правом верхнем углу */
+/* Логотип вынесен отдельно */
 .logo-text {
     position: absolute;
     top: 15px;
     right: 20px;
     z-index: 1000;
     transition: all 0.3s ease;
-    display: none; /* будет показан, когда куб собран */
+    display: none; /* Показывается, когда куб собран */
 }
 
 .logo-text img {
-    max-width: 150px;  /* ограничиваем размер логотипа */
+    max-width: 100px;  /* Ограничиваем логотип до 100px по ширине */
     height: auto;
 }
 
@@ -73,7 +73,7 @@ canvas {
     left: 20px;
     top: 70px;
     width: 220px;
-    background: transparent; /* фон убран */
+    background: transparent;
     padding: 10px;
     display: none;
     z-index: 1000;
@@ -139,7 +139,7 @@ canvas {
     width: 80%;
     max-width: 800px;
     padding: 20px;
-    background: transparent; /* подложка убрана */
+    background: transparent; /* Подложка убрана */
     border: none;
     box-shadow: none;
     word-wrap: break-word;

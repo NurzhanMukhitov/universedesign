@@ -115,7 +115,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-
     createPoints();
 
     function drawPoints() {
@@ -161,10 +160,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        window.requestAnimationFrame(render);
+        requestAnimationFrame(render);
     }
-    window.requestAnimationFrame(render);
+    requestAnimationFrame(render);
 
+    // Функция обновления размеров и пересоздания canvas
     function onResize() {
         ww = window.innerWidth;
         wh = window.innerHeight;
@@ -177,11 +177,11 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.style.height = wh + "px";
         createPoints();
     }
-
     window.addEventListener('resize', onResize);
     window.addEventListener('orientationchange', function() {
         setTimeout(onResize, 500);
     });
+    onResize();
 
     canvas.addEventListener('mousedown', function(e) {
         handleStart(e.pageX, e.pageY);
@@ -199,7 +199,6 @@ document.addEventListener('DOMContentLoaded', function() {
         touchStartY = touch.pageY;
         oldY = touch.pageY;
     }, { passive: false });
-
     canvas.addEventListener('touchmove', function(e) {
         e.preventDefault();
         var touch = e.touches[0];
@@ -208,7 +207,6 @@ document.addEventListener('DOMContentLoaded', function() {
         handleScroll(deltaY);
         touchStartY = touch.pageY;
     }, { passive: false });
-
     canvas.addEventListener('touchend', function(e) {
         e.preventDefault();
         handleEnd();
