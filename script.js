@@ -20,7 +20,7 @@ var points = [],
     linesX = 14,
     linesY = 14,
     pointsPerLine = 10;
-var tParam = 1;
+var tParam = 1; // 0 - куб, 1 - хаос
 var rotationX = 0,
     rotationY = 0;
 var drag = false,
@@ -134,7 +134,7 @@ function render(time) {
     if (!drag) {
         rotationY += 0.0002 * deltaTime;
     }
-    if (tParam < .1) {
+    if (tParam < 0.1) {
         document.querySelector('.menu').style.display = 'block';
         document.querySelector('.logo-text').style.display = 'block';
     } else {
@@ -157,9 +157,7 @@ if (menuBtn) {
 if (logoText) {
     logoText.addEventListener('click', function() {
         console.log("Logo clicked!");
-        tParam = 0;
-        rotationX = defaultRotationX;
-        rotationY = defaultRotationY;
+        animateGather();
     });
 }
 
@@ -175,6 +173,7 @@ for (var i = 0; i < sections.length; i++) {
     });
 }
 
+// Управление вращением
 function handleStart(x, y) {
     console.log("Handle start:", x, y);
     drag = true;
@@ -197,52 +196,7 @@ function handleEnd() {
     drag = false;
 }
 
-canvas.addEventListener('mousedown', function(e) {
-    if (!activePopup) {
-        handleStart(e.pageX, e.pageY);
-    }
-});
-
-canvas.addEventListener('mousemove', function(e) {
-    handleMove(e.pageX, e.pageY);
-});
-
-canvas.addEventListener('mouseup', handleEnd);
-
-canvas.addEventListener('touchstart', function(e) {
-    console.log("Touch start event");
-    e.preventDefault();
-    if (!activePopup) {
-        var touch = e.touches[0];
-        handleStart(touch.pageX, touch.pageY);
-    }
-});
-
-canvas.addEventListener('touchmove', function(e) {
-    console.log("Touch move event");
-    e.preventDefault();
-    var touch = e.touches[0];
-    handleMove(touch.pageX, touch.pageY);
-});
-
-canvas.addEventListener('touchend', function(e) {
-    console.log("Touch end event");
-    e.preventDefault();
-    handleEnd();
-});
-
-window.addEventListener('resize', function() {
-    console.log("Window resized");
-    ww = window.innerWidth;
-    wh = window.innerHeight;
-    canvas.width = ww;
-    canvas.height = wh;
-    createPoints();
-});
-
-var scrollThreshold = 50;
-var scrollAccumulator = 0;
-
+// Анимации перехода
 function animateGather() {
     console.log("Animating gather");
     var startTime = performance.now();
@@ -291,34 +245,73 @@ function animateScatter() {
     requestAnimationFrame(step);
 }
 
-function handleScroll(deltaY) {
-    console.log("Handle scroll:", deltaY);
-    scrollAccumulator += deltaY;
+// Управление жестами и скроллингом
+var touchStartY = 0;
+var swipeThreshold = 50; // Порог свайпа для активации анимации
 
-    if (scrollAccumulator > scrollThreshold) {
-        console.log("Scattering");
-        animateScatter();
-        scrollAccumulator = 0;
-    } else if (scrollAccumulator < -scrollThreshold) {
-        console.log("Gathering");
-        animateGather();
-        scrollAccumulator = 0;
+canvas.addEventListener('mousedown', function(e) {
+    if (!activePopup) {
+        handleStart(e.pageX, e.pageY);
     }
-}
+});
 
-canvas.addEventListener('wheel', function(e) {
+canvas.addEventListener('mousemove', function(e) {
+    handleMove(e.pageX, e.pageY);
+});
+
+canvas.addEventListener('mouseup', handleEnd);
+
+canvas.addEventListener('touchstart', function(e) {
+    console.log("Touch start event");
     e.preventDefault();
-    console.log("Wheel event", e.deltaY);
-    handleScroll(e.deltaY);
+    if (!activePopup) {
+        var touch = e.touches[0];
+        handleStart(touch.pageX, touch.pageY);
+        touchStartY = touch.pageY; // Запоминаем начальную позицию для свайпа
+    }
 });
 
 canvas.addEventListener('touchmove', function(e) {
-    if (drag) {
-        console.log("Touch move for scroll");
-        var touch = e.touches[0];
-        var deltaY = oldY - touch.pageY;
-        handleScroll(deltaY);
-        oldY = touch.pageY;
+    console.log("Touch move event");
+    e.preventDefault();
+    var touch = e.touches[0];
+    handleMove(touch.pageX, touch.pageY);
+});
+
+canvas.addEventListener('touchend', function(e) {
+    console.log("Touch end event");
+    e.preventDefault();
+    var touch = e.changedTouches[0];
+    var deltaY = touchStartY - touch.pageY; // Вычисляем разницу для свайпа
+    if (Math.abs(deltaY) > swipeThreshold) {
+        if (deltaY > 0) {
+            console.log("Swipe up - scattering");
+            animateScatter();
+        } else {
+            console.log("Swipe down - gathering");
+            animateGather();
+        }
+    }
+    handleEnd();
+});
+
+window.addEventListener('resize', function() {
+    console.log("Window resized");
+    ww = window.innerWidth;
+    wh = window.innerHeight;
+    canvas.width = ww;
+    canvas.height = wh;
+    createPoints();
+});
+
+// Поддержка мыши для десктопа
+canvas.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    console.log("Wheel event", e.deltaY);
+    if (e.deltaY > 0) {
+        animateScatter();
+    } else {
+        animateGather();
     }
 });
 
