@@ -17,9 +17,9 @@ canvas.height = wh;
 var ctx = canvas.getContext("2d");
 
 var points = [],
-    linesX = 14,
-    linesY = 14,
-    pointsPerLine = 10;
+    linesX = 10, // Уменьшаем плотность для мобильных устройств
+    linesY = 10, // Уменьшаем плотность для мобильных устройств
+    pointsPerLine = 8; // Уменьшаем количество точек на линии
 var tParam = 1; // 0 - куб, 1 - хаос
 var rotationX = 0,
     rotationY = 0;
@@ -40,11 +40,11 @@ function Point(x, y, z) {
     this.originalX = x;
     this.originalY = y;
     this.originalZ = z;
-    this.scatterX = Math.random() * 2000 - 1000;
-    this.scatterY = Math.random() * 2000 - 1000;
-    this.scatterZ = Math.random() * 2000 - 1000;
+    this.scatterX = Math.random() * 1500 - 750; // Уменьшаем разброс для мобильных
+    this.scatterY = Math.random() * 1500 - 750; // Уменьшаем разброс для мобильных
+    this.scatterZ = Math.random() * 1500 - 750; // Уменьшаем разброс для мобильных
 }
-var focale = 500;
+var focale = 400; // Уменьшаем фокусное расстояние для мобильных
 
 Point.prototype.rotateX = function(angle) {
     var cos = Math.cos(angle);
@@ -68,22 +68,23 @@ Point.prototype.draw = function(i, j) {
         z = this.z;
     var scale = focale / (focale + z);
     ctx.beginPath();
-    ctx.font = "18px OneDay";
-    ctx.fillStyle = "#ffffff";
+    var fontSize = Math.max(10, ww / 60); // Динамический размер шрифта, минимум 10px
+    ctx.font = `${fontSize}px OneDay`;
+    ctx.fillStyle = "rgba(255, 255, 255, 0.7)"; // Добавляем прозрачность (70%)
     var text = letters[i % letters.length];
-    var xPos = ww / 2 + x * scale;
+    var xPos = ww / 2 + x * scale + (i % 2 === 0 ? 2 : -2); // Небольшой сдвиг для чередования
     var yPos = wh / 2 + y * scale;
     ctx.fillText(text, xPos, yPos);
 }
 
 function getCubeSize() {
     var w = window.innerWidth;
-    if (w < 576) return 180;
-    if (w < 768) return 220;
-    if (w < 992) return 260;
-    if (w < 1200) return 300;
-    if (w < 1400) return 340;
-    return 360;
+    if (w < 576) return 120; // Меньший размер для очень маленьких экранов
+    if (w < 768) return 160; // Меньший размер для мобильных
+    if (w < 992) return 200; // Средние экраны
+    if (w < 1200) return 250; // Большие экраны
+    if (w < 1400) return 300; // Очень большие экраны
+    return 320; // Максимальный размер для огромных экранов
 }
 
 function createPoints() {
@@ -285,11 +286,11 @@ canvas.addEventListener('touchend', function(e) {
     var deltaY = touchStartY - touch.pageY; // Вычисляем разницу для свайпа
     if (Math.abs(deltaY) > swipeThreshold) {
         if (deltaY > 0) {
-            console.log("Swipe up - scattering");
-            animateScatter();
-        } else {
-            console.log("Swipe down - gathering");
+            console.log("Swipe up - gathering");
             animateGather();
+        } else {
+            console.log("Swipe down - scattering");
+            animateScatter();
         }
     }
     handleEnd();
@@ -302,7 +303,35 @@ window.addEventListener('resize', function() {
     canvas.width = ww;
     canvas.height = wh;
     createPoints();
+    adjustDensity(); // Новая функция для адаптации плотности
 });
+
+// Новая функция для адаптации плотности точек
+function adjustDensity() {
+    var w = window.innerWidth;
+    if (w < 576) {
+        linesX = 8;
+        linesY = 8;
+        pointsPerLine = 6;
+        focale = 300;
+    } else if (w < 768) {
+        linesX = 10;
+        linesY = 10;
+        pointsPerLine = 8;
+        focale = 350;
+    } else if (w < 992) {
+        linesX = 12;
+        linesY = 12;
+        pointsPerLine = 10;
+        focale = 400;
+    } else {
+        linesX = 14;
+        linesY = 14;
+        pointsPerLine = 10;
+        focale = 500;
+    }
+    createPoints(); // Пересоздаем точки с новыми параметрами
+}
 
 // Поддержка мыши для десктопа
 canvas.addEventListener('wheel', function(e) {
@@ -325,6 +354,16 @@ document.addEventListener('click', function(event) {
     }
 });
 
+// Закрытие попапа через клавишу Escape (только для десктопа)
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && activePopup) {
+        console.log("Closing popup with Escape key");
+        activePopup.style.display = 'none';
+        overlayMask.style.display = 'none';
+        activePopup = null;
+    }
+});
+
 // Предотвращение закрытия при клике на меню
 menuBtn.addEventListener('click', function(event) {
     event.stopPropagation();
@@ -339,3 +378,6 @@ menuItems.forEach(function(item) {
 });
 
 console.log("All event listeners attached");
+
+// Вызываем адаптацию при загрузке
+adjustDensity();
