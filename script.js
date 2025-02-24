@@ -7,19 +7,20 @@ var canvas = document.getElementById("c");
 var menuBtn = document.querySelector('.menu-btn');
 var logoText = document.querySelector('.logo-text');
 var overlayMask = document.querySelector('.overlay-mask');
+var projectsGrid = document.getElementById("projects-grid");
 
 var activePopup = null;
 
-console.log("DOM elements:", canvas, menuBtn, logoText, overlayMask);
+console.log("DOM elements:", canvas, menuBtn, logoText, overlayMask, projectsGrid);
 
 canvas.width = ww;
 canvas.height = wh;
 var ctx = canvas.getContext("2d");
 
 var points = [],
-    linesX = 10, // Уменьшаем плотность для мобильных устройств
-    linesY = 10, // Уменьшаем плотность для мобильных устройств
-    pointsPerLine = 8; // Уменьшаем количество точек на линии
+    linesX = 6, // Минимальная плотность для мобильных
+    linesY = 6, // Минимальная плотность для мобильных
+    pointsPerLine = 4; // Минимальное количество точек на линии
 var tParam = 1; // 0 - куб, 1 - хаос
 var rotationX = 0,
     rotationY = 0;
@@ -33,6 +34,10 @@ var letters = "UNIVERSEDESIGN";
 var defaultRotationX = -0.4;
 var defaultRotationY = 0.5;
 
+var lastFrameTime = 0;
+var targetFPS = 30; // Ограничение FPS для плавности на мобильных
+var frameInterval = 1000 / targetFPS;
+
 function Point(x, y, z) {
     this.x = x;
     this.y = y;
@@ -40,11 +45,11 @@ function Point(x, y, z) {
     this.originalX = x;
     this.originalY = y;
     this.originalZ = z;
-    this.scatterX = Math.random() * 1500 - 750; // Уменьшаем разброс для мобильных
-    this.scatterY = Math.random() * 1500 - 750; // Уменьшаем разброс для мобильных
-    this.scatterZ = Math.random() * 1500 - 750; // Уменьшаем разброс для мобильных
+    this.scatterX = Math.random() * 400 - 200; // Уменьшаем разброс для мобильных
+    this.scatterY = Math.random() * 400 - 200; // Уменьшаем разброс для мобильных
+    this.scatterZ = Math.random() * 400 - 200; // Уменьшаем разброс для мобильных
 }
-var focale = 400; // Уменьшаем фокусное расстояние для мобильных
+var focale = 250; // Уменьшаем фокусное расстояние для мобильных
 
 Point.prototype.rotateX = function(angle) {
     var cos = Math.cos(angle);
@@ -68,23 +73,23 @@ Point.prototype.draw = function(i, j) {
         z = this.z;
     var scale = focale / (focale + z);
     ctx.beginPath();
-    var fontSize = Math.max(10, ww / 60); // Динамический размер шрифта, минимум 10px
+    var fontSize = Math.max(6, ww / 100); // Еще меньший динамический размер шрифта для мобильных
     ctx.font = `${fontSize}px OneDay`;
-    ctx.fillStyle = "rgba(255, 255, 255, 0.7)"; // Добавляем прозрачность (70%)
+    ctx.fillStyle = "rgba(255, 255, 255, 0.5)"; // Больше прозрачности для читаемости
     var text = letters[i % letters.length];
-    var xPos = ww / 2 + x * scale + (i % 2 === 0 ? 2 : -2); // Небольшой сдвиг для чередования
+    var xPos = ww / 2 + x * scale + (i % 2 === 0 ? 1 : -1); // Минимальный сдвиг для чередования
     var yPos = wh / 2 + y * scale;
     ctx.fillText(text, xPos, yPos);
 }
 
 function getCubeSize() {
     var w = window.innerWidth;
-    if (w < 576) return 120; // Меньший размер для очень маленьких экранов
-    if (w < 768) return 160; // Меньший размер для мобильных
-    if (w < 992) return 200; // Средние экраны
-    if (w < 1200) return 250; // Большие экраны
-    if (w < 1400) return 300; // Очень большие экраны
-    return 320; // Максимальный размер для огромных экранов
+    if (w < 576) return 80; // Очень маленький размер для мобильных
+    if (w < 768) return 120; // Меньший размер для мобильных
+    if (w < 992) return 160; // Средний размер для планшетов
+    if (w < 1200) return 200; // Больший размер для планшетов/малых десктопов
+    if (w < 1400) return 240; // Средний десктоп
+    return 280; // Большой десктоп
 }
 
 function createPoints() {
@@ -108,32 +113,30 @@ function createPoints() {
 }
 
 function drawPoints() {
-    for (var i = 0; i < linesX; i++) {
-        for (var j = 0; j < linesY; j++) {
-            for (var k = 0; k < pointsPerLine; k++) {
-                var point = points[i * linesX * pointsPerLine + j * pointsPerLine + k];
-                point.x = (1 - tParam) * point.originalX + tParam * point.scatterX;
-                point.y = (1 - tParam) * point.originalY + tParam * point.scatterY;
-                point.z = (1 - tParam) * point.originalZ + tParam * point.scatterZ;
-                point.rotateX(rotationX);
-                point.rotateY(rotationY);
-                point.draw(i, j);
-            }
-        }
+    for (var i = 0; i < points.length; i++) {
+        var point = points[i];
+        point.x = (1 - tParam) * point.originalX + tParam * point.scatterX;
+        point.y = (1 - tParam) * point.originalY + tParam * point.scatterY;
+        point.z = (1 - tParam) * point.originalZ + tParam * point.scatterZ;
+        point.rotateX(rotationX);
+        point.rotateY(rotationY);
+        point.draw(i % linesX, Math.floor(i / linesX));
     }
 }
 createPoints();
 
-var lastTime = 0;
 function render(time) {
-    var deltaTime = time - lastTime;
-    lastTime = time;
+    if (time - lastFrameTime < frameInterval) {
+        requestAnimationFrame(render);
+        return;
+    }
+    lastFrameTime = time;
 
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, ww, wh);
     drawPoints();
     if (!drag) {
-        rotationY += 0.0002 * deltaTime;
+        rotationY += 0.0001 * (time - lastFrameTime); // Уменьшаем скорость вращения для плавности
     }
     if (tParam < 0.1) {
         document.querySelector('.menu').style.display = 'block';
@@ -143,10 +146,10 @@ function render(time) {
         document.querySelector('.logo-text').style.display = 'none';
         document.querySelector('.overlay-menu').style.display = 'none';
     }
-    window.requestAnimationFrame(render);
+    requestAnimationFrame(render);
 }
 
-window.requestAnimationFrame(render);
+requestAnimationFrame(render);
 
 if (menuBtn) {
     menuBtn.addEventListener('click', function() {
@@ -185,8 +188,8 @@ function handleStart(x, y) {
 function handleMove(x, y) {
     if (drag) {
         console.log("Handle move:", x, y);
-        rotationY += (x - oldX) * 0.01;
-        rotationX += (y - oldY) * 0.01;
+        rotationY += (x - oldX) * 0.002; // Еще меньшая скорость вращения для плавности
+        rotationX += (y - oldY) * 0.002; // Еще меньшая скорость вращения для плавности
         oldX = x;
         oldY = y;
     }
@@ -204,7 +207,7 @@ function animateGather() {
     var startParam = tParam;
     var startRotationX = rotationX;
     var startRotationY = rotationY;
-    var duration = 1500;
+    var duration = 300; // Уменьшаем до 0.3 секунды для быстрого и плавного перехода
 
     function step(currentTime) {
         var elapsed = currentTime - startTime;
@@ -229,7 +232,7 @@ function animateScatter() {
     console.log("Animating scatter");
     var startTime = performance.now();
     var startParam = tParam;
-    var duration = 1500;
+    var duration = 300; // Уменьшаем до 0.3 секунды для быстрого и плавного перехода
 
     function step(currentTime) {
         var elapsed = currentTime - startTime;
@@ -248,7 +251,7 @@ function animateScatter() {
 
 // Управление жестами и скроллингом
 var touchStartY = 0;
-var swipeThreshold = 50; // Порог свайпа для активации анимации
+var swipeThreshold = 30; // Уменьшаем порог свайпа для мобильных
 
 canvas.addEventListener('mousedown', function(e) {
     if (!activePopup) {
@@ -296,6 +299,20 @@ canvas.addEventListener('touchend', function(e) {
     handleEnd();
 });
 
+// Скроллинг для проектов на мобильных и десктопе
+projectsGrid.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    projectsGrid.scrollTop += e.deltaY;
+});
+
+projectsGrid.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+    var touch = e.touches[0];
+    var deltaY = touch.pageY - oldY;
+    projectsGrid.scrollTop -= deltaY;
+    oldY = touch.pageY;
+});
+
 window.addEventListener('resize', function() {
     console.log("Window resized");
     ww = window.innerWidth;
@@ -303,23 +320,34 @@ window.addEventListener('resize', function() {
     canvas.width = ww;
     canvas.height = wh;
     createPoints();
-    adjustDensity(); // Новая функция для адаптации плотности
+    adjustDensity(); // Адаптация плотности
+    adjustProjectsGrid(); // Адаптация размера сетки проектов
 });
 
 // Новая функция для адаптации плотности точек
 function adjustDensity() {
     var w = window.innerWidth;
     if (w < 576) {
+        linesX = 4;
+        linesY = 4;
+        pointsPerLine = 3;
+        focale = 200;
+    } else if (w < 768) {
+        linesX = 6;
+        linesY = 6;
+        pointsPerLine = 4;
+        focale = 250;
+    } else if (w < 992) {
         linesX = 8;
         linesY = 8;
         pointsPerLine = 6;
         focale = 300;
-    } else if (w < 768) {
+    } else if (w < 1200) {
         linesX = 10;
         linesY = 10;
         pointsPerLine = 8;
         focale = 350;
-    } else if (w < 992) {
+    } else if (w < 1400) {
         linesX = 12;
         linesY = 12;
         pointsPerLine = 10;
@@ -327,20 +355,39 @@ function adjustDensity() {
     } else {
         linesX = 14;
         linesY = 14;
-        pointsPerLine = 10;
-        focale = 500;
+        pointsPerLine = 12;
+        focale = 450;
     }
     createPoints(); // Пересоздаем точки с новыми параметрами
+}
+
+// Новая функция для адаптации размера сетки проектов
+function adjustProjectsGrid() {
+    var w = window.innerWidth;
+    if (w >= 1400) {
+        projectsGrid.style.maxHeight = '70vh';
+    } else if (w >= 1200) {
+        projectsGrid.style.maxHeight = '70vh';
+    } else if (w >= 992) {
+        projectsGrid.style.maxHeight = '65vh';
+    } else if (w >= 768) {
+        projectsGrid.style.maxHeight = '60vh';
+    } else if (w >= 576) {
+        projectsGrid.style.maxHeight = '55vh';
+    } else {
+        projectsGrid.style.maxHeight = '50vh';
+    }
 }
 
 // Поддержка мыши для десктопа
 canvas.addEventListener('wheel', function(e) {
     e.preventDefault();
-    console.log("Wheel event", e.deltaY);
-    if (e.deltaY > 0) {
-        animateScatter();
-    } else {
-        animateGather();
+    if (!activePopup) {
+        if (e.deltaY > 0) {
+            animateScatter();
+        } else {
+            animateGather();
+        }
     }
 });
 
@@ -361,6 +408,7 @@ document.addEventListener('keydown', function(event) {
         activePopup.style.display = 'none';
         overlayMask.style.display = 'none';
         activePopup = null;
+        event.preventDefault();
     }
 });
 
@@ -381,3 +429,4 @@ console.log("All event listeners attached");
 
 // Вызываем адаптацию при загрузке
 adjustDensity();
+adjustProjectsGrid();

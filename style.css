@@ -19,6 +19,8 @@ canvas {
     width: 100%;
     height: 70px;
     z-index: 1000;
+    background: rgba(0, 0, 0, 0.8);
+    transition: all 0.3s ease;
 }
 
 .menu-btn {
@@ -36,6 +38,7 @@ canvas {
     background: #fff;
     display: block;
     margin: 4px 0;
+    transition: all 0.3s ease;
 }
 
 .logo-text {
@@ -47,6 +50,7 @@ canvas {
     text-align: right;
     line-height: 1.1;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .overlay-menu {
@@ -54,10 +58,13 @@ canvas {
     left: 20px;
     top: 70px;
     width: 220px;
-    background: rgba(0, 0, 0, .8);
+    background: rgba(0, 0, 0, 0.9);
     padding: 10px;
     display: none;
     z-index: 1000;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
 }
 
 .overlay-menu ul {
@@ -74,6 +81,12 @@ canvas {
     color: #fff;
     text-decoration: none;
     cursor: pointer;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.overlay-menu ul li a:hover {
+    color: #ccc;
 }
 
 .overlay-mask {
@@ -98,38 +111,57 @@ canvas {
     text-align: center;
     font-size: 24px;
     z-index: 1002;
+    overflow-y: auto; /* Добавляем возможность скроллинга для попапов */
 }
 
 .popup-block .popup-content {
-    position: absolute;
+    position: relative;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 80%;
     max-width: 800px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    word-wrap: break-word; /* Перенос длинных слов */
 }
 
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    gap: 15px;
+    padding: 10px;
+    overflow-y: auto; /* Добавляем скроллинг для проекта на всех устройствах */
+    max-height: 80vh; /* Ограничиваем высоту для скроллинга */
 }
 
 .project-item {
     background: rgba(255, 255, 255, 0.1);
-    padding: 20px;
+    padding: 15px;
     text-align: center;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.project-item:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 #about .popup-content, #contacts .popup-content {
-    font-size: 36px;
+    font-size: 20px;
 }
 
 #contacts a {
     color: #fff;
     text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+#contacts a:hover {
+    color: #ccc;
 }
 
 @font-face {
@@ -137,4 +169,372 @@ canvas {
     src: url('fonts/ONEDAY.woff') format('woff');
     font-weight: normal;
     font-style: normal;
+}
+
+/* Адаптация под разные устройства и ориентации */
+@media (min-width: 1400px) { /* Desktop (большие разрешения) */
+    .menu {
+        height: 80px;
+    }
+
+    .menu-btn {
+        left: 30px;
+        top: 25px;
+        width: 50px;
+        height: 35px;
+    }
+
+    .menu-btn span {
+        height: 5px;
+        margin: 5px 0;
+    }
+
+    .logo-text {
+        right: 30px;
+        top: 20px;
+        font-size: 28px;
+    }
+
+    .overlay-menu {
+        width: 250px;
+        left: 30px;
+        top: 80px;
+        padding: 15px;
+    }
+
+    .overlay-menu ul li a {
+        font-size: 18px;
+    }
+
+    .popup-block .popup-content {
+        max-width: 900px;
+        padding: 25px;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        max-height: 70vh;
+    }
+
+    .project-item {
+        font-size: 18px;
+        padding: 20px;
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1399px) { /* Desktop */
+    .menu {
+        height: 75px;
+    }
+
+    .menu-btn {
+        left: 25px;
+        top: 22px;
+        width: 45px;
+        height: 32px;
+    }
+
+    .menu-btn span {
+        height: 4px;
+        margin: 4px 0;
+    }
+
+    .logo-text {
+        right: 25px;
+        top: 18px;
+        font-size: 26px;
+    }
+
+    .overlay-menu {
+        width: 230px;
+        left: 25px;
+        top: 75px;
+        padding: 12px;
+    }
+
+    .overlay-menu ul li a {
+        font-size: 17px;
+    }
+
+    .popup-block .popup-content {
+        max-width: 850px;
+        padding: 22px;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 18px;
+        max-height: 70vh;
+    }
+
+    .project-item {
+        font-size: 17px;
+        padding: 18px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) { /* Tablet */
+    .menu {
+        height: 70px;
+    }
+
+    .menu-btn {
+        left: 20px;
+        top: 20px;
+        width: 40px;
+        height: 30px;
+    }
+
+    .menu-btn span {
+        height: 4px;
+        margin: 4px 0;
+    }
+
+    .logo-text {
+        right: 20px;
+        top: 15px;
+        font-size: 24px;
+    }
+
+    .overlay-menu {
+        width: 220px;
+        left: 20px;
+        top: 70px;
+        padding: 10px;
+    }
+
+    .overlay-menu ul li a {
+        font-size: 16px;
+    }
+
+    .popup-block .popup-content {
+        max-width: 800px;
+        padding: 20px;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 15px;
+        max-height: 70vh;
+    }
+
+    .project-item {
+        font-size: 16px;
+        padding: 15px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) { /* Tablet */
+    .menu {
+        height: 65px;
+    }
+
+    .menu-btn {
+        left: 15px;
+        top: 18px;
+        width: 35px;
+        height: 28px;
+    }
+
+    .menu-btn span {
+        height: 3px;
+        margin: 3px 0;
+    }
+
+    .logo-text {
+        right: 15px;
+        top: 12px;
+        font-size: 22px;
+    }
+
+    .overlay-menu {
+        width: 200px;
+        left: 15px;
+        top: 65px;
+        padding: 8px;
+    }
+
+    .overlay-menu ul li a {
+        font-size: 15px;
+    }
+
+    .popup-block .popup-content {
+        max-width: 750px;
+        padding: 18px;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        max-height: 70vh;
+    }
+
+    .project-item {
+        font-size: 15px;
+        padding: 12px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) { /* Mobile */
+    .menu {
+        height: 60px;
+    }
+
+    .menu-btn {
+        left: 10px;
+        top: 15px;
+        width: 30px;
+        height: 24px;
+    }
+
+    .menu-btn span {
+        height: 3px;
+        margin: 3px 0;
+    }
+
+    .logo-text {
+        right: 10px;
+        top: 10px;
+        font-size: 18px;
+    }
+
+    .overlay-menu {
+        width: 180px;
+        left: 10px;
+        top: 60px;
+        padding: 6px;
+    }
+
+    .overlay-menu ul li a {
+        font-size: 14px;
+    }
+
+    .popup-block .popup-content {
+        width: 90%;
+        max-width: 90%;
+        padding: 15px;
+        font-size: 16px;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        max-height: 60vh;
+    }
+
+    .project-item {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 575px) { /* Mobile (очень маленькие экраны) */
+    .menu {
+        height: 50px;
+    }
+
+    .menu-btn {
+        left: 8px;
+        top: 12px;
+        width: 25px;
+        height: 20px;
+    }
+
+    .menu-btn span {
+        height: 2px;
+        margin: 2px 0;
+    }
+
+    .logo-text {
+        right: 8px;
+        top: 8px;
+        font-size: 16px;
+    }
+
+    .overlay-menu {
+        width: 160px;
+        left: 8px;
+        top: 50px;
+        padding: 5px;
+    }
+
+    .overlay-menu ul li a {
+        font-size: 12px;
+    }
+
+    .popup-block .popup-content {
+        width: 90%;
+        max-width: 90%;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    #about .popup-content, #contacts .popup-content {
+        font-size: 14px;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 8px;
+        max-height: 50vh;
+    }
+
+    .project-item {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+
+/* Адаптация для горизонтального формата */
+@media (orientation: landscape) and (max-width: 991px) {
+    .menu {
+        height: 50px;
+    }
+
+    .menu-btn {
+        left: 10px;
+        top: 10px;
+        width: 30px;
+        height: 24px;
+    }
+
+    .menu-btn span {
+        height: 3px;
+        margin: 2px 0;
+    }
+
+    .logo-text {
+        right: 10px;
+        top: 8px;
+        font-size: 18px;
+    }
+
+    .overlay-menu {
+        width: 180px;
+        left: 10px;
+        top: 50px;
+        padding: 6px;
+    }
+
+    .overlay-menu ul li a {
+        font-size: 14px;
+    }
+
+    .popup-block .popup-content {
+        width: 70%;
+        max-width: 700px;
+        padding: 15px;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        max-height: 60vh;
+    }
+
+    .project-item {
+        font-size: 14px;
+        padding: 10px;
+    }
 }
