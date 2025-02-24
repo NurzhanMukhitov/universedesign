@@ -70,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     Point.prototype.draw = function(i, j) {
         var scale = focale / (focale + this.z);
-        // Верхняя грань при собранном кубе — белый жирный шрифт
         if (j === linesY - 1 && tParam <= 0.1) {
             ctx.font = "bold 14px OneDay";
             ctx.fillStyle = "#ffffff";
@@ -87,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
         ctx.fillText(text, xPos, yPos);
     };
 
-    // Функция для определения размера куба по брейкпоинтам
     function getCubeSize() {
         var w = window.innerWidth;
         if (w < 576) return 180;
@@ -98,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return 360;
     }
 
-    // Создание массива точек
     function createPoints() {
         pointsArray = [];
         var cubeSize = getCubeSize();
@@ -121,18 +118,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     createPoints();
 
-    // Отрисовка всех точек
     function drawPoints() {
         for (var i = 0; i < linesX; i++) {
             for (var j = 0; j < linesY; j++) {
                 for (var k = 0; k < pointsPerLine; k++) {
                     var idx = i * linesY * pointsPerLine + j * pointsPerLine + k;
                     var point = pointsArray[idx];
-                    // Интерполяция между собранным и хаотичным состоянием
                     point.x = (1 - tParam) * point.originalX + tParam * point.scatterX;
                     point.y = (1 - tParam) * point.originalY + tParam * point.scatterY;
                     point.z = (1 - tParam) * point.originalZ + tParam * point.scatterZ;
-                    // Повороты
                     point.rotateX(rotationX);
                     point.rotateY(rotationY);
                     point.draw(i, j);
@@ -141,8 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Главный цикл рендеринга
-    var lastTime = 0;
     function render(time) {
         var deltaTime = time - lastTime;
         lastTime = time;
@@ -152,57 +144,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
         drawPoints();
 
-        // Автовращение
         if (!drag) {
             rotationY += 0.0002 * deltaTime;
         }
 
-        // Показ/скрытие меню и логотипа
+        // Показываем меню и логотип, если куб собран (tParam <= 0.1)
         if (tParam <= 0.1) {
             menuBtn.style.display = "block";
             logoText.style.display = "block";
         } else {
             menuBtn.style.display = "none";
             logoText.style.display = "none";
-            // Скрываем меню и popup
-            document.querySelector('.overlay-menu').style.display = 'none';
-            var popups = document.querySelectorAll('.popup-block, .overlay-mask');
-            popups.forEach(function(p) {
-                p.style.display = 'none';
+            var overlays = document.querySelectorAll('.overlay-menu, .popup-block, .overlay-mask');
+            overlays.forEach(function(el) {
+                el.style.display = "none";
             });
         }
 
-        requestAnimationFrame(render);
+        window.requestAnimationFrame(render);
     }
-    requestAnimationFrame(render);
+    window.requestAnimationFrame(render);
 
-    // Функция обновления размеров и пересоздания canvas
     function onResize() {
         ww = window.innerWidth;
         wh = window.innerHeight;
-
-        let dpr = window.devicePixelRatio || 1;
+        var dpr = window.devicePixelRatio || 1;
         canvas.width = ww * dpr;
         canvas.height = wh * dpr;
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.scale(dpr, dpr);
         canvas.style.width = ww + "px";
         canvas.style.height = wh + "px";
-
-        createPoints(); // Пересоздаём точки
+        createPoints();
     }
 
-    // Событие resize
     window.addEventListener('resize', onResize);
-    // orientationchange
     window.addEventListener('orientationchange', function() {
         setTimeout(onResize, 500);
     });
 
-    // Инициализация размеров при загрузке
-    onResize();
-
-    // Управление мышью
     canvas.addEventListener('mousedown', function(e) {
         handleStart(e.pageX, e.pageY);
     });
@@ -212,7 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
     canvas.addEventListener('mouseup', handleEnd);
     canvas.addEventListener('mouseleave', handleEnd);
 
-    // Управление touch
     canvas.addEventListener('touchstart', function(e) {
         e.preventDefault();
         var touch = e.touches[0];
@@ -252,7 +231,6 @@ document.addEventListener('DOMContentLoaded', function() {
         drag = false;
     }
 
-    // Скролл для сборки/разброса
     function handleScroll(deltaY) {
         scrollAccumulator += deltaY;
         if (scrollAccumulator > scrollThreshold) {
@@ -268,7 +246,6 @@ document.addEventListener('DOMContentLoaded', function() {
         handleScroll(e.deltaY);
     });
 
-    // Анимация сборки (Gather)
     function animateGather() {
         console.log("Animating gather");
         var startTime = performance.now();
@@ -281,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var progress = Math.min(elapsed / duration, 1);
             tParam = initT * (1 - progress);
             rotationX = startRotationX + (defaultRotationX - startRotationX) * progress;
-            rotationY = startRotationY + (defaultRotationY - startRotationY) * progress;
+            rotationY = startRotationY + (defaultRotationY - rotationY) * progress;
             if (progress < 1) {
                 requestAnimationFrame(step);
             } else {
@@ -293,7 +270,6 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(step);
     }
 
-    // Анимация разброса (Scatter)
     function animateScatter() {
         console.log("Animating scatter");
         var startTime = performance.now();
@@ -312,7 +288,6 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(step);
     }
 
-    // Меню и popup
     var menuOverlay = document.querySelector('.overlay-menu');
     if (menuBtn) {
         menuBtn.addEventListener('click', function(e) {
@@ -325,7 +300,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Логотип – при клике запускается сборка
     if (logoText) {
         logoText.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -333,7 +307,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Обработка кликов по пунктам меню
     var menuLinks = document.querySelectorAll('.overlay-menu a');
     menuLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
@@ -348,7 +321,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Закрытие popup при клике вне
     document.addEventListener('click', function(e) {
         if (activePopup) {
             activePopup.style.display = 'none';
@@ -357,7 +329,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Закрытие popup по Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && activePopup) {
             activePopup.style.display = 'none';
@@ -365,4 +336,6 @@ document.addEventListener('DOMContentLoaded', function() {
             activePopup = null;
         }
     });
+
+    console.log("All event listeners attached");
 });

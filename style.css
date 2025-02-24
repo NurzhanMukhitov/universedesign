@@ -22,7 +22,7 @@ canvas {
     z-index: 1;
 }
 
-/* Меню и логотип */
+/* Меню */
 .menu {
     position: absolute;
     top: 0;
@@ -30,7 +30,7 @@ canvas {
     width: 100%;
     height: 70px;
     z-index: 1000;
-    background: rgba(0, 0, 0, 0.2); /* Максимально прозрачная панель меню */
+    background: rgba(0, 0, 0, 0.2); /* максимально прозрачная подложка */
     transition: all 0.3s ease;
 }
 
@@ -52,28 +52,28 @@ canvas {
     transition: all 0.3s ease;
 }
 
+/* Логотип – вынесен отдельно, чтобы всегда быть в правом верхнем углу */
 .logo-text {
     position: absolute;
-    right: 20px;
     top: 15px;
-    font-size: 24px;
-    color: #fff;
-    text-align: right;
-    line-height: 1.1;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: none; /* Показывается, когда куб собран */
+    right: 20px;
     z-index: 1000;
+    transition: all 0.3s ease;
+    display: none; /* будет показан, когда куб собран */
 }
 
-/* Overlay меню */
+.logo-text img {
+    max-width: 150px;  /* ограничиваем размер логотипа */
+    height: auto;
+}
+
+/* Overlay меню (фон убран) */
 .overlay-menu {
     position: absolute;
     left: 20px;
     top: 70px;
     width: 220px;
-    /* Убираем фон вовсе */
-    background: transparent;
+    background: transparent; /* фон убран */
     padding: 10px;
     display: none;
     z-index: 1000;
@@ -139,7 +139,7 @@ canvas {
     width: 80%;
     max-width: 800px;
     padding: 20px;
-    background: transparent; /* Подложка убрана */
+    background: transparent; /* подложка убрана */
     border: none;
     box-shadow: none;
     word-wrap: break-word;

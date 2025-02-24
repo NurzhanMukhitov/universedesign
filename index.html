@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Адаптивность -->
-  <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>UNIVERSEDESIGN - Adaptive Cube with Touch</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -15,12 +15,11 @@
       <span></span>
       <span></span>
     </div>
-    <!-- Логотип заменён на изображение -->
-    <div class="logo-text">
-      <img src="logo/UNIVERSE.png" alt="UNIVERSE design">
-    </div>
   </div>
-
+  <!-- Логотип вынесен отдельно, чтобы всегда быть в правом верхнем углу -->
+  <div class="logo-text">
+    <img src="logo/UNIVERSE.png" alt="UNIVERSE design">
+  </div>
   <div class="overlay-menu">
     <ul>
       <li><a data-section="about">ABOUT</a></li>
@@ -28,15 +27,12 @@
       <li><a data-section="contacts">CONTACTS</a></li>
     </ul>
   </div>
-
   <div class="overlay-mask"></div>
-
   <div class="popup-block" id="about">
     <div class="popup-content">
       <p>We are a design studio passionate about technology research, media art, and installation/exhibition design.</p>
     </div>
   </div>
-
   <div class="popup-block" id="contacts">
     <div class="popup-content">
       <p>
@@ -45,7 +41,6 @@
       </p>
     </div>
   </div>
-
   <div class="popup-block" id="projects">
     <div class="popup-content">
       <h2>Projects</h2>
@@ -59,7 +54,6 @@
       </div>
     </div>
   </div>
-
   <script src="script.js" defer></script>
 </body>
 </html>
