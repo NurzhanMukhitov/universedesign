@@ -176,6 +176,7 @@ for (var i = 0; i < sections.length; i++) {
 }
 
 function handleStart(x, y) {
+    console.log("Handle start:", x, y);
     drag = true;
     oldX = x;
     oldY = y;
@@ -183,6 +184,7 @@ function handleStart(x, y) {
 
 function handleMove(x, y) {
     if (drag) {
+        console.log("Handle move:", x, y);
         rotationY += (x - oldX) * 0.01;
         rotationX += (y - oldY) * 0.01;
         oldX = x;
@@ -191,6 +193,7 @@ function handleMove(x, y) {
 }
 
 function handleEnd() {
+    console.log("Handle end");
     drag = false;
 }
 
@@ -207,6 +210,7 @@ canvas.addEventListener('mousemove', function(e) {
 canvas.addEventListener('mouseup', handleEnd);
 
 canvas.addEventListener('touchstart', function(e) {
+    console.log("Touch start event");
     e.preventDefault();
     if (!activePopup) {
         var touch = e.touches[0];
@@ -215,12 +219,14 @@ canvas.addEventListener('touchstart', function(e) {
 });
 
 canvas.addEventListener('touchmove', function(e) {
+    console.log("Touch move event");
     e.preventDefault();
     var touch = e.touches[0];
     handleMove(touch.pageX, touch.pageY);
 });
 
 canvas.addEventListener('touchend', function(e) {
+    console.log("Touch end event");
     e.preventDefault();
     handleEnd();
 });
@@ -238,6 +244,7 @@ var scrollThreshold = 50;
 var scrollAccumulator = 0;
 
 function animateGather() {
+    console.log("Animating gather");
     var startTime = performance.now();
     var startParam = tParam;
     var startRotationX = rotationX;
@@ -264,6 +271,7 @@ function animateGather() {
 }
 
 function animateScatter() {
+    console.log("Animating scatter");
     var startTime = performance.now();
     var startParam = tParam;
     var duration = 1500;
@@ -284,6 +292,7 @@ function animateScatter() {
 }
 
 function handleScroll(deltaY) {
+    console.log("Handle scroll:", deltaY);
     scrollAccumulator += deltaY;
 
     if (scrollAccumulator > scrollThreshold) {
@@ -305,6 +314,7 @@ canvas.addEventListener('wheel', function(e) {
 
 canvas.addEventListener('touchmove', function(e) {
     if (drag) {
+        console.log("Touch move for scroll");
         var touch = e.touches[0];
         var deltaY = oldY - touch.pageY;
         handleScroll(deltaY);
