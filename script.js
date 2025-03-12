@@ -1,6 +1,44 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("JavaScript is running!");
 
+    // Функция для загрузки данных проекта
+    async function loadProjectData(projectId) {
+        try {
+            const response = await fetch(`projects/project_${projectId}/meta.json`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(`Error loading project ${projectId} data:`, error);
+            return null;
+        }
+    }
+
+    // Функция для обновления изображений проекта
+    async function updateProjectImages() {
+        const projectItems = document.querySelectorAll('.project-item');
+        
+        for (let i = 0; i < projectItems.length; i++) {
+            const projectId = i + 1;
+            const projectData = await loadProjectData(projectId);
+            
+            // Устанавливаем изображение обложки
+            const img = projectItems[i].querySelector('img');
+            if (img) {
+                // Используем локальный путь к обложке
+                img.src = `projects/project_${projectId}/covers/cover.jpg`;
+                img.alt = '';
+                console.log(`Setting cover image for project ${projectId}:`, img.src);
+            }
+
+            // Удаляем все существующие span элементы
+            const spans = projectItems[i].querySelectorAll('span');
+            spans.forEach(span => span.remove());
+        }
+    }
+
+    // Вызываем функцию обновления изображений
+    updateProjectImages();
+
     // Размеры экрана
     var ww = window.innerWidth, wh = window.innerHeight;
 
@@ -465,6 +503,128 @@ document.addEventListener('DOMContentLoaded', function() {
                 activePopup = null;
             }, 1200);
         }
+    });
+
+    // Функция для открытия модального окна проекта
+    async function openProjectModal(projectId) {
+        console.log('Opening modal for project:', projectId);
+        const projectData = await loadProjectData(projectId);
+        console.log('Project data:', projectData);
+        let modalContent = '';
+        
+        // Добавляем первые две картинки
+        if (projectData.galleryUrls && projectData.galleryUrls.length > 0) {
+            console.log('Gallery URLs:', projectData.galleryUrls);
+            const initialImages = projectData.galleryUrls.slice(0, 2);
+            initialImages.forEach((url, index) => {
+                console.log('Adding image:', url);
+                modalContent += `
+                    <div class="slide">
+                        <img src="${url}" alt="Project image ${index + 1}" onload="console.log('Image loaded:', '${url}')" onerror="console.error('Image failed to load:', '${url}')">
+                    </div>
+                `;
+            });
+        }
+        
+        // Добавляем видео Vimeo для первого проекта
+        if (projectId === 1) {
+            console.log('Adding Vimeo video');
+            modalContent += `
+                <div style="padding:56.25% 0 0 0;position:relative;">
+                    <iframe src="https://player.vimeo.com/video/902962085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" 
+                            frameborder="0" 
+                            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
+                            style="position:absolute;top:0;left:0;width:100%;height:100%;" 
+                            title="INTERVALS 2023">
+                    </iframe>
+                </div>
+                <script src="https://player.vimeo.com/api/player.js"></script>
+            `;
+        }
+        
+        // Добавляем оставшиеся картинки
+        if (projectData.galleryUrls && projectData.galleryUrls.length > 2) {
+            console.log('Adding remaining images');
+            const remainingImages = projectData.galleryUrls.slice(2);
+            remainingImages.forEach((url, index) => {
+                console.log('Adding remaining image:', url);
+                modalContent += `
+                    <div class="slide">
+                        <img src="${url}" alt="Project image ${index + 3}" onload="console.log('Image loaded:', '${url}')" onerror="console.error('Image failed to load:', '${url}')">
+                    </div>
+                `;
+            });
+        }
+
+        const modalHtml = `
+            <div class="modal-content">
+                <button class="back-button" style="position: fixed; left: 20px; top: 20px; z-index: 1000; background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 10px;">←</button>
+                <button class="close-modal">&times;</button>
+                <div class="modal-slides">
+                    ${modalContent}
+                </div>
+            </div>
+        `;
+
+        const modal = document.createElement('div');
+        modal.className = 'project-modal';
+        modal.innerHTML = modalHtml;
+        document.body.appendChild(modal);
+
+        // Анимация появления
+        requestAnimationFrame(() => {
+            modal.classList.add('visible');
+        });
+
+        // Обработчики для закрытия
+        const backBtn = modal.querySelector('.back-button');
+        const closeBtn = modal.querySelector('.close-modal');
+        
+        backBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.remove();
+            }, 400);
+        });
+
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.remove();
+            }, 400);
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                e.preventDefault();
+                modal.classList.remove('visible');
+                setTimeout(() => {
+                    modal.remove();
+                }, 400);
+            }
+        });
+
+        document.addEventListener('keydown', function handleEscape(e) {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                modal.classList.remove('visible');
+                setTimeout(() => {
+                    modal.remove();
+                }, 400);
+                document.removeEventListener('keydown', handleEscape);
+            }
+        });
+    }
+
+    // Добавляем обработчики для проектов
+    document.querySelectorAll('.project-item').forEach((item, index) => {
+        item.addEventListener('click', () => {
+            openProjectModal(index + 1);
+        });
     });
 
     console.log("All event listeners attached");

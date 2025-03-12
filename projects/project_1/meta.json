@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "title": "INTERVALS 2023",
+  "description": "Описание проекта",
+  "coverUrl": "https://res.cloudinary.com/dxkkbif27/image/upload/v1741795257/project_1/covers/project_1_cover.jpg",
+  "galleryUrls": [
+    "https://res.cloudinary.com/dxkkbif27/image/upload/v1741795257/project_1/gallery/project_1_gallery_1.jpg",
+    "https://res.cloudinary.com/dxkkbif27/image/upload/v1741822090/project_1/gallery/project_1_gallery_2.jpg",
+    "https://res.cloudinary.com/dxkkbif27/image/upload/v1741822090/project_1/gallery/project_1_gallery_3.jpg",
+    "https://res.cloudinary.com/dxkkbif27/image/upload/v1741822090/project_1/gallery/project_1_gallery_4.jpg",
+    "https://res.cloudinary.com/dxkkbif27/image/upload/v1741822090/project_1/gallery/project_1_gallery_5.jpg",
+    "https://res.cloudinary.com/dxkkbif27/image/upload/v1741822090/project_1/gallery/project_1_gallery_6.jpg",
+    "https://res.cloudinary.com/dxkkbif27/image/upload/v1741822090/project_1/gallery/project_1_gallery_7.jpg"
+  ]
+}
