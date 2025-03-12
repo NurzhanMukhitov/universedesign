@@ -38,6 +38,57 @@ document.addEventListener('DOMContentLoaded', function() {
     // Для анимации
     var lastTime = 0;
 
+    // Система логирования
+    var debugLog = {
+        lastFrameTime: performance.now(),
+        frameDeltas: [],
+        isLogging: true,
+        maxLogs: 60, // Хранить данные за последние 60 кадров
+        
+        logFrame: function(time) {
+            if (!this.isLogging) return;
+            
+            const currentTime = performance.now();
+            const frameDelta = currentTime - this.lastFrameTime;
+            this.lastFrameTime = currentTime;
+            
+            // Сохраняем время кадра
+            this.frameDeltas.push({
+                time: currentTime,
+                delta: frameDelta,
+                fps: 1000 / frameDelta,
+                tParam: tParam,
+                rotation: { x: rotationX, y: rotationY }
+            });
+            
+            // Ограничиваем количество логов
+            if (this.frameDeltas.length > this.maxLogs) {
+                this.frameDeltas.shift();
+            }
+            
+            // Выводим предупреждение если кадр занял больше 32мс (меньше 30 FPS)
+            if (frameDelta > 32) {
+                console.warn(`Низкий FPS: ${(1000 / frameDelta).toFixed(1)} FPS (${frameDelta.toFixed(2)}мс)`);
+            }
+        },
+        
+        logAction: function(action, data) {
+            if (!this.isLogging) return;
+            console.log(`Действие: ${action}`, {
+                time: performance.now(),
+                tParam: tParam,
+                rotation: { x: rotationX, y: rotationY },
+                ...data
+            });
+        },
+        
+        getAverageFPS: function() {
+            if (this.frameDeltas.length === 0) return 0;
+            const sum = this.frameDeltas.reduce((acc, frame) => acc + frame.fps, 0);
+            return (sum / this.frameDeltas.length).toFixed(1);
+        }
+    };
+
     // Массив точек
     var pointsArray = [];
 
@@ -134,6 +185,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Добавляем функцию для управления видимостью элементов
+    function updateElementsVisibility(shouldShow) {
+        if (shouldShow) {
+            // Показываем элементы
+            menuBtn.style.display = "block";
+            logoText.style.display = "block";
+            
+            // Форсируем reflow
+            void menuBtn.offsetHeight;
+            void logoText.offsetHeight;
+            
+            // Добавляем классы видимости
+            requestAnimationFrame(() => {
+                menuBtn.classList.add('visible');
+                logoText.classList.add('visible');
+            });
+        } else {
+            // Убираем классы видимости одновременно
+            menuBtn.classList.remove('visible');
+            logoText.classList.remove('visible');
+            
+            // Ждем окончания анимации перед скрытием
+            setTimeout(() => {
+                if (!shouldShow) {
+                    // Скрываем элементы одновременно
+                    requestAnimationFrame(() => {
+                        menuBtn.style.display = "none";
+                        logoText.style.display = "none";
+                    });
+                }
+            }, 1200); // Увеличили время в соответствии с CSS
+        }
+    }
+
     function render(time) {
         var deltaTime = time - lastTime;
         lastTime = time;
@@ -142,21 +227,24 @@ document.addEventListener('DOMContentLoaded', function() {
         ctx.fillRect(0, 0, ww, wh);
 
         drawPoints();
+        debugLog.logFrame(time);
 
         if (!drag) {
             rotationY += 0.0002 * deltaTime;
         }
-
-        // Показываем меню и логотип, если куб собран (tParam <= 0.1)
-        if (tParam <= 0.1) {
-            menuBtn.style.display = "block";
-            logoText.style.display = "block";
-        } else {
-            menuBtn.style.display = "none";
-            logoText.style.display = "none";
+        
+        // Обрабатываем оверлеи
+        if (tParam > 0.1) {
             var overlays = document.querySelectorAll('.overlay-menu, .popup-block, .overlay-mask');
             overlays.forEach(function(el) {
-                el.style.display = "none";
+                if (el.classList.contains('overlay-menu')) {
+                    el.classList.remove('visible');
+                    setTimeout(() => {
+                        el.style.display = "none";
+                    }, 1200);
+                } else {
+                    el.style.display = "none";
+                }
             });
         }
 
@@ -164,7 +252,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     requestAnimationFrame(render);
 
-    // Функция обновления размеров и пересоздания canvas
     function onResize() {
         ww = window.innerWidth;
         wh = window.innerHeight;
@@ -230,6 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleScroll(deltaY) {
+        debugLog.logAction('scroll', { deltaY, scrollAccumulator });
         scrollAccumulator += deltaY;
         if (scrollAccumulator > scrollThreshold) {
             animateScatter();
@@ -245,6 +333,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function animateGather() {
+        debugLog.logAction('gather_start', { initTParam: tParam });
         console.log("Animating gather");
         var startTime = performance.now();
         var initT = tParam;
@@ -263,16 +352,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 tParam = 0;
                 rotationX = defaultRotationX;
                 rotationY = defaultRotationY;
+                debugLog.logAction('gather_complete', {});
+                // Показываем элементы после завершения анимации куба
+                menuBtn.style.display = "block";
+                logoText.style.display = "block";
+                requestAnimationFrame(() => {
+                    menuBtn.classList.add('visible');
+                    logoText.classList.add('visible');
+                });
             }
         }
         requestAnimationFrame(step);
     }
 
     function animateScatter() {
+        debugLog.logAction('scatter_start', { initTParam: tParam });
         console.log("Animating scatter");
+        
+        // Начинаем обе анимации одновременно
         var startTime = performance.now();
         var initT = tParam;
         var duration = 1500;
+        
+        // Запускаем исчезновение интерфейса
+        menuBtn.classList.remove('visible');
+        logoText.classList.remove('visible');
+        setTimeout(() => {
+            menuBtn.style.display = "none";
+            logoText.style.display = "none";
+        }, 1200);
+        
+        // Запускаем анимацию рассеивания букв
         function step(currentTime) {
             var elapsed = currentTime - startTime;
             var progress = Math.min(elapsed / duration, 1);
@@ -281,6 +391,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 requestAnimationFrame(step);
             } else {
                 tParam = 1;
+                debugLog.logAction('scatter_complete', {});
             }
         }
         requestAnimationFrame(step);
@@ -290,10 +401,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (menuBtn) {
         menuBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            if (menuOverlay.style.display === "block") {
-                menuOverlay.style.display = "none";
+            if (menuOverlay.classList.contains('visible')) {
+                menuOverlay.classList.remove('visible');
+                setTimeout(() => {
+                    menuOverlay.style.display = "none";
+                }, 400);
             } else {
                 menuOverlay.style.display = "block";
+                requestAnimationFrame(() => {
+                    menuOverlay.classList.add('visible');
+                });
             }
         });
     }
@@ -305,33 +422,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    document.addEventListener('click', function(e) {
+        if (activePopup) {
+            overlayMask.classList.remove('visible');
+            activePopup.classList.remove('visible');
+            setTimeout(() => {
+                overlayMask.style.display = "none";
+                activePopup.style.display = "none";
+                activePopup = null;
+            }, 400);
+        }
+    });
+
     var menuLinks = document.querySelectorAll('.overlay-menu a');
     menuLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             var section = this.dataset.section;
+            
+            // Показываем маску и попап с анимацией
             overlayMask.style.display = 'block';
             activePopup = document.getElementById(section);
             if (activePopup) {
                 activePopup.style.display = 'block';
+                // Добавляем небольшую задержку для плавности
+                setTimeout(() => {
+                    overlayMask.classList.add('visible');
+                    activePopup.classList.add('visible');
+                }, 20);
             }
         });
     });
 
-    document.addEventListener('click', function(e) {
-        if (activePopup) {
-            activePopup.style.display = 'none';
-            overlayMask.style.display = 'none';
-            activePopup = null;
-        }
-    });
-
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && activePopup) {
-            activePopup.style.display = 'none';
-            overlayMask.style.display = 'none';
-            activePopup = null;
+            overlayMask.classList.remove('visible');
+            activePopup.classList.remove('visible');
+            setTimeout(() => {
+                overlayMask.style.display = "none";
+                activePopup.style.display = "none";
+                activePopup = null;
+            }, 1200);
         }
     });
 

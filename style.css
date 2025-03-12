@@ -30,8 +30,8 @@ canvas {
     width: 100%;
     height: 70px;
     z-index: 1000;
-    background: rgba(0, 0, 0, 0.2); /* максимально прозрачная подложка */
-    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.2);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .menu-btn {
@@ -41,15 +41,17 @@ canvas {
     width: 40px;
     height: 30px;
     cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .menu-btn span {
     display: block;
     width: 100%;
-    height: 4px;
+    height: 3px;
     background: #fff;
-    margin: 4px 0;
-    transition: all 0.3s ease;
+    margin: 3px 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Логотип вынесен отдельно */
@@ -58,8 +60,9 @@ canvas {
     top: 15px;
     right: 20px;
     z-index: 1000;
-    transition: all 0.3s ease;
-    display: none; /* Показывается, когда куб собран */
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: none;
 }
 
 .logo-text img {
@@ -79,7 +82,8 @@ canvas {
     z-index: 1000;
     border-radius: 5px;
     box-shadow: none;
-    transition: all 0.3s ease;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .overlay-menu ul {
@@ -97,11 +101,17 @@ canvas {
     text-decoration: none;
     cursor: pointer;
     font-size: 16px;
-    transition: color 0.3s ease;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    padding-left: 0;
+    display: inline-block;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .overlay-menu ul li a:hover {
-    color: #ccc;
+    color: #fff;
+    transform: translateX(8px) scale(1.02);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 /* Overlay маска */
@@ -114,6 +124,8 @@ canvas {
     background: rgba(0, 0, 0, 0.8);
     display: none;
     z-index: 1001;
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Popup блоки (без подложки) */
@@ -129,6 +141,9 @@ canvas {
     font-size: 24px;
     z-index: 1002;
     overflow-y: auto;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .popup-block .popup-content {
@@ -139,10 +154,12 @@ canvas {
     width: 80%;
     max-width: 800px;
     padding: 20px;
-    background: transparent; /* Подложка убрана */
+    background: transparent;
     border: none;
     box-shadow: none;
     word-wrap: break-word;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.6;
 }
 
 .projects-grid {
@@ -165,6 +182,29 @@ canvas {
     background: rgba(255, 255, 255, 0.2);
 }
 
+/* Добавляем классы для состояний видимости */
+.logo-text.visible {
+    opacity: 1;
+    display: block;
+}
+
+.overlay-menu.visible {
+    opacity: 1;
+    display: block;
+}
+
+.menu-btn.visible {
+    opacity: 1;
+}
+
+.overlay-mask.visible {
+    opacity: 1;
+}
+
+.popup-block.visible {
+    opacity: 1;
+}
+
 /* Адаптивные стили */
 @media screen and (max-width: 575px) {
     .menu {
@@ -177,8 +217,8 @@ canvas {
         top: 12px;
     }
     .menu-btn span {
-        height: 2px;
-        margin: 2px 0;
+        height: 3px;
+        margin: 4px 0;
     }
     .logo-text {
         top: 8px;
@@ -208,6 +248,14 @@ canvas {
         font-size: 12px;
         padding: 8px;
     }
+    .social-icons {
+        gap: 16px;
+    }
+    
+    .social-icons a {
+        width: 48px;
+        height: 48px;
+    }
 }
 @media screen and (min-width: 576px) and (max-width: 767px) {
     .logo-text { font-size: 20px; }
@@ -228,4 +276,41 @@ canvas {
 @media screen and (min-width: 1400px) {
     .logo-text { font-size: 28px; }
     .overlay-menu { width: 280px; top: 80px; left: 20px; }
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.social-icons a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-icons img {
+    width: 85%;
+    height: 85%;
+    object-fit: contain;
+    filter: brightness(1);
+}
+
+.social-icons img[alt="Behance"] {
+    width: 75%;
+    height: 75%;
+}
+
+.social-icons a:hover {
+    transform: translateY(-2px);
+}
+
+.social-icons a:hover img {
+    filter: brightness(0.8);
 }
