@@ -33,6 +33,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Удаляем все существующие span элементы
             const spans = projectItems[i].querySelectorAll('span');
             spans.forEach(span => span.remove());
+
+            // Добавляем название для первого проекта
+            if (projectId === 1) {
+                const span = document.createElement('span');
+                span.textContent = 'INTERVALS 2023';
+                span.style.fontSize = 'clamp(16px, 1.125rem, 20px)';
+                projectItems[i].appendChild(span);
+            }
         }
     }
 
@@ -512,18 +520,14 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Project data:', projectData);
         let modalContent = '';
         
-        // Добавляем первые две картинки
+        // Добавляем первую картинку
         if (projectData.galleryUrls && projectData.galleryUrls.length > 0) {
-            console.log('Gallery URLs:', projectData.galleryUrls);
-            const initialImages = projectData.galleryUrls.slice(0, 2);
-            initialImages.forEach((url, index) => {
-                console.log('Adding image:', url);
-                modalContent += `
-                    <div class="slide">
-                        <img src="${url}" alt="Project image ${index + 1}" onload="console.log('Image loaded:', '${url}')" onerror="console.error('Image failed to load:', '${url}')">
-                    </div>
-                `;
-            });
+            console.log('Adding first image:', projectData.galleryUrls[0]);
+            modalContent += `
+                <div class="slide">
+                    <img src="${projectData.galleryUrls[0]}" alt="Project image 1" onload="console.log('Image loaded:', '${projectData.galleryUrls[0]}')" onerror="console.error('Image failed to load:', '${projectData.galleryUrls[0]}')">
+                </div>
+            `;
         }
         
         // Добавляем видео Vimeo для первого проекта
@@ -543,17 +547,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Добавляем оставшиеся картинки
-        if (projectData.galleryUrls && projectData.galleryUrls.length > 2) {
+        if (projectData.galleryUrls && projectData.galleryUrls.length > 1) {
             console.log('Adding remaining images');
-            const remainingImages = projectData.galleryUrls.slice(2);
+            const remainingImages = projectData.galleryUrls.slice(1);
             remainingImages.forEach((url, index) => {
                 console.log('Adding remaining image:', url);
                 modalContent += `
                     <div class="slide">
-                        <img src="${url}" alt="Project image ${index + 3}" onload="console.log('Image loaded:', '${url}')" onerror="console.error('Image failed to load:', '${url}')">
+                        <img src="${url}" alt="Project image ${index + 2}" onload="console.log('Image loaded:', '${url}')" onerror="console.error('Image failed to load:', '${url}')">
                     </div>
                 `;
             });
+        }
+
+        // Добавляем логотип Behance для первого проекта
+        if (projectId === 1) {
+            modalContent += `
+                <a href="https://www.behance.net/gallery/183591977/INTERSECTION" target="_blank" class="behance-link">
+                    <img src="logo/behance.png" alt="Behance">
+                </a>
+            `;
         }
 
         const modalHtml = `
