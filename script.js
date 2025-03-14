@@ -1,6 +1,72 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("JavaScript is running!");
 
+    // Функция для загрузки данных проекта
+    async function loadProjectData(projectId) {
+        try {
+            const response = await fetch(`projects/project_${projectId}/meta.json`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(`Error loading project ${projectId} data:`, error);
+            return null;
+        }
+    }
+
+    // Функция для обновления изображений проекта
+    async function updateProjectImages() {
+        const projectItems = document.querySelectorAll('.project-item');
+        
+        for (let i = 0; i < projectItems.length; i++) {
+            const projectId = i + 1;
+            const projectData = await loadProjectData(projectId);
+            
+            // Устанавливаем изображение обложки
+            const img = projectItems[i].querySelector('img');
+            if (img) {
+                // Используем локальный путь к обложке
+                img.src = `projects/project_${projectId}/covers/cover.jpg`;
+                img.alt = '';
+                console.log(`Setting cover image for project ${projectId}:`, img.src);
+                
+                // Добавляем обработчик клика для изображения
+                img.addEventListener('click', function(e) {
+                    // Если клик был по изображению внутри проекта
+                    if (this.closest('.project-content')) {
+                        e.stopPropagation(); // Предотвращаем всплытие события
+                        openFullscreen(this);
+                    }
+                });
+            }
+
+            // Добавляем обработчики для видео, если они есть
+            const videos = projectItems[i].querySelectorAll('video');
+            videos.forEach(video => {
+                video.addEventListener('click', function(e) {
+                    if (this.closest('.project-content')) {
+                        e.stopPropagation();
+                        openFullscreen(this);
+                    }
+                });
+            });
+
+            // Удаляем все существующие span элементы
+            const spans = projectItems[i].querySelectorAll('span');
+            spans.forEach(span => span.remove());
+
+            // Добавляем название для первого проекта
+            if (projectId === 1) {
+                const span = document.createElement('span');
+                span.textContent = 'INTERVALS 2023';
+                span.style.fontSize = 'clamp(16px, 1.125rem, 20px)';
+                projectItems[i].appendChild(span);
+            }
+        }
+    }
+
+    // Вызываем функцию обновления изображений
+    updateProjectImages();
+
     // Размеры экрана
     var ww = window.innerWidth, wh = window.innerHeight;
 
@@ -10,6 +76,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var logoText = document.querySelector('.logo-text');
     var overlayMask = document.querySelector('.overlay-mask');
     var activePopup = null;
+    
+    // Элементы для полноэкранного просмотра
+    var fullscreenView = document.querySelector('.fullscreen-view');
+    var fullscreenMedia = document.querySelector('.fullscreen-media');
+    var closeFullscreenBtn = document.querySelector('.close-fullscreen');
+    var currentFullscreenMedia = null;
 
     // Настройка canvas с учётом devicePixelRatio для чёткости
     var dpr = window.devicePixelRatio || 1;
@@ -467,5 +539,289 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Функция для открытия модального окна проекта
+    async function openProjectModal(projectId) {
+        console.log('Opening modal for project:', projectId);
+        const projectData = await loadProjectData(projectId);
+        console.log('Project data:', projectData);
+        let modalContent = '';
+        
+        // Добавляем первую картинку
+        if (projectData.galleryUrls && projectData.galleryUrls.length > 0) {
+            console.log('Adding first image:', projectData.galleryUrls[0]);
+            modalContent += `
+                <div class="slide">
+                    <img src="${projectData.galleryUrls[0]}" alt="Project image 1" 
+                         onload="console.log('Image loaded:', '${projectData.galleryUrls[0]}')" 
+                         onerror="console.error('Image failed to load:', '${projectData.galleryUrls[0]}')"
+                         class="fullscreen-trigger">
+                </div>
+            `;
+        }
+        
+        // Добавляем видео Vimeo для первого проекта
+        if (projectId === 1) {
+            console.log('Adding Vimeo video');
+            modalContent += `
+                <div style="padding:56.25% 0 0 0;position:relative;">
+                    <iframe src="https://player.vimeo.com/video/902962085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" 
+                            frameborder="0" 
+                            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
+                            style="position:absolute;top:0;left:0;width:100%;height:100%;" 
+                            title="INTERVALS 2023"
+                            class="fullscreen-trigger">
+                    </iframe>
+                </div>
+                <script src="https://player.vimeo.com/api/player.js"></script>
+            `;
+        }
+        
+        // Добавляем оставшиеся картинки
+        if (projectData.galleryUrls && projectData.galleryUrls.length > 1) {
+            console.log('Adding remaining images');
+            const remainingImages = projectData.galleryUrls.slice(1);
+            remainingImages.forEach((url, index) => {
+                console.log('Adding remaining image:', url);
+                modalContent += `
+                    <div class="slide">
+                        <img src="${url}" alt="Project image ${index + 2}" 
+                             onload="console.log('Image loaded:', '${url}')" 
+                             onerror="console.error('Image failed to load:', '${url}')"
+                             class="fullscreen-trigger">
+                    </div>
+                `;
+            });
+        }
+
+        // Добавляем логотип Behance для первого проекта
+        if (projectId === 1) {
+            modalContent += `
+                <a href="https://www.behance.net/gallery/183591977/INTERSECTION" target="_blank" class="behance-link">
+                    <img src="logo/behance.png" alt="Behance">
+                </a>
+            `;
+        }
+
+        const modalHtml = `
+            <div class="modal-content">
+                <button class="back-button" style="position: fixed; left: 20px; top: 20px; z-index: 1000; background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 10px;">←</button>
+                <button class="close-modal">&times;</button>
+                <div class="modal-slides">
+                    ${modalContent}
+                </div>
+            </div>
+        `;
+
+        const modal = document.createElement('div');
+        modal.className = 'project-modal';
+        modal.innerHTML = modalHtml;
+        document.body.appendChild(modal);
+
+        // Добавляем обработчики для полноэкранного просмотра
+        modal.querySelectorAll('.fullscreen-trigger').forEach(media => {
+            media.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openFullscreen(media);
+            });
+        });
+
+        // Анимация появления
+        requestAnimationFrame(() => {
+            modal.classList.add('visible');
+        });
+
+        // Обработчики для закрытия
+        const backBtn = modal.querySelector('.back-button');
+        const closeBtn = modal.querySelector('.close-modal');
+        
+        backBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.remove();
+            }, 400);
+        });
+
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.remove();
+            }, 400);
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                e.preventDefault();
+                modal.classList.remove('visible');
+                setTimeout(() => {
+                    modal.remove();
+                }, 400);
+            }
+        });
+
+        document.addEventListener('keydown', function handleEscape(e) {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                modal.classList.remove('visible');
+                setTimeout(() => {
+                    modal.remove();
+                }, 400);
+                document.removeEventListener('keydown', handleEscape);
+            }
+        });
+    }
+
+    // Добавляем обработчики для проектов
+    document.querySelectorAll('.project-item').forEach((item, index) => {
+        item.addEventListener('click', () => {
+            openProjectModal(index + 1);
+        });
+    });
+
     console.log("All event listeners attached");
+
+    // Функции для полноэкранного просмотра
+    let currentFullscreenIndex = 0;
+    let fullscreenImages = [];
+
+    function openFullscreen(mediaElement) {
+        // Собираем все медиа элементы из текущего проекта (включая iframe для видео)
+        fullscreenImages = Array.from(mediaElement.closest('.modal-slides').querySelectorAll('.fullscreen-trigger, iframe'));
+        currentFullscreenIndex = fullscreenImages.indexOf(mediaElement);
+        
+        showCurrentMedia(mediaElement);
+        
+        // Показываем полноэкранный режим
+        fullscreenView.classList.add('active');
+        
+        // Блокируем скролл
+        document.body.style.overflow = 'hidden';
+
+        // Добавляем обработчик клавиш
+        document.addEventListener('keydown', handleFullscreenKeyPress);
+    }
+
+    function showCurrentMedia(mediaElement) {
+        // Очищаем контейнер
+        fullscreenMedia.innerHTML = '';
+        
+        if (mediaElement.tagName === 'IFRAME') {
+            // Для Vimeo видео создаем новый iframe
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'padding:56.25% 0 0 0;position:relative;width:100%;max-width:1200px;';
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = mediaElement.src;
+            iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;';
+            iframe.setAttribute('frameborder', '0');
+            iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media');
+            iframe.setAttribute('allowfullscreen', '');
+            
+            wrapper.appendChild(iframe);
+            fullscreenMedia.appendChild(wrapper);
+            
+            // Добавляем скрипт Vimeo Player API
+            if (!document.querySelector('script[src="https://player.vimeo.com/api/player.js"]')) {
+                const script = document.createElement('script');
+                script.src = 'https://player.vimeo.com/api/player.js';
+                document.body.appendChild(script);
+            }
+        } else {
+            // Для изображений и других типов медиа
+            const clone = mediaElement.cloneNode(true);
+            if (clone.tagName === 'VIDEO') {
+                clone.controls = true;
+            }
+            fullscreenMedia.appendChild(clone);
+        }
+        
+        currentFullscreenMedia = mediaElement;
+    }
+
+    function closeFullscreen() {
+        // Скрываем полноэкранный режим
+        fullscreenView.classList.remove('active');
+        currentFullscreenMedia = null;
+        
+        // Разблокируем скролл
+        document.body.style.overflow = '';
+        
+        // Если было видео, останавливаем его
+        const video = fullscreenMedia.querySelector('video');
+        if (video) {
+            video.pause();
+        }
+        
+        // Если было Vimeo видео, останавливаем его
+        const iframe = fullscreenMedia.querySelector('iframe');
+        if (iframe && iframe.src.includes('vimeo')) {
+            iframe.src = iframe.src;
+        }
+        
+        // Очищаем контейнер
+        fullscreenMedia.innerHTML = '';
+
+        // Удаляем обработчик клавиш
+        document.removeEventListener('keydown', handleFullscreenKeyPress);
+    }
+
+    function showNextImage() {
+        if (currentFullscreenIndex < fullscreenImages.length - 1) {
+            currentFullscreenIndex++;
+            const nextMedia = fullscreenImages[currentFullscreenIndex];
+            showCurrentMedia(nextMedia);
+        }
+    }
+
+    function showPrevImage() {
+        if (currentFullscreenIndex > 0) {
+            currentFullscreenIndex--;
+            const prevMedia = fullscreenImages[currentFullscreenIndex];
+            showCurrentMedia(prevMedia);
+        }
+    }
+
+    function handleFullscreenKeyPress(e) {
+        if (fullscreenView.classList.contains('active')) {
+            if (e.key === 'ArrowRight') {
+                showNextImage();
+            } else if (e.key === 'ArrowLeft') {
+                showPrevImage();
+            } else if (e.key === 'Escape') {
+                closeFullscreen();
+            }
+        }
+    }
+
+    // Обработчики событий для полноэкранного просмотра
+    closeFullscreenBtn.addEventListener('click', closeFullscreen);
+
+    // Добавляем обработчики для свайпов на мобильных устройствах
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    fullscreenView.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    fullscreenView.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, false);
+
+    function handleSwipe() {
+        const swipeThreshold = 50; // минимальное расстояние для свайпа
+        const swipeLength = touchEndX - touchStartX;
+        
+        if (Math.abs(swipeLength) > swipeThreshold) {
+            if (swipeLength > 0) {
+                showPrevImage();
+            } else {
+                showNextImage();
+            }
+        }
+    }
 });
