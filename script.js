@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.src = `projects/project_${projectId}/covers/cover.jpg`;
                 img.alt = '';
                 console.log(`Setting cover image for project ${projectId}:`, img.src);
+<<<<<<< HEAD
                 
                 // Добавляем обработчик клика для изображения
                 img.addEventListener('click', function(e) {
@@ -50,6 +51,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
+=======
+            }
+
+>>>>>>> 6e3bbf48720fa692cfb1a97263252d55c9415498
             // Удаляем все существующие span элементы
             const spans = projectItems[i].querySelectorAll('span');
             spans.forEach(span => span.remove());
@@ -551,10 +556,14 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Adding first image:', projectData.galleryUrls[0]);
             modalContent += `
                 <div class="slide">
+<<<<<<< HEAD
                     <img src="${projectData.galleryUrls[0]}" alt="Project image 1" 
                          onload="console.log('Image loaded:', '${projectData.galleryUrls[0]}')" 
                          onerror="console.error('Image failed to load:', '${projectData.galleryUrls[0]}')"
                          class="fullscreen-trigger">
+=======
+                    <img src="${projectData.galleryUrls[0]}" alt="Project image 1" onload="console.log('Image loaded:', '${projectData.galleryUrls[0]}')" onerror="console.error('Image failed to load:', '${projectData.galleryUrls[0]}')">
+>>>>>>> 6e3bbf48720fa692cfb1a97263252d55c9415498
                 </div>
             `;
         }
@@ -568,8 +577,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             frameborder="0" 
                             allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
                             style="position:absolute;top:0;left:0;width:100%;height:100%;" 
+<<<<<<< HEAD
                             title="INTERVALS 2023"
                             class="fullscreen-trigger">
+=======
+                            title="INTERVALS 2023">
+>>>>>>> 6e3bbf48720fa692cfb1a97263252d55c9415498
                     </iframe>
                 </div>
                 <script src="https://player.vimeo.com/api/player.js"></script>
@@ -584,10 +597,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Adding remaining image:', url);
                 modalContent += `
                     <div class="slide">
+<<<<<<< HEAD
                         <img src="${url}" alt="Project image ${index + 2}" 
                              onload="console.log('Image loaded:', '${url}')" 
                              onerror="console.error('Image failed to load:', '${url}')"
                              class="fullscreen-trigger">
+=======
+                        <img src="${url}" alt="Project image ${index + 2}" onload="console.log('Image loaded:', '${url}')" onerror="console.error('Image failed to load:', '${url}')">
+>>>>>>> 6e3bbf48720fa692cfb1a97263252d55c9415498
                     </div>
                 `;
             });
@@ -617,6 +634,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.innerHTML = modalHtml;
         document.body.appendChild(modal);
 
+<<<<<<< HEAD
         // Добавляем обработчики для полноэкранного просмотра
         modal.querySelectorAll('.fullscreen-trigger').forEach(media => {
             media.addEventListener('click', (e) => {
@@ -625,6 +643,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+=======
+>>>>>>> 6e3bbf48720fa692cfb1a97263252d55c9415498
         // Анимация появления
         requestAnimationFrame(() => {
             modal.classList.add('visible');

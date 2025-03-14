@@ -577,6 +577,7 @@ canvas {
 .behance-link:hover img {
     opacity: 0.7;
 }
+<<<<<<< HEAD
 
 /* Стили для полноэкранного просмотра */
 .fullscreen-view {
@@ -720,3 +721,5 @@ canvas {
     font-size: 28px;
   }
 }
+=======
+>>>>>>> 6e3bbf48720fa692cfb1a97263252d55c9415498
