@@ -1,6 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("JavaScript is running!");
 
+    // Определение производительности устройства
+    const isLowPerfDevice = () => {
+        return window.innerWidth < 768 && !window.matchMedia('(min-resolution: 2dppx)').matches;
+    };
+
+    // Адаптация параметров в зависимости от устройства
+    var linesX = isLowPerfDevice() ? 10 : 14;
+    var linesY = isLowPerfDevice() ? 10 : 14;
+    var pointsPerLine = isLowPerfDevice() ? 8 : 10;
+
     // Функция для загрузки данных проекта
     async function loadProjectData(projectId) {
         try {
@@ -93,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
     canvas.style.height = wh + "px";
 
     // Параметры куба
-    var linesX = 14, linesY = 14, pointsPerLine = 10;
     var tParam = 1; // 1 = хаос, 0 = собранный куб
     var rotationX = 0, rotationY = 0;
     var letters = "UNIVERSEDESIGN";
@@ -539,7 +548,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Функция для открытия модального окна проекта
+    // Добавляем кэш для предзагруженных плееров
+    const videoPlayers = new Map();
+
+    // Функция для предзагрузки видеоплеера
+    function preloadVideoPlayer(videoSrc) {
+        if (!videoPlayers.has(videoSrc)) {
+            const iframe = document.createElement('iframe');
+            iframe.src = videoSrc;
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.style.aspectRatio = '16/9';
+            iframe.frameBorder = '0';
+            iframe.allow = 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media';
+            videoPlayers.set(videoSrc, iframe);
+        }
+        return videoPlayers.get(videoSrc);
+    }
+
+    // Добавляем предзагрузку при открытии проекта
     async function openProjectModal(projectId) {
         console.log('Opening modal for project:', projectId);
         const projectData = await loadProjectData(projectId);
@@ -559,12 +586,14 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         }
         
-        // Добавляем видео Vimeo для первого проекта
+        // Добавляем видео Vimeo для первого проекта и предзагружаем его
         if (projectId === 1) {
             console.log('Adding Vimeo video');
+            const videoSrc = "https://player.vimeo.com/video/902962085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479";
+            preloadVideoPlayer(videoSrc); // Предзагружаем видео
             modalContent += `
                 <div style="padding:56.25% 0 0 0;position:relative;">
-                    <iframe src="https://player.vimeo.com/video/902962085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" 
+                    <iframe src="${videoSrc}" 
                             frameborder="0" 
                             allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
                             style="position:absolute;top:0;left:0;width:100%;height:100%;" 
@@ -688,140 +717,190 @@ document.addEventListener('DOMContentLoaded', function() {
     let fullscreenImages = [];
 
     function openFullscreen(mediaElement) {
-        // Собираем все медиа элементы из текущего проекта (включая iframe для видео)
-        fullscreenImages = Array.from(mediaElement.closest('.modal-slides').querySelectorAll('.fullscreen-trigger, iframe'));
-        currentFullscreenIndex = fullscreenImages.indexOf(mediaElement);
-        
-        showCurrentMedia(mediaElement);
-        
-        // Показываем полноэкранный режим
-        fullscreenView.classList.add('active');
-        
-        // Блокируем скролл
-        document.body.style.overflow = 'hidden';
+        // Удаляем старый fullscreenView, если он существует
+        if (fullscreenView) {
+            fullscreenView.remove();
+        }
 
-        // Добавляем обработчик клавиш
+        // Создаем новый fullscreenView каждый раз
+        fullscreenView = document.createElement('div');
+        fullscreenView.className = 'fullscreen-view';
+        document.body.appendChild(fullscreenView);
+
+        const content = document.createElement('div');
+        content.className = 'fullscreen-content';
+        fullscreenView.appendChild(content);
+
+        const mediaContainer = document.createElement('div');
+        mediaContainer.className = 'fullscreen-media';
+        content.appendChild(mediaContainer);
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'close-fullscreen';
+        closeBtn.innerHTML = '×';
+        content.appendChild(closeBtn);
+
+        // Добавляем кнопку next только для десктопов
+        if (window.innerWidth > 768) {
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'next-fullscreen';
+            content.appendChild(nextBtn);
+            
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                showNextImage();
+            });
+        }
+
+        // Добавляем индикатор свайпа для мобильных
+        if (window.innerWidth <= 768) {
+            const swipeIndicator = document.createElement('div');
+            swipeIndicator.className = 'swipe-indicator';
+            swipeIndicator.textContent = 'Свайпните влево для навигации';
+            content.appendChild(swipeIndicator);
+            
+            // Скрываем индикатор после 5 секунд
+            setTimeout(() => {
+                swipeIndicator.style.display = 'none';
+            }, 5000);
+        }
+
+        // Добавляем обработчики событий
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeFullscreen();
+        });
+
+        fullscreenMedia = mediaContainer;
+
+        // Получаем все изображения и видео в текущем проекте, исключая логотип Behance
+        const projectContent = mediaElement.closest('.modal-slides');
+        fullscreenImages = Array.from(projectContent.querySelectorAll('.slide img, iframe:not([src*="player.vimeo.com/api"])')).filter(el => !el.closest('.behance-link'));
+        currentFullscreenIndex = fullscreenImages.indexOf(mediaElement);
+
+        // Показываем контент
+        showCurrentMedia();
+        
+        // Добавляем обработчики клавиш
         document.addEventListener('keydown', handleFullscreenKeyPress);
+
+        // Активируем полноэкранный режим
+        requestAnimationFrame(() => {
+            fullscreenView.classList.add('active');
+        });
+
+        // Улучшенные обработчики для свайпов
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartTime = 0;
+        
+        fullscreenView.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartTime = Date.now();
+        }, { passive: true });
+        
+        fullscreenView.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            const touchEndTime = Date.now();
+            const touchDuration = touchEndTime - touchStartTime;
+            handleSwipe(touchDuration);
+        }, { passive: true });
+        
+        function handleSwipe(duration) {
+            const swipeThreshold = window.innerWidth * 0.15; // 15% от ширины экрана
+            const swipeLength = touchEndX - touchStartX;
+            const swipeSpeed = Math.abs(swipeLength) / duration;
+            
+            // Учитываем скорость свайпа и длину
+            if (Math.abs(swipeLength) > swipeThreshold || (Math.abs(swipeLength) > 30 && swipeSpeed > 0.5)) {
+                if (swipeLength > 0) {
+                    showPreviousImage();
+                } else {
+                    showNextImage();
+                }
+            }
+        }
     }
 
-    function showCurrentMedia(mediaElement) {
-        // Очищаем контейнер
+    // Модифицируем функцию showCurrentMedia
+    function showCurrentMedia() {
+        const media = fullscreenImages[currentFullscreenIndex];
         fullscreenMedia.innerHTML = '';
         
-        if (mediaElement.tagName === 'IFRAME') {
-            // Для Vimeo видео создаем новый iframe
-            const wrapper = document.createElement('div');
-            wrapper.style.cssText = 'padding:56.25% 0 0 0;position:relative;width:100%;max-width:1200px;';
-            
-            const iframe = document.createElement('iframe');
-            iframe.src = mediaElement.src;
-            iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;';
-            iframe.setAttribute('frameborder', '0');
-            iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media');
-            iframe.setAttribute('allowfullscreen', '');
-            
-            wrapper.appendChild(iframe);
-            fullscreenMedia.appendChild(wrapper);
-            
-            // Добавляем скрипт Vimeo Player API
-            if (!document.querySelector('script[src="https://player.vimeo.com/api/player.js"]')) {
-                const script = document.createElement('script');
-                script.src = 'https://player.vimeo.com/api/player.js';
-                document.body.appendChild(script);
+        if (media.tagName.toLowerCase() === 'iframe') {
+            const videoSrc = media.src;
+            const player = preloadVideoPlayer(videoSrc);
+            if (player) {
+                const clone = player.cloneNode(true);
+                fullscreenMedia.appendChild(clone);
             }
         } else {
-            // Для изображений и других типов медиа
-            const clone = mediaElement.cloneNode(true);
-            if (clone.tagName === 'VIDEO') {
-                clone.controls = true;
-            }
+            const clone = media.cloneNode();
             fullscreenMedia.appendChild(clone);
         }
-        
-        currentFullscreenMedia = mediaElement;
     }
 
-    function closeFullscreen() {
-        // Скрываем полноэкранный режим
-        fullscreenView.classList.remove('active');
-        currentFullscreenMedia = null;
-        
-        // Разблокируем скролл
-        document.body.style.overflow = '';
-        
-        // Если было видео, останавливаем его
-        const video = fullscreenMedia.querySelector('video');
-        if (video) {
-            video.pause();
-        }
-        
-        // Если было Vimeo видео, останавливаем его
-        const iframe = fullscreenMedia.querySelector('iframe');
-        if (iframe && iframe.src.includes('vimeo')) {
-            iframe.src = iframe.src;
-        }
-        
-        // Очищаем контейнер
-        fullscreenMedia.innerHTML = '';
-
-        // Удаляем обработчик клавиш
-        document.removeEventListener('keydown', handleFullscreenKeyPress);
-    }
-
+    // Функция для показа следующего изображения
     function showNextImage() {
-        if (currentFullscreenIndex < fullscreenImages.length - 1) {
-            currentFullscreenIndex++;
-            const nextMedia = fullscreenImages[currentFullscreenIndex];
-            showCurrentMedia(nextMedia);
-        }
+        currentFullscreenIndex = (currentFullscreenIndex + 1) % fullscreenImages.length;
+        showCurrentMedia();
     }
 
-    function showPrevImage() {
-        if (currentFullscreenIndex > 0) {
-            currentFullscreenIndex--;
-            const prevMedia = fullscreenImages[currentFullscreenIndex];
-            showCurrentMedia(prevMedia);
-        }
+    // Функция для показа предыдущего изображения
+    function showPreviousImage() {
+        currentFullscreenIndex = (currentFullscreenIndex - 1 + fullscreenImages.length) % fullscreenImages.length;
+        showCurrentMedia();
     }
 
+    // Обработчик нажатий клавиш в полноэкранном режиме
     function handleFullscreenKeyPress(e) {
-        if (fullscreenView.classList.contains('active')) {
-            if (e.key === 'ArrowRight') {
-                showNextImage();
-            } else if (e.key === 'ArrowLeft') {
-                showPrevImage();
-            } else if (e.key === 'Escape') {
-                closeFullscreen();
-            }
+        if (e.key === 'Escape') {
+            closeFullscreen();
+        } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+            e.key === 'ArrowRight' ? showNextImage() : showPreviousImage();
         }
     }
 
-    // Обработчики событий для полноэкранного просмотра
-    closeFullscreenBtn.addEventListener('click', closeFullscreen);
-
-    // Добавляем обработчики для свайпов на мобильных устройствах
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    fullscreenView.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-    }, false);
-
-    fullscreenView.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    }, false);
-
-    function handleSwipe() {
-        const swipeThreshold = 50; // минимальное расстояние для свайпа
-        const swipeLength = touchEndX - touchStartX;
-        
-        if (Math.abs(swipeLength) > swipeThreshold) {
-            if (swipeLength > 0) {
-                showPrevImage();
-            } else {
-                showNextImage();
+    // Функция закрытия полноэкранного режима
+    function closeFullscreen() {
+        if (fullscreenView) {
+            fullscreenView.classList.remove('active');
+            document.removeEventListener('keydown', handleFullscreenKeyPress);
+            
+            // Останавливаем видео при закрытии
+            const iframe = fullscreenMedia.querySelector('iframe');
+            if (iframe) {
+                iframe.src = '';
             }
+
+            // Удаляем элемент после анимации
+            setTimeout(() => {
+                fullscreenView.remove();
+                fullscreenView = null;
+                fullscreenMedia = null;
+            }, 300);
+        }
+    }
+
+    // Управление видимостью иконки жеста
+    const gestureHint = document.querySelector('.gesture-hint');
+    if (gestureHint) {
+        setTimeout(() => {
+            gestureHint.classList.add('visible');
+        }, 1000); // Показать через 1 секунду
+
+        // Скрыть иконку после первого взаимодействия
+        const hideGestureHint = () => {
+            gestureHint.classList.remove('visible');
+            localStorage.setItem('gestureHintShown', 'true');
+        };
+
+        // Проверяем, показывалась ли иконка ранее
+        if (!localStorage.getItem('gestureHintShown')) {
+            gestureHint.addEventListener('click', hideGestureHint);
+            gestureHint.addEventListener('touchstart', hideGestureHint);
         }
     }
 });
