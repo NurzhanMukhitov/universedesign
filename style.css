@@ -1,0 +1,947 @@
+/* Подключаем кастомный шрифт OneDay */
+@font-face {
+    font-family: 'OneDay';
+    src: url('fonts/ONEDAY.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    /* Брейкпоинты */
+    --mobile: 576px;
+    --tablet: 768px;
+    --desktop: 1024px;
+    --large: 1200px;
+    --xlarge: 1400px;
+}
+
+/* Базовые стили */
+body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    overflow-x: hidden; /* Предотвращаем горизонтальный скролл */
+    font-family: 'OneDay', sans-serif;
+    box-sizing: border-box; /* Устанавливаем box-sizing для всего */
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Меню */
+.menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.2);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 30px;
+    height: 20px;
+    cursor: pointer;
+    z-index: 1000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.menu-btn.visible {
+    opacity: 1;
+}
+
+.menu-btn span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: #fff;
+    margin: 3px 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Логотип вынесен отдельно */
+.logo-text {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.logo-text.visible {
+    opacity: 1;
+}
+
+.logo-text img {
+    max-width: 100px;  /* Ограничиваем логотип до 100px по ширине */
+    height: auto;
+    pointer-events: none;
+}
+
+/* Overlay меню (фон убран) */
+.overlay-menu {
+    position: absolute;
+    left: 20px;
+    top: 70px;
+    width: 220px;
+    background: transparent;
+    padding: 10px;
+    display: none;
+    z-index: 1000;
+    border-radius: 5px;
+    box-shadow: none;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.overlay-menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.overlay-menu ul li {
+    margin: 10px 0;
+}
+
+.overlay-menu ul li a {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    padding-left: 0;
+    display: inline-block;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.overlay-menu ul li a:hover {
+    color: #fff;
+    transform: translateX(8px) scale(1.02);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Оверлей для попапов */
+.overlay-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1001;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    cursor: pointer;
+}
+
+.overlay-mask.visible {
+    opacity: 1;
+}
+
+/* Popup блоки (без подложки) */
+.popup-block {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: none;
+    color: #fff;
+    text-align: center;
+    z-index: 1002;
+    overflow-y: auto;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 20px 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.popup-block::-webkit-scrollbar {
+    width: 6px;
+}
+
+.popup-block::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.popup-block::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.popup-block:not(#projects) .popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 20px;
+    width: auto;
+    max-width: 90%;
+}
+
+#projects .popup-content {
+    position: relative;
+    width: 95%;
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 16px;
+}
+
+.popup-block.visible {
+    opacity: 1;
+}
+
+/* Стили для социальных иконок */
+#contacts .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 0;
+}
+
+/* Стили для текста в About */
+#about .popup-content p {
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 600px;
+}
+
+/* Стили для LedPulse */
+#ledpulse .popup-content p {
+    font-size: 24px;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+/* Стили для галереи проектов */
+.projects-grid {
+    /* Удаляем все стили, так как они будут применяться через JavaScript */
+}
+
+.project-item {
+    /* Удаляем все стили, так как они будут применяться через JavaScript */
+}
+
+.project-item picture {
+    /* Удаляем все стили, так как они будут применяться через JavaScript */
+}
+
+.project-item img {
+    /* Удаляем все стили, так как они будут применяться через JavaScript */
+}
+
+.project-item:hover {
+    /* Удаляем все стили, так как они будут применяться через JavaScript */
+}
+
+.project-item span {
+    /* Удаляем все стили, так как они будут применяться через JavaScript */
+}
+
+/* Добавляем классы для состояний видимости */
+.logo-text.visible {
+    opacity: 1;
+    display: block;
+}
+
+.overlay-menu.visible {
+    opacity: 1;
+    display: block;
+}
+
+.menu-btn.visible {
+    opacity: 1;
+}
+
+.overlay-mask.visible {
+    opacity: 1;
+}
+
+/* Адаптивные стили */
+@media screen and (max-width: 575px) {
+    .menu {
+        height: 50px;
+    }
+    .menu-btn {
+        width: 35px;
+        height: 25px;
+        left: 8px;
+        top: 12px;
+    }
+    .menu-btn span {
+        height: 3px;
+        margin: 4px 0;
+    }
+    .logo-text {
+        top: 8px;
+        right: 8px;
+        font-size: 16px;
+    }
+    .overlay-menu {
+        width: 160px;
+        left: 8px;
+        top: 50px;
+        padding: 5px;
+    }
+    .overlay-menu ul li a {
+        font-size: 12px;
+    }
+    .popup-block:not(#projects) .popup-content {
+        width: 85%;
+        padding: 15px;
+    }
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .project-item span {
+        font-size: 0.875rem; /* 14px */
+    }
+    .social-icons {
+        gap: 16px;
+    }
+    
+    .social-icons a {
+        width: 48px;
+        height: 48px;
+    }
+}
+@media screen and (min-width: 576px) and (max-width: 767px) {
+    .logo-text { font-size: 20px; }
+    .overlay-menu { width: 200px; top: 60px; left: 15px; }
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    .logo-text { font-size: 22px; }
+    .overlay-menu { width: 220px; top: 60px; left: 20px; }
+}
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+    .logo-text { font-size: 24px; }
+    .overlay-menu { width: 240px; top: 70px; left: 20px; }
+}
+@media screen and (min-width: 1200px) and (max-width: 1399px) {
+    .logo-text { font-size: 26px; }
+    .overlay-menu { width: 260px; top: 80px; left: 20px; }
+}
+@media screen and (min-width: 1400px) {
+    .logo-text { font-size: 28px; }
+    .overlay-menu { width: 280px; top: 80px; left: 20px; }
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.social-icons a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-icons img {
+    width: 85%;
+    height: 85%;
+    object-fit: contain;
+    filter: brightness(1);
+}
+
+.social-icons img[alt="Behance"] {
+    width: 75%;
+    height: 75%;
+}
+
+.social-icons a:hover {
+    transform: translateY(-2px);
+}
+
+.social-icons a:hover img {
+    filter: brightness(0.8);
+}
+
+/* Медиа-запросы для адаптивности галереи проектов */
+@media (min-width: 1200px) {
+    .projects-grid {
+        /* Удаляем все стили, так как они будут применяться через JavaScript */
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .projects-grid {
+        /* Удаляем все стили, так как они будут применяться через JavaScript */
+    }
+}
+
+@media (max-width: 767px) {
+    .projects-grid {
+        /* Удаляем все стили, так как они будут применяться через JavaScript */
+    }
+    
+    .project-item {
+        /* Удаляем все стили, так как они будут применяться через JavaScript */
+    }
+    
+    .project-item span {
+        /* Удаляем все стили, так как они будут применяться через JavaScript */
+    }
+    
+    #projects .popup-content {
+        /* Удаляем все стили, так как они будут применяться через JavaScript */
+    }
+}
+
+@media (max-width: 480px) {
+    .projects-grid {
+        /* Удаляем все стили, так как они будут применяться через JavaScript */
+    }
+    
+    .project-item span {
+        /* Удаляем все стили, так как они будут применяться через JavaScript */
+    }
+}
+
+/* Стили для модального окна проекта */
+.project-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: #0a0a0a;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    z-index: 2000;
+    overflow-y: auto;
+    padding: 40px 0;
+}
+
+.project-modal.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.project-modal .modal-content {
+    position: relative;
+    width: calc(100% - 120px);
+    max-width: 1200px;
+    margin: 0 auto;
+    background: transparent;
+    border-radius: 0;
+    overflow: visible;
+}
+
+.project-modal .project-title {
+    color: #fff;
+    text-align: center;
+    font-size: 32px;
+    margin: 0 0 40px;
+    font-family: 'OneDay', sans-serif;
+    letter-spacing: 1px;
+}
+
+.project-modal .close-modal {
+    position: fixed; /* Фиксируем кнопку закрытия */
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: rgba(25, 25, 25, 0.6);
+    color: #fff;
+    font-size: 24px;
+    line-height: 40px; /* Центрируем крестик по вертикали */
+    padding: 0; /* Убираем отступы */
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 2;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-modal .close-modal:hover {
+    background: rgba(25, 25, 25, 0.8);
+}
+
+.project-modal .modal-slides {
+    width: 100%;
+    height: auto;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.project-modal .slide {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-modal .slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+}
+
+/* Стили для видео */
+.project-modal .modal-slides iframe {
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+/* Убираем навигационные кнопки */
+.project-modal .modal-nav {
+    display: none;
+}
+
+/* Адаптивность */
+@media screen and (max-width: 1024px) {
+    .project-modal .modal-content {
+        width: calc(100% - 80px);
+        margin: 30px auto;
+    }
+
+    .fullscreen-media iframe {
+        max-height: 80vh;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .project-modal .modal-content {
+        width: calc(100% - 40px);
+        margin: 20px auto;
+    }
+    
+    .project-modal .close-modal {
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+        line-height: 36px;
+    }
+    
+    .project-modal .modal-slides {
+        max-width: 100%;
+    }
+}
+
+/* Медиа-запросы для мобильных устройств */
+@media screen and (max-width: 768px) {
+    .popup-block:not(#projects) .popup-content {
+        width: 85%;
+        padding: 15px;
+    }
+    
+    #about .popup-content p {
+        font-size: 16px;
+    }
+    
+    #ledpulse .popup-content p {
+        font-size: 20px;
+    }
+    
+    #contacts .social-icons {
+        gap: 15px;
+    }
+
+    .fullscreen-media iframe {
+        max-height: 75vh;
+        margin: auto;
+    }
+
+    .close-fullscreen {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        top: 15px;
+        right: 15px;
+    }
+
+    .next-fullscreen {
+        display: none;
+    }
+
+    /* Добавляем индикатор свайпа для мобильных */
+    .swipe-indicator {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 14px;
+        opacity: 0.7;
+        text-align: center;
+        width: 100%;
+        pointer-events: none;
+        animation: fadeInOut 2s ease-in-out infinite;
+    }
+
+    @keyframes fadeInOut {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 0.3; }
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .project-modal .modal-content {
+        width: calc(100% - 20px);
+        margin: 15px auto;
+    }
+
+    .fullscreen-media iframe {
+        max-height: 70vh;
+    }
+
+    .close-fullscreen {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+        top: 10px;
+        right: 10px;
+    }
+
+    #about .popup-content p {
+        font-size: 14px;
+    }
+}
+
+.behance-link {
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.behance-link img {
+    width: 64px;
+    height: 64px;
+    transition: opacity 0.3s ease;
+}
+
+.behance-link:hover img {
+    opacity: 0.7;
+}
+
+/* Стили для полноэкранного просмотра */
+.fullscreen-view {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.fullscreen-view.active {
+  display: flex;
+  opacity: 1;
+}
+
+.fullscreen-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreen-media {
+  max-width: 95%;
+  max-height: 95%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  width: 100%;
+}
+
+.fullscreen-media img,
+.fullscreen-media video {
+  max-width: 100%;
+  max-height: 95vh;
+  object-fit: contain;
+  cursor: auto;
+  transition: transform 0.3s ease;
+}
+
+/* Стили для видео Vimeo в полноэкранном режиме */
+.fullscreen-media > div {
+  width: 100%;
+  max-width: 1600px; /* Максимальная ширина для видео */
+  margin: 0 auto;
+}
+
+.fullscreen-media iframe {
+  border: none;
+  background: #000;
+  max-height: 85vh; /* Уменьшенная максимальная высота для видимости панели управления */
+}
+
+/* Кнопки управления в полноэкранном режиме */
+.close-fullscreen,
+.next-fullscreen {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  background: rgba(25, 25, 25, 0.6);
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10000;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.close-fullscreen {
+  top: 20px;
+  right: 20px;
+}
+
+.next-fullscreen {
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  background: rgba(25, 25, 25, 0.8);
+  width: 48px;
+  height: 48px;
+}
+
+.next-fullscreen::after {
+  content: '';
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid white;
+  border-right: 2px solid white;
+  transform: rotate(45deg);
+  margin-left: -2px;
+}
+
+.close-fullscreen:hover,
+.next-fullscreen:hover {
+  background: rgba(25, 25, 25, 0.95);
+  transform: scale(1.1);
+}
+
+.next-fullscreen:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Добавляем стили для курсора на изображениях */
+.fullscreen-trigger {
+  cursor: zoom-in;
+}
+
+/* Стили для прелоадера видео */
+.video-preloader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px; /* Уменьшенный размер */
+  height: 30px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  animation: spin 1.5s linear infinite; /* Более плавная анимация */
+  z-index: 10001;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Стили для иконки жеста */
+.gesture-hint {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+    animation: fadeInOutAndHide 4s ease-in-out forwards;
+}
+
+.gesture-hint.visible {
+    display: flex;
+    opacity: 1;
+}
+
+.gesture-icon {
+    width: clamp(40px, 10vw, 80px);
+    height: auto;
+    filter: invert(1) opacity(0.85);
+    animation: moveUpDown 4s ease-in-out infinite;
+}
+
+/* Маска для блокировки взаимодействия */
+.gesture-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9998;
+    display: none;
+    opacity: 0;
+    pointer-events: all;
+    animation: fadeInOutAndHide 4s ease-in-out forwards;
+}
+
+.gesture-mask.visible {
+    display: block;
+    opacity: 1;
+}
+
+@keyframes fadeInOutAndHide {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}
+
+@keyframes moveUpDown {
+    0% { transform: translateY(0); opacity: 0.85; }
+    25% { transform: translateY(-30px); opacity: 0.85; }
+    50% { transform: translateY(0); opacity: 0.85; }
+    75% { transform: translateY(30px); opacity: 0.85; }
+    100% { transform: translateY(0); opacity: 0.85; }
+}
+
+/* Специальные стили для блока проектов */
+#projects {
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 576px) {
+    .menu-btn {
+        top: 15px;
+        left: 15px;
+    }
+    
+    .logo-text {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .logo-text img {
+        max-width: 80px;
+    }
+    
+    .overlay-menu {
+        left: 15px;
+        top: 60px;
+        width: 200px;
+    }
+    
+    .overlay-menu ul li a {
+        font-size: 14px;
+    }
+    
+    #about .popup-content p {
+        font-size: 16px;
+    }
+    
+    #ledpulse .popup-content p {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .popup-block:not(#projects) .popup-content {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    #projects .popup-content {
+        padding: 15px;
+    }
+}
+
+/* Кнопка сброса для принудительного обновления */
+.reset-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 2000;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.reset-button:hover {
+    background-color: rgba(50, 50, 50, 0.8);
+    transform: rotate(180deg);
+}
+
+@media (max-width: 576px) {
+    .reset-button {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        bottom: 15px;
+        right: 15px;
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "title": "INTERVALS 2023",
+  "description": "International Media Arts Festival Nizhny Novgorod",
+  "coverUrl": "covers/cover.jpg",
+  "galleryUrls": [
+    "gallery/image1.jpeg",
+    "gallery/image2.jpeg",
+    "gallery/image3.jpeg",
+    "gallery/image4.jpeg",
+    "gallery/image5.jpeg",
+    "gallery/image6.jpeg",
+    "gallery/image7.jpeg"
+  ],
+  "vimeoUrl": "https://player.vimeo.com/video/902962085?h=1f8f24b0f2",
+  "behanceUrl": "https://www.behance.net/gallery/183591977/INTERSECTION"
+}

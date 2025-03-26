@@ -1,0 +1,14 @@
+{
+  "id": 3,
+  "title": "LADA VESTA",
+  "description": "Automotive Design Project",
+  "coverUrl": "covers/cover.jpg",
+  "galleryUrls": [
+    "gallery/image1.jpg",
+    "gallery/image2.jpg",
+    "gallery/image3.jpg",
+    "gallery/image4.jpg",
+    "gallery/image5.jpg"
+  ],
+  "behanceUrl": ""
+} 

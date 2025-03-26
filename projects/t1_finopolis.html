@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINOPOLIS 2022 | T1 - UNIVERSE DESIGN</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../projects/projects.css">
+    <script src="https://player.vimeo.com/api/player.js"></script>
+</head>
+<body>
+    <div class="logo-text">
+        <img src="../logo/UNIVERSE.png" alt="UNIVERSE">
+    </div>
+
+    <div class="project-content">
+        <div class="project-gallery">
+            <!-- Gallery content will be loaded from meta.json -->
+        </div>
+    </div>
+
+    <div class="fullscreen-view">
+        <div class="fullscreen-content">
+            <div class="fullscreen-media"></div>
+            <button class="close-fullscreen" onclick="closeFullscreen()">×</button>
+            <button class="nav-button prev-button" onclick="showPrevImage()"></button>
+            <button class="nav-button next-button" onclick="showNextImage()"></button>
+        </div>
+    </div>
+
+    <button class="back-button" onclick="window.location.href = '../projects.html'"></button>
+
+    <script>
+        let currentItemIndex = 0;
+        let galleryItems = [];
+
+        // Загрузка метаданных проекта
+        fetch('./t1_finopolis/meta.json')
+            .then(response => response.json())
+            .then(data => {
+                const content = document.querySelector('.project-gallery');
+                content.innerHTML = data.gallery.map(image => `
+                    <div class="gallery-item">
+                        <img src="./t1_finopolis/gallery/${image}" alt="${data.title}" onclick="openFullscreen(this)">
+                    </div>
+                `).join('');
+
+                // Инициализация массива элементов галереи
+                galleryItems = Array.from(document.querySelectorAll('.gallery-item img')).map(img => ({
+                    type: 'image',
+                    element: img
+                }));
+            });
+
+        function openFullscreen(img) {
+            const fullscreenView = document.querySelector('.fullscreen-view');
+            
+            // Находим индекс текущего элемента
+            currentItemIndex = galleryItems.findIndex(item => item.element === img);
+            
+            updateFullscreenContent();
+            fullscreenView.classList.add('active');
+            
+            document.addEventListener('keydown', handleKeyPress);
+        }
+        
+        function updateFullscreenContent() {
+            const mediaContainer = document.querySelector('.fullscreen-media');
+            const currentItem = galleryItems[currentItemIndex];
+            
+            const img = currentItem.element;
+            mediaContainer.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
+        }
+        
+        function closeFullscreen() {
+            const fullscreenView = document.querySelector('.fullscreen-view');
+            fullscreenView.classList.remove('active');
+            document.removeEventListener('keydown', handleKeyPress);
+        }
+        
+        function showNextImage() {
+            currentItemIndex = (currentItemIndex + 1) % galleryItems.length;
+            updateFullscreenContent();
+        }
+        
+        function showPrevImage() {
+            currentItemIndex = (currentItemIndex - 1 + galleryItems.length) % galleryItems.length;
+            updateFullscreenContent();
+        }
+        
+        function handleKeyPress(e) {
+            if (e.key === 'Escape') closeFullscreen();
+            else if (e.key === 'ArrowRight') showNextImage();
+            else if (e.key === 'ArrowLeft') showPrevImage();
+        }
+
+        // Показываем логотип при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoText = document.querySelector('.logo-text');
+            setTimeout(() => {
+                logoText.style.display = "block";
+                requestAnimationFrame(() => {
+                    logoText.classList.add('visible');
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html> 
