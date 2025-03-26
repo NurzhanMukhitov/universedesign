@@ -1,6 +1,82 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("JavaScript is running!");
 
+    // Определение производительности устройства
+    const isLowPerfDevice = () => {
+        return window.innerWidth < 768 && !window.matchMedia('(min-resolution: 2dppx)').matches;
+    };
+
+    // Адаптация параметров в зависимости от устройства
+    var linesX = isLowPerfDevice() ? 10 : 14;
+    var linesY = isLowPerfDevice() ? 10 : 14;
+    var pointsPerLine = isLowPerfDevice() ? 8 : 10;
+
+    // Функция для загрузки данных проекта
+    async function loadProjectData(projectId) {
+        try {
+            const response = await fetch(`projects/project_${projectId}/meta.json`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(`Error loading project ${projectId} data:`, error);
+            return null;
+        }
+    }
+
+    // Функция для обновления изображений проекта
+    async function updateProjectImages() {
+        const projectItems = document.querySelectorAll('.project-item');
+        
+        for (let i = 0; i < projectItems.length; i++) {
+            const projectId = i + 1;
+            const projectData = await loadProjectData(projectId);
+            
+            // Устанавливаем изображение обложки
+            const img = projectItems[i].querySelector('img');
+            if (img) {
+                // Используем локальный путь к обложке
+                img.src = `projects/project_${projectId}/covers/cover.jpg`;
+                img.alt = '';
+                console.log(`Setting cover image for project ${projectId}:`, img.src);
+                
+                // Добавляем обработчик клика для изображения
+                img.addEventListener('click', function(e) {
+                    // Если клик был по изображению внутри проекта
+                    if (this.closest('.project-content')) {
+                        e.stopPropagation(); // Предотвращаем всплытие события
+                        openFullscreen(this);
+                    }
+                });
+            }
+
+            // Добавляем обработчики для видео, если они есть
+            const videos = projectItems[i].querySelectorAll('video');
+            videos.forEach(video => {
+                video.addEventListener('click', function(e) {
+                    if (this.closest('.project-content')) {
+                        e.stopPropagation();
+                        openFullscreen(this);
+                    }
+                });
+            });
+
+            // Удаляем все существующие span элементы
+            const spans = projectItems[i].querySelectorAll('span');
+            spans.forEach(span => span.remove());
+
+            // Добавляем название для первого проекта
+            if (projectId === 1) {
+                const span = document.createElement('span');
+                span.textContent = 'INTERVALS 2023';
+                span.style.fontSize = 'clamp(16px, 1.125rem, 20px)';
+                projectItems[i].appendChild(span);
+            }
+        }
+    }
+
+    // Вызываем функцию обновления изображений
+    updateProjectImages();
+
     // Размеры экрана
     var ww = window.innerWidth, wh = window.innerHeight;
 
@@ -32,11 +108,12 @@ document.addEventListener('DOMContentLoaded', function() {
     canvas.style.height = wh + "px";
 
     // Параметры куба
-    var linesX = 14, linesY = 14, pointsPerLine = 10;
+    var tParam = 1; // 1 = хаос, 0 = собранный куб
+    var rotationX = 0, rotationY = 0;
     var letters = "UNIVERSEDESIGN";
     var focale = 500;
     var defaultRotationX = -0.4, defaultRotationY = 0.5;
-    var autoRotateSpeed = 0.0002;
+    var autoRotateSpeed = 0.002;
     
     // Параметры для подсветки букв
     var highlightedPoints = new Set();
@@ -227,7 +304,6 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
         }
-        
         var xPos = ww / 2 + this.x * scale;
         var yPos = wh / 2 + this.y * scale;
         var text = letters[i % letters.length];
@@ -506,62 +582,44 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (logoText) {
-        // Удаляем обработчик клика с логотипа
-        logoText.style.pointerEvents = 'none';
         logoText.addEventListener('click', function(e) {
-            e.preventDefault();
             e.stopPropagation();
+            animateGather();
         });
     }
 
-    // Общий обработчик клика для закрытия меню и попапа
     document.addEventListener('click', function(e) {
-        // Проверяем, что клик не на маске
-        if (e.target === overlayMask) {
-            return;
-        }
-        
-        // Обработка закрытия попапа по клику вне его
-        if (activePopup && !e.target.closest('.popup-block') && !e.target.closest('.overlay-menu') && !e.target.closest('.menu-btn')) {
-            console.log("Закрываем попап по клику вне его (общий обработчик)");
-            hidePopup();
-        }
-        
-        // Обработка закрытия меню - только если нет активного попапа и меню не зафиксировано
-        else if (!isMenuLocked && !activePopup && 
-            !e.target.closest('.overlay-menu') && 
-            !e.target.closest('.menu-btn') && 
-            menuOverlay.classList.contains('visible')) {
-            
-            console.log("Закрываем меню по клику вне его");
-            menuOverlay.classList.remove('visible');
+        if (activePopup) {
+            overlayMask.classList.remove('visible');
+            activePopup.classList.remove('visible');
             setTimeout(() => {
-                menuOverlay.style.display = "none";
+                overlayMask.style.display = "none";
+                activePopup.style.display = "none";
+                activePopup = null;
             }, 400);
         }
     });
 
     var menuLinks = document.querySelectorAll('.overlay-menu a');
-    if (menuLinks) {
-        // Обработчик для всех ссылок в меню
-        menuLinks.forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                var sectionId = this.getAttribute('data-section');
-                if (sectionId) {
-                    e.preventDefault();
-                    
-                    // Скрываем меню при клике на пункт
-                    menuOverlay.classList.remove('visible');
-                    setTimeout(() => {
-                        menuOverlay.style.display = "none";
-                    }, 400);
-                    
-                    // Показываем соответствующий popup
-                    showPopup(sectionId);
-                }
-            });
+    menuLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var section = this.dataset.section;
+            
+            // Показываем маску и попап с анимацией
+            overlayMask.style.display = 'block';
+            activePopup = document.getElementById(section);
+            if (activePopup) {
+                activePopup.style.display = 'block';
+                // Добавляем небольшую задержку для плавности
+                setTimeout(() => {
+                    overlayMask.classList.add('visible');
+                    activePopup.classList.add('visible');
+                }, 20);
+            }
         });
-    }
+    });
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && activePopup) {
@@ -574,80 +632,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 1200);
         }
     });
-
-    // Функция для открытия модального окна проекта
-    async function openProjectModal(projectId) {
-        console.log('Opening project page for project:', projectId);
-        
-        // Перенаправляем на страницу проекта вместо открытия модального окна
-        let projectPath = projectId === 1 ? 'intervals2023' : `project_${projectId}`;
-        let projectUrl = `projects/${projectPath}/index.html`;
-        
-        console.log('Redirecting to:', projectUrl);
-        window.location.href = projectUrl;
-        return;
-        
-        // Оставшийся код не будет выполняться из-за return выше
-    }
-    
-    // Функция для закрытия модального окна проекта
-    function closeProjectModal(modal) {
-        // Возвращаем исходный URL
-        window.history.pushState({}, '', window.location.pathname);
-        
-        modal.classList.remove('visible');
-        setTimeout(() => {
-            modal.remove();
-        }, 400);
-    }
-
-    // Добавляем обработчики для проектов
-    document.querySelectorAll('.project-item').forEach((item, index) => {
-        console.log("Adding click handler for project item:", item);
-        const projectId = parseInt(item.getAttribute('data-project-id')) || (index + 1);
-        if (!projectId) {
-            console.error("Project item without data-project-id:", item);
-            return;
-        }
-        
-        item.addEventListener('click', () => {
-            console.log("Project item clicked:", projectId);
-            openProjectModal(projectId);
-        });
-    });
-
-    // Обработчик для History API
-    window.addEventListener('popstate', function(event) {
-        // Закрываем все открытые модальные окна проектов
-        const openModals = document.querySelectorAll('.project-modal');
-        openModals.forEach(modal => {
-            modal.classList.remove('visible');
-            setTimeout(() => {
-                modal.remove();
-            }, 400);
-        });
-        
-        // Если в URL есть хэш с проектом, открываем его
-        if (window.location.hash.startsWith('#project/')) {
-            const projectPath = window.location.hash.replace('#project/', '');
-            let projectId;
-            
-            if (projectPath === 'intervals2023') {
-                projectId = 1;
-            } else {
-                const match = projectPath.match(/project_(\d+)/);
-                if (match) {
-                    projectId = parseInt(match[1]);
-                }
-            }
-            
-            if (projectId) {
-                openProjectModal(projectId);
-            }
-        }
-    });
-
-    console.log("All event listeners attached");
 
     // Функции для полноэкранного просмотра
     let currentFullscreenIndex = 0;
@@ -677,9 +661,31 @@ document.addEventListener('DOMContentLoaded', function() {
         closeBtn.innerHTML = '×';
         content.appendChild(closeBtn);
 
-        const nextBtn = document.createElement('button');
-        nextBtn.className = 'next-fullscreen';
-        content.appendChild(nextBtn);
+        // Добавляем кнопку next только для десктопов
+        if (window.innerWidth > 768) {
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'next-fullscreen';
+            content.appendChild(nextBtn);
+            
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                showNextImage();
+            });
+        }
+
+        // Добавляем индикатор свайпа для мобильных
+        if (window.innerWidth <= 768) {
+            const swipeIndicator = document.createElement('div');
+            swipeIndicator.className = 'swipe-indicator';
+            swipeIndicator.textContent = 'Свайпните влево для навигации';
+            content.appendChild(swipeIndicator);
+            
+            // Скрываем индикатор после 5 секунд
+            setTimeout(() => {
+                swipeIndicator.style.display = 'none';
+            }, 5000);
+        }
 
         // Добавляем обработчики событий
         closeBtn.addEventListener('click', (e) => {
@@ -687,7 +693,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             closeFullscreen();
         });
-        
+
         nextBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -712,71 +718,52 @@ document.addEventListener('DOMContentLoaded', function() {
             fullscreenView.classList.add('active');
         });
 
-        // Добавляем обработчики для свайпов
+        // Улучшенные обработчики для свайпов
         let touchStartX = 0;
         let touchEndX = 0;
+        let touchStartTime = 0;
         
         fullscreenView.addEventListener('touchstart', function(e) {
             touchStartX = e.changedTouches[0].screenX;
+            touchStartTime = Date.now();
         }, { passive: true });
         
         fullscreenView.addEventListener('touchend', function(e) {
             touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
+            const touchEndTime = Date.now();
+            const touchDuration = touchEndTime - touchStartTime;
+            handleSwipe(touchDuration);
         }, { passive: true });
         
-        function handleSwipe() {
-            const swipeThreshold = 50; // Минимальное расстояние для свайпа
+        function handleSwipe(duration) {
+            const swipeThreshold = window.innerWidth * 0.15; // 15% от ширины экрана
             const swipeLength = touchEndX - touchStartX;
+            const swipeSpeed = Math.abs(swipeLength) / duration;
             
-            if (Math.abs(swipeLength) > swipeThreshold) {
+            // Учитываем скорость свайпа и длину
+            if (Math.abs(swipeLength) > swipeThreshold || (Math.abs(swipeLength) > 30 && swipeSpeed > 0.5)) {
                 if (swipeLength > 0) {
-                    // Свайп вправо - предыдущее изображение
                     showPreviousImage();
                 } else {
-                    // Свайп влево - следующее изображение
                     showNextImage();
                 }
             }
         }
-        
-        function showPreviousImage() {
-            currentFullscreenIndex = (currentFullscreenIndex - 1 + fullscreenImages.length) % fullscreenImages.length;
-            showCurrentMedia();
-        }
     }
 
-    // Функция для показа текущего медиа
+    // Модифицируем функцию showCurrentMedia
     function showCurrentMedia() {
         const media = fullscreenImages[currentFullscreenIndex];
-        
-        // Очищаем контейнер
         fullscreenMedia.innerHTML = '';
         
         if (media.tagName.toLowerCase() === 'iframe') {
-            // Создаем статичный прелоадер
-            const preloader = document.createElement('div');
-            preloader.textContent = 'Загрузка видео...'; // Текст прелоадера
-            preloader.style.fontSize = '18px';
-            preloader.style.color = '#fff';
-            preloader.style.textAlign = 'center';
-            preloader.style.padding = '20px';
-            fullscreenMedia.appendChild(preloader);
-            
-            // Загружаем видео после прелоадера
-            const iframe = document.createElement('iframe');
-            iframe.src = media.src;
-            iframe.width = '100%';
-            iframe.height = '100%';
-            iframe.style.aspectRatio = '16/9';
-            iframe.frameBorder = '0';
-            iframe.allow = 'autoplay; fullscreen; picture-in-picture';
-            iframe.onload = function() {
-                fullscreenMedia.innerHTML = ''; // Очищаем контейнер перед добавлением видео
-                fullscreenMedia.appendChild(iframe);
-            };
+            const videoSrc = media.src;
+            const player = preloadVideoPlayer(videoSrc);
+            if (player) {
+                const clone = player.cloneNode(true);
+                fullscreenMedia.appendChild(clone);
+            }
         } else {
-            // Клонируем изображение
             const clone = media.cloneNode();
             fullscreenMedia.appendChild(clone);
         }
@@ -824,196 +811,186 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    if (menuOverlay) {
-        menuOverlay.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
+    // Добавляем кэш для предзагруженных плееров
+    const videoPlayers = new Map();
+
+    // Функция для предзагрузки видеоплеера
+    function preloadVideoPlayer(videoSrc) {
+        if (!videoPlayers.has(videoSrc)) {
+            const iframe = document.createElement('iframe');
+            iframe.src = videoSrc;
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.style.aspectRatio = '16/9';
+            iframe.frameBorder = '0';
+            iframe.allow = 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media';
+            videoPlayers.set(videoSrc, iframe);
+        }
+        return videoPlayers.get(videoSrc);
     }
 
-    // Обработчики событий для скрытия gesture-hint при взаимодействии
-    function hideGestureHint() {
-        if (gestureHint && gestureHint.classList.contains('visible')) {
-            gestureHint.classList.remove('visible');
-            gestureMask.classList.remove('visible');
-            setTimeout(() => {
-                gestureHint.style.display = 'none';
-                gestureMask.style.display = 'none';
-            }, 300);
-        }
-    }
-
-    canvas.addEventListener('mousedown', hideGestureHint);
-    canvas.addEventListener('touchstart', hideGestureHint);
-    canvas.addEventListener('wheel', hideGestureHint);
-
-    // Функция для получения случайного индекса точки для текущей буквы
-    function getRandomPointIndexForLetter(letter) {
-        var indices = [];
-        for (var i = 0; i < linesX; i++) {
-            for (var j = 0; j < linesY; j++) {
-                for (var k = 0; k < pointsPerLine; k++) {
-                    var idx = i * linesY * pointsPerLine + j * pointsPerLine + k;
-                    if (letters[i % letters.length] === letter) {
-                        indices.push(idx);
-                    }
-                }
-            }
-        }
-        return indices[Math.floor(Math.random() * indices.length)];
-    }
-
-    // Функция обновления подсветки букв
-    function updateLetterHighlight(time) {
-        if (!lastHighlightTime) lastHighlightTime = time;
+    // Добавляем предзагрузку при открытии проекта
+    async function openProjectModal(projectId) {
+        console.log('Opening modal for project:', projectId);
+        const projectData = await loadProjectData(projectId);
+        console.log('Project data:', projectData);
+        let modalContent = '';
         
-        if (!canStartHighlight || tParam < 0.9) {
-            highlightedPoints.clear();
-            return;
-        }
-
-        var deltaTime = time - lastHighlightTime;
-        
-        // Обновляем интенсивность подсветки с более плавной пульсацией
-        if (highlightedPoints.size > 0) {
-            // Комбинируем несколько синусоид с разными частотами для более естественной пульсации
-            var pulse1 = Math.sin(time * 0.0005) * 0.5; // Очень медленная пульсация
-            var pulse2 = Math.sin(time * 0.001) * 0.3; // Средняя пульсация
-            var pulse3 = Math.sin(time * 0.002) * 0.2; // Быстрая пульсация
-            highlightIntensity = (pulse1 + pulse2 + pulse3 + 1) / 2; // Нормализуем к диапазону 0-1
-        }
-
-        // Проверяем, нужно ли добавить новую букву
-        if (deltaTime > letterHighlightDuration / letters.length) {
-            // Находим все возможные индексы для текущей буквы
-            var indices = [];
-            var currentLetter = letters[currentLetterIndex];
-            
-            for (var i = 0; i < linesX; i++) {
-                for (var j = 0; j < linesY; j++) {
-                    for (var k = 0; k < pointsPerLine; k++) {
-                        var idx = i * linesY * pointsPerLine + j * pointsPerLine + k;
-                        if (letters[i % letters.length] === currentLetter) {
-                            indices.push(idx);
-                        }
-                    }
-                }
-            }
-            
-            // Добавляем больше точек для текущей буквы
-            var pointsToAdd = Math.min(8, indices.length); // Увеличиваем количество подсвеченных точек
-            for (var p = 0; p < pointsToAdd; p++) {
-                if (indices.length > 0) {
-                    var randomIndex = Math.floor(Math.random() * indices.length);
-                    highlightedPoints.add(indices[randomIndex]);
-                    indices.splice(randomIndex, 1);
-                }
-            }
-            
-            // Переходим к следующей букве
-            currentLetterIndex = (currentLetterIndex + 1) % letters.length;
-            
-            // Если начали новое слово, НЕ очищаем старые подсветки
-            // Удалено: if (currentLetterIndex === 0) { highlightedPoints.clear(); }
-            
-            lastHighlightTime = time;
-        }
-    }
-
-    // Обработчик клика на кнопку сброса
-    if (resetButton) {
-        resetButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Устанавливаем флаг принудительного обновления
-            localStorage.setItem('force_chaotic_cube', 'true');
-            
-            // Перезагружаем страницу
-            window.location.reload();
-        });
-    }
-    
-    // Обработчик комбинации клавиш Cmd+Shift+R (и Ctrl+Shift+R для Windows/Linux)
-    document.addEventListener('keydown', function(e) {
-        // Проверяем комбинацию клавиш (Cmd/Ctrl + Shift + R)
-        if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 'r' || e.key === 'R')) {
-            console.log("Комбинация клавиш для сброса обнаружена");
-            
-            // Предотвращаем стандартное поведение браузера
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Устанавливаем флаг принудительного обновления
-            localStorage.setItem('force_chaotic_cube', 'true');
-            
-            // Перезагружаем страницу
-            setTimeout(function() {
-                window.location.reload();
-            }, 50);
-            
-            return false;
-        }
-    }, true); // Добавляем третий параметр true для фазы захвата
-    
-    // Функции для управления popup
-    function showPopup(id) {
-        // Запоминаем время открытия
-        popupOpenTime = Date.now();
-        
-        // Закрываем предыдущий popup
-        if (activePopup) {
-            hidePopup();
+        // Добавляем первую картинку
+        if (projectData.galleryUrls && projectData.galleryUrls.length > 0) {
+            console.log('Adding first image:', projectData.galleryUrls[0]);
+            modalContent += `
+                <div class="slide">
+                    <img src="${projectData.galleryUrls[0]}" alt="Project image 1" 
+                         onload="console.log('Image loaded:', '${projectData.galleryUrls[0]}')" 
+                         onerror="console.error('Image failed to load:', '${projectData.galleryUrls[0]}')"
+                         class="fullscreen-trigger">
+                </div>
+            `;
         }
         
-        activePopup = document.getElementById(id);
-        if (!activePopup) return;
+        // Добавляем видео Vimeo для первого проекта и предзагружаем его
+        if (projectId === 1) {
+            console.log('Adding Vimeo video');
+            const videoSrc = "https://player.vimeo.com/video/902962085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479";
+            preloadVideoPlayer(videoSrc); // Предзагружаем видео
+            modalContent += `
+                <div style="padding:56.25% 0 0 0;position:relative;">
+                    <iframe src="${videoSrc}" 
+                            frameborder="0" 
+                            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
+                            style="position:absolute;top:0;left:0;width:100%;height:100%;" 
+                            title="INTERVALS 2023"
+                            class="fullscreen-trigger">
+                    </iframe>
+                </div>
+                <script src="https://player.vimeo.com/api/player.js"></script>
+            `;
+        }
         
-        console.log("Показываем popup:", id);
-        
-        // Показываем маску и popup
-        overlayMask.style.display = 'block';
-        activePopup.style.display = 'block';
-        
-        // Анимация
-        setTimeout(function() {
-            overlayMask.classList.add('visible');
-            activePopup.classList.add('visible');
-        }, 10);
-    }
-    
-    function hidePopup() {
-        if (!activePopup) return;
-        
-        console.log("Скрываем popup:", activePopup.id);
-        
-        overlayMask.classList.remove('visible');
-        activePopup.classList.remove('visible');
-        
-        setTimeout(function() {
-            overlayMask.style.display = 'none';
-            activePopup.style.display = 'none';
-            activePopup = null;
-        }, 400);
-    }
+        // Добавляем оставшиеся картинки
+        if (projectData.galleryUrls && projectData.galleryUrls.length > 1) {
+            console.log('Adding remaining images');
+            const remainingImages = projectData.galleryUrls.slice(1);
+            remainingImages.forEach((url, index) => {
+                console.log('Adding remaining image:', url);
+                modalContent += `
+                    <div class="slide">
+                        <img src="${url}" alt="Project image ${index + 2}" 
+                             onload="console.log('Image loaded:', '${url}')" 
+                             onerror="console.error('Image failed to load:', '${url}')"
+                             class="fullscreen-trigger">
+                    </div>
+                `;
+            });
+        }
 
-    // Обработчик для закрытия popup по клику на маску
-    if (overlayMask) {
-        overlayMask.addEventListener('click', function(e) {
-            console.log("Клик на маску обнаружен");
-            if (activePopup) {
-                console.log("Закрываем popup по клику на маску");
-                e.preventDefault();
+        // Добавляем логотип Behance для первого проекта
+        if (projectId === 1) {
+            modalContent += `
+                <a href="https://www.behance.net/gallery/183591977/INTERSECTION" target="_blank" class="behance-link">
+                    <img src="logo/behance.png" alt="Behance">
+                </a>
+            `;
+        }
+
+        const modalHtml = `
+            <div class="modal-content">
+                <button class="back-button" style="position: fixed; left: 20px; top: 20px; z-index: 1000; background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 10px;">←</button>
+                <button class="close-modal">&times;</button>
+                <div class="modal-slides">
+                    ${modalContent}
+                </div>
+            </div>
+        `;
+
+        const modal = document.createElement('div');
+        modal.className = 'project-modal';
+        modal.innerHTML = modalHtml;
+        document.body.appendChild(modal);
+
+        // Добавляем обработчики для полноэкранного просмотра
+        modal.querySelectorAll('.fullscreen-trigger').forEach(media => {
+            media.addEventListener('click', (e) => {
                 e.stopPropagation();
-                hidePopup();
+                openFullscreen(media);
+            });
+        });
+
+        // Анимация появления
+        requestAnimationFrame(() => {
+            modal.classList.add('visible');
+        });
+
+        // Обработчики для закрытия
+        const backBtn = modal.querySelector('.back-button');
+        const closeBtn = modal.querySelector('.close-modal');
+        
+        backBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.remove();
+            }, 400);
+        });
+
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.remove();
+            }, 400);
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                e.preventDefault();
+                modal.classList.remove('visible');
+                setTimeout(() => {
+                    modal.remove();
+                }, 400);
+            }
+        });
+
+        document.addEventListener('keydown', function handleEscape(e) {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                modal.classList.remove('visible');
+                setTimeout(() => {
+                    modal.remove();
+                }, 400);
+                document.removeEventListener('keydown', handleEscape);
             }
         });
     }
-    
-    // Обработчик для Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && activePopup) {
-            console.log("Закрываем popup по Escape");
-            hidePopup();
-        }
+
+    // Добавляем обработчики для проектов
+    document.querySelectorAll('.project-item').forEach((item, index) => {
+        item.addEventListener('click', () => {
+            openProjectModal(index + 1);
+        });
     });
+
+    console.log("All event listeners attached");
+
+    // Управление видимостью иконки жеста
+    if (gestureHint) {
+        setTimeout(() => {
+            gestureHint.classList.add('visible');
+        }, 1000); // Показать через 1 секунду
+
+        // Скрыть иконку после первого взаимодействия
+        const hideGestureHint = () => {
+            gestureHint.classList.remove('visible');
+            localStorage.setItem('gestureHintShown', 'true');
+        };
+
+        // Проверяем, показывалась ли иконка ранее
+        if (!localStorage.getItem('gestureHintShown')) {
+            gestureHint.addEventListener('click', hideGestureHint);
+            gestureHint.addEventListener('touchstart', hideGestureHint);
+        }
+    }
 });
