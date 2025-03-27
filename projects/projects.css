@@ -594,10 +594,9 @@ body {
 /* Общие стили для проектов */
 .project-content {
     width: 100%;
-    max-width: 1920px;
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 0 20px;
-    box-sizing: border-box;
+    padding: 80px 40px;
 }
 
 .project-title {
@@ -613,47 +612,41 @@ body {
 }
 
 .project-gallery {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
     width: 100%;
 }
 
 .gallery-item {
-    width: 100%;
-    max-width: 1280px;
-    margin: 0 auto 40px;
     position: relative;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
 .gallery-item img {
     width: 100%;
-    height: auto;
-    max-height: 85vh;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    margin: 0 auto;
-    cursor: pointer;
 }
 
-/* Подготовка для будущих вертикальных изображений */
-.gallery-item--vertical {
-    /* Будущие стили для вертикальных изображений */
+/* Отступы между рядами */
+.gallery-row:not(:last-child) {
+    margin-bottom: 10px;
 }
 
-/* Стили для видео-контейнера */
+/* Видео-контейнер */
 .vimeo-container {
-    width: 100%;
-    max-width: 1920px;
-    margin: 0 auto 40px;
-    display: grid;
-    place-items: center;
-}
-
-.vimeo-container > div {
+    margin: 0;
     width: 100%;
     max-width: 1280px;
     position: relative;
-    aspect-ratio: 16/9;
-    /* Fallback для браузеров, которые не поддерживают aspect-ratio */
-    padding-top: 56.25%;
+    padding-bottom: 56.25%; /* Соотношение сторон 16:9 */
+    height: 0;
+    overflow: hidden;
 }
 
 .vimeo-container iframe {
@@ -665,24 +658,63 @@ body {
     border: 0;
 }
 
+/* Мобильные устройства */
+@media (max-width: 767px) {
+    .gallery-row:not(:last-child) {
+        margin-bottom: 5px;
+    }
+}
+
+/* Подготовка для будущих вертикальных изображений */
+.gallery-item--vertical {
+    /* Будущие стили для вертикальных изображений */
+}
+
 /* Стили для Behance-ссылки */
 .behance-link {
     display: block;
-    text-align: center;
-    margin: 60px auto;
-    transition: transform 0.3s ease;
+    margin: 40px auto 0;
+    width: 40px;
+    height: 40px;
+    transition: opacity 0.3s ease;
 }
 
 .behance-link:hover {
-    transform: scale(1.1);
+    opacity: 0.7;
 }
 
 .behance-link img {
-    width: 50px;
-    height: auto;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
-/* Стили для полноэкранного режима */
+/* Медиа-запросы для проекта */
+@media (max-width: 1440px) {
+    .project-content {
+        padding: 60px 30px;
+    }
+    
+    .gallery-item {
+        max-width: 1000px;
+    }
+    
+    .vimeo-container {
+        max-width: 1000px;
+    }
+}
+
+@media (max-width: 768px) {
+    .project-content {
+        padding: 40px 20px;
+    }
+    
+    .project-gallery {
+        gap: 10px;
+    }
+}
+
+/* Полноэкранный режим */
 .fullscreen-view {
     display: none;
     position: fixed;
@@ -816,5 +848,70 @@ body {
     }
     .gallery-item {
         margin-bottom: 15px;
+    }
+}
+
+/* Базовая сетка */
+.gallery-row {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    gap: 10px;
+}
+
+/* Стандартная сетка (десктоп) */
+.gallery-row .gallery-item {
+    width: calc(50% - 5px);
+    flex: 0 0 calc(50% - 5px);
+    margin: 0;
+}
+
+.gallery-row.gif-row .gallery-item {
+    width: calc(33.333% - 7px);
+    flex: 0 0 calc(33.333% - 7px);
+    margin: 0;
+}
+
+/* Одиночные изображения */
+.gallery-row .gallery-item:only-child,
+.gallery-item.full-width {
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+/* iPad и планшеты (768px - 1024px) */
+@media only screen 
+and (min-width: 768px) 
+and (max-width: 1024px) {
+    .gallery-row {
+        gap: 10px;
+    }
+    
+    .gallery-row.gif-row .gallery-item {
+        width: calc(33.333% - 7px);
+        flex: 0 0 calc(33.333% - 7px);
+        margin: 0;
+    }
+}
+
+/* Мобильные устройства (до 767px) */
+@media only screen 
+and (max-width: 767px) {
+    .gallery-row {
+        gap: 5px;
+    }
+    
+    .project-gallery {
+        gap: 5px;
+    }
+    
+    .gallery-row.gif-row .gallery-item {
+        width: 100%;
+        flex: 0 0 100%;
+        margin: 0;
     }
 } 

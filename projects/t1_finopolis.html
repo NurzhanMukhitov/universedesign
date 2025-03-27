@@ -35,21 +35,41 @@
         let galleryItems = [];
 
         // Загрузка метаданных проекта
-        fetch('./t1_finopolis/meta.json')
-            .then(response => response.json())
+        fetch('t1_finopolis/meta.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
-                const content = document.querySelector('.project-gallery');
-                content.innerHTML = data.gallery.map(image => `
-                    <div class="gallery-item">
-                        <img src="./t1_finopolis/gallery/${image}" alt="${data.title}" onclick="openFullscreen(this)">
-                    </div>
-                `).join('');
-
+                const gallery = document.querySelector('.project-gallery');
+                
+                // Создаем элементы галереи
+                data.gallery.forEach(image => {
+                    const galleryItem = document.createElement('div');
+                    galleryItem.className = 'gallery-item';
+                    
+                    const img = document.createElement('img');
+                    img.src = `t1_finopolis/gallery/${image}`;
+                    img.alt = data.title;
+                    img.onclick = function() { openFullscreen(this); };
+                    
+                    galleryItem.appendChild(img);
+                    gallery.appendChild(galleryItem);
+                });
+                
                 // Инициализация массива элементов галереи
-                galleryItems = Array.from(document.querySelectorAll('.gallery-item img')).map(img => ({
-                    type: 'image',
-                    element: img
-                }));
+                galleryItems = Array.from(document.querySelectorAll('.gallery-item img'))
+                    .map(img => ({
+                        type: 'image',
+                        element: img
+                    }));
+            })
+            .catch(error => {
+                console.error('Error loading project data:', error);
+                document.querySelector('.project-gallery').innerHTML = 
+                    '<p>Error loading project content. Please try again later.</p>';
             });
 
         function openFullscreen(img) {
@@ -70,6 +90,10 @@
             
             const img = currentItem.element;
             mediaContainer.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
+            
+            // Показываем навигационные кнопки
+            document.querySelector('.prev-button').style.display = 'block';
+            document.querySelector('.next-button').style.display = 'block';
         }
         
         function closeFullscreen() {

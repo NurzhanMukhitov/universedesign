@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRE-EVENT OUTLINE 2025</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../projects/projects.css">
+</head>
+<body>
+    <div class="logo-text">
+        <img src="../logo/UNIVERSE.png" alt="UNIVERSE">
+    </div>
+    <div class="project-content">
+        <div class="project-gallery">
+            <!-- Первое изображение на всю ширину -->
+            <div class="gallery-item full-width">
+                <img src="pre_event_outline_2025/gallery/image1.jpg" alt="PRE-EVENT OUTLINE 2025">
+            </div>
+
+            <!-- Ряды с PNG изображениями (по 2 в ряд) -->
+            <div class="gallery-row">
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image2.png" alt="Image 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image3.png" alt="Image 3">
+                </div>
+            </div>
+
+            <div class="gallery-row">
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image4.png" alt="Image 4">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image5.png" alt="Image 5">
+                </div>
+            </div>
+
+            <div class="gallery-row">
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image6.png" alt="Image 6">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image7.png" alt="Image 7">
+                </div>
+            </div>
+
+            <div class="gallery-row">
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image8.png" alt="Image 8">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image9.png" alt="Image 9">
+                </div>
+            </div>
+
+            <div class="gallery-row">
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image10.png" alt="Image 10">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image11.png" alt="Image 11">
+                </div>
+            </div>
+
+            <div class="gallery-row">
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image12.png" alt="Image 12">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image13.png" alt="Image 13">
+                </div>
+            </div>
+
+            <div class="gallery-row">
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image14.png" alt="Image 14">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image15.png" alt="Image 15">
+                </div>
+            </div>
+
+            <div class="gallery-row">
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/image16.png" alt="Image 16">
+                </div>
+            </div>
+
+            <!-- Ряды с GIF файлами (по 3 в ряд) -->
+            <div class="gallery-row gif-row">
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/gif1.gif" alt="GIF 1">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/gif2.gif" alt="GIF 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/gif3.gif" alt="GIF 3">
+                </div>
+            </div>
+
+            <div class="gallery-row gif-row">
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/gif4.gif" alt="GIF 4">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/gif5.gif" alt="GIF 5">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/gif6.gif" alt="GIF 6">
+                </div>
+            </div>
+
+            <div class="gallery-row gif-row">
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/gif7.gif" alt="GIF 7">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/gif8.gif" alt="GIF 8">
+                </div>
+                <div class="gallery-item">
+                    <img src="pre_event_outline_2025/gallery/gif9.gif" alt="GIF 9">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Полноэкранный просмотр -->
+    <div class="fullscreen-view">
+        <div class="fullscreen-content">
+            <div class="fullscreen-media">
+                <img src="" alt="Fullscreen view">
+            </div>
+        </div>
+        <button class="close-fullscreen">×</button>
+        <button class="nav-button prev-button"></button>
+        <button class="nav-button next-button"></button>
+    </div>
+
+    <button class="back-button" onclick="window.location.href = '../projects.html'"></button>
+
+    <script>
+        // Получаем все изображения в галерее
+        const galleryImages = document.querySelectorAll('.gallery-item img');
+        const fullscreenView = document.querySelector('.fullscreen-view');
+        const fullscreenImage = fullscreenView.querySelector('img');
+        const closeFullscreen = document.querySelector('.close-fullscreen');
+        const prevButton = document.querySelector('.prev-button');
+        const nextButton = document.querySelector('.next-button');
+        
+        let currentImageIndex = 0;
+        const images = Array.from(galleryImages);
+
+        // Открываем полноэкранный просмотр
+        galleryImages.forEach((img, index) => {
+            img.addEventListener('click', () => {
+                currentImageIndex = index;
+                fullscreenImage.src = img.src;
+                fullscreenView.classList.add('active');
+            });
+        });
+
+        // Закрываем полноэкранный просмотр
+        closeFullscreen.addEventListener('click', () => {
+            fullscreenView.classList.remove('active');
+        });
+
+        // Навигация по изображениям
+        function showImage(index) {
+            if (index >= 0 && index < images.length) {
+                currentImageIndex = index;
+                fullscreenImage.src = images[currentImageIndex].src;
+            }
+        }
+
+        prevButton.addEventListener('click', () => {
+            showImage(currentImageIndex - 1);
+        });
+
+        nextButton.addEventListener('click', () => {
+            showImage(currentImageIndex + 1);
+        });
+
+        // Закрытие по клику вне изображения
+        fullscreenView.addEventListener('click', (e) => {
+            if (e.target === fullscreenView) {
+                fullscreenView.classList.remove('active');
+            }
+        });
+
+        // Закрытие по клавише Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && fullscreenView.classList.contains('active')) {
+                fullscreenView.classList.remove('active');
+            }
+        });
+
+        // Навигация по стрелкам
+        document.addEventListener('keydown', (e) => {
+            if (fullscreenView.classList.contains('active')) {
+                if (e.key === 'ArrowLeft') {
+                    showImage(currentImageIndex - 1);
+                } else if (e.key === 'ArrowRight') {
+                    showImage(currentImageIndex + 1);
+                }
+            }
+        });
+
+        // Показываем логотип при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoText = document.querySelector('.logo-text');
+            setTimeout(() => {
+                logoText.style.display = "block";
+                requestAnimationFrame(() => {
+                    logoText.classList.add('visible');
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html> 
