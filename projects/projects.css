@@ -1,3 +1,9 @@
+/* Общие стили */
+:root {
+    --transition-duration: 0.4s;
+    --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 body {
     background-color: #000;
     margin: 0;
@@ -8,6 +14,7 @@ body {
     font-family: 'OneDay', sans-serif;
 }
 
+/* Стили для проектов */
 .projects-container {
     width: 100%;
     max-width: 1440px;
@@ -30,7 +37,7 @@ body {
     background: #000;
     border-radius: 4px;
     text-decoration: none;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform var(--transition-duration) var(--transition-timing);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -51,7 +58,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: opacity 0.4s ease;
+    transition: opacity var(--transition-duration) ease;
 }
 
 .project-item:hover .project-image img {
@@ -72,6 +79,7 @@ body {
     transition: opacity 0.3s ease;
 }
 
+/* Кнопки */
 .back-button {
     position: fixed;
     top: 20px;
@@ -102,8 +110,27 @@ body {
     transform: translateX(-5px);
 }
 
-.back-button img {
+/* Логотип */
+.logo-text {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity var(--transition-duration) var(--transition-timing);
     display: none;
+    pointer-events: none;
+}
+
+.logo-text img {
+    max-width: 100px;
+    height: auto;
+    pointer-events: none;
+}
+
+.logo-text.visible {
+    opacity: 1;
+    display: block;
 }
 
 /* Адаптивность */
@@ -130,29 +157,6 @@ body {
     }
 }
 
-/* Логотип */
-.logo-text {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    display: none;
-    pointer-events: none;
-}
-
-.logo-text img {
-    max-width: 100px;
-    height: auto;
-    pointer-events: none;
-}
-
-.logo-text.visible {
-    opacity: 1;
-    display: block;
-}
-
 @media screen and (max-width: 575px) {
     .logo-text {
         top: 8px;
@@ -161,6 +165,121 @@ body {
     .logo-text img {
         max-width: 80px;
     }
+}
+
+/* Фуллскрин */
+.fullscreen-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-duration) var(--transition-timing);
+}
+
+.fullscreen-view.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.fullscreen-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fullscreen-media {
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fullscreen-media img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.close-fullscreen {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
+    z-index: 2001;
+}
+
+.nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
+    z-index: 2001;
+    opacity: 0.5;
+    transition: opacity var(--transition-duration) ease;
+}
+
+.nav-button:hover {
+    opacity: 1;
+}
+
+.prev-button {
+    left: 20px;
+}
+
+.next-button {
+    right: 20px;
+}
+
+/* Ссылка на Behance */
+.behance-link {
+    display: block;
+    margin: 40px auto 0;
+    width: fit-content;
+}
+
+.behance-link img {
+    height: 30px;
+    opacity: 0.7;
+    transition: opacity var(--transition-duration) ease;
+}
+
+.behance-link:hover img {
+    opacity: 1;
 }
 
 /* Меню */
@@ -432,165 +551,6 @@ body {
     object-fit: contain;
 }
 
-/* Полноэкранный просмотр */
-.fullscreen-view {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 3000;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.fullscreen-view.active {
-    display: flex;
-    opacity: 1;
-}
-
-.fullscreen-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.fullscreen-media {
-    max-width: 90%;
-    max-height: 90%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.fullscreen-media img {
-    max-width: min(1920px, 95vw);
-    max-height: 95vh;
-    object-fit: contain;
-}
-
-.fullscreen-media iframe {
-    width: 100%;
-    max-width: 1200px;
-    aspect-ratio: 16/9;
-    border: none;
-}
-
-.fullscreen-media .video-container {
-    width: 80vw;
-    max-width: 1280px;
-    position: relative;
-    aspect-ratio: 16/9;
-    /* Fallback для браузеров, которые не поддерживают aspect-ratio */
-    padding-top: 56.25%;
-}
-
-.fullscreen-media .video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-}
-
-.close-fullscreen {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    background: rgba(0, 0, 0, 0.5);
-    border: none;
-    border-radius: 50%;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 3001;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s ease;
-}
-
-.close-fullscreen:hover {
-    background: rgba(0, 0, 0, 0.8);
-}
-
-.next-fullscreen {
-    position: fixed;
-    top: 50%;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    background: rgba(0, 0, 0, 0.8);
-    border: none;
-    border-radius: 50%;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 3001;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transform: translateY(-50%);
-    transition: all 0.3s ease;
-}
-
-.next-fullscreen:hover {
-    background: rgba(0, 0, 0, 0.9);
-}
-
-.next-fullscreen::before {
-    content: '';
-    display: inline-block;
-    font-family: monospace;
-    font-weight: bold;
-    letter-spacing: -2px;
-}
-
-.swipe-indicator {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: white;
-    font-size: 14px;
-    opacity: 0.7;
-    text-align: center;
-    animation: fadeOut 5s forwards;
-}
-
-@keyframes fadeOut {
-    0% { opacity: 0.7; }
-    80% { opacity: 0.7; }
-    100% { opacity: 0; }
-}
-
-@media (max-width: 768px) {
-    .modal-content {
-        width: 95%;
-        margin: 20px auto;
-    }
-    
-    .back-button,
-    .close-modal,
-    .close-fullscreen {
-        width: 36px;
-        height: 36px;
-        font-size: 20px;
-    }
-    
-    .slide {
-        margin-bottom: 20px;
-    }
-}
-
 /* Общие стили для проектов */
 .project-content {
     width: 100%;
@@ -668,25 +628,6 @@ body {
 /* Подготовка для будущих вертикальных изображений */
 .gallery-item--vertical {
     /* Будущие стили для вертикальных изображений */
-}
-
-/* Стили для Behance-ссылки */
-.behance-link {
-    display: block;
-    margin: 40px auto 0;
-    width: 40px;
-    height: 40px;
-    transition: opacity 0.3s ease;
-}
-
-.behance-link:hover {
-    opacity: 0.7;
-}
-
-.behance-link img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
 }
 
 /* Медиа-запросы для проекта */
@@ -914,4 +855,23 @@ and (max-width: 767px) {
         flex: 0 0 100%;
         margin: 0;
     }
+}
+
+.youtube-container {
+    margin: 0;
+    width: 100%;
+    max-width: 1280px;
+    position: relative;
+    padding-bottom: 56.25%; /* Соотношение сторон 16:9 */
+    height: 0;
+    overflow: hidden;
+}
+
+.youtube-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
 } 
