@@ -223,31 +223,35 @@ canvas {
     width: 85%;
     height: 85%;
     object-fit: contain;
-    transition: filter 0.3s ease;
+    opacity: 0.8;
+    transform: scale(1);
+    transition: all 0.3s ease;
 }
 
 /* Для иконок, которые изначально черные */
 .social-icons img[alt="Vimeo"],
 .social-icons img[alt="Dprofile"],
 .social-icons img[alt="Telegram"] {
-    filter: invert(1) brightness(100);
+    filter: invert(1);
 }
 
 .social-icons img[alt="Vimeo"]:hover,
 .social-icons img[alt="Dprofile"]:hover,
 .social-icons img[alt="Telegram"]:hover {
-    filter: invert(1) brightness(80%);
+    opacity: 1;
+    transform: scale(1.05);
 }
 
 /* Для иконок, которые изначально белые */
 .social-icons img[alt="Behance"],
 .social-icons img[alt="Instagram"] {
-    filter: brightness(100);
+    filter: none;
 }
 
 .social-icons img[alt="Behance"]:hover,
 .social-icons img[alt="Instagram"]:hover {
-    filter: brightness(80%);
+    opacity: 1;
+    transform: scale(1.05);
 }
 
 /* Специальные размеры для некоторых иконок */
