@@ -1,0 +1,220 @@
+.about-page {
+    background-color: #000;
+    color: #fff;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 2001;
+    display: flex;
+    align-items: center;
+}
+
+.back-button:before {
+    content: '←';
+    color: white;
+    font-size: 32px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.back-button:hover {
+    transform: translateX(-5px);
+}
+
+.logo-text {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: none;
+}
+
+.logo-text img {
+    width: 200px;
+    height: auto;
+}
+
+.logo-text.visible {
+    opacity: 1;
+    display: block;
+}
+
+.about-content {
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 120px 80px 40px;
+}
+
+.about-text {
+    max-width: 640px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+}
+
+.about-text .lead-paragraph {
+    font-size: 22px;
+    line-height: 1.8;
+    margin-bottom: 24px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+}
+
+.about-text p {
+    margin-bottom: 16px;
+}
+
+.about-text h2 {
+    font-size: 26px;
+    margin: 40px 0 24px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.about-text ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.about-text li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.about-text li:before {
+    content: "—";
+    position: absolute;
+    left: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+    .about-content {
+        padding: 100px 60px 32px;
+    }
+    
+    .back-button {
+        top: 32px;
+        left: 32px;
+    }
+
+    .logo-text {
+        top: 32px;
+        right: 32px;
+    }
+
+    .logo-text img {
+        width: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        padding: 80px 50px 24px;
+    }
+    
+    .back-button {
+        top: 24px;
+        left: 24px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .back-button:before {
+        font-size: 28px;
+    }
+
+    .logo-text {
+        top: 24px;
+        right: 24px;
+    }
+
+    .logo-text img {
+        width: 160px;
+    }
+    
+    .about-text {
+        max-width: 100%;
+    }
+    
+    .about-text .lead-paragraph {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .about-text h2 {
+        font-size: 24px;
+        margin: 32px 0 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-content {
+        padding: 60px 50px 20px;
+    }
+    
+    .back-button {
+        top: 20px;
+        left: 20px;
+        width: 32px;
+        height: 32px;
+    }
+
+    .back-button:before {
+        font-size: 24px;
+    }
+
+    .logo-text {
+        top: 20px;
+        right: 20px;
+    }
+
+    .logo-text img {
+        width: 140px;
+    }
+    
+    .about-text {
+        font-size: 15px;
+    }
+    
+    .about-text .lead-paragraph {
+        font-size: 19px;
+        margin-bottom: 16px;
+        line-height: 1.7;
+    }
+    
+    .about-text h2 {
+        font-size: 22px;
+        margin: 28px 0 16px;
+    }
+    
+    .about-text p {
+        margin-bottom: 12px;
+    }
+    
+    .about-text li {
+        margin-bottom: 8px;
+    }
+} 

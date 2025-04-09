@@ -543,28 +543,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Обработчики меню
     if (menuOverlay) {
-        var menuItems = menuOverlay.querySelectorAll('a');
+        var menuItems = menuOverlay.querySelectorAll('li a');
         menuItems.forEach(function(item) {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                var popupId = this.getAttribute('data-section');
-                if (!popupId) {
-                    // Если это ссылка на projects.html, позволяем стандартное поведение
-                    if (this.getAttribute('href') === 'projects.html') {
-                        window.location.href = 'projects.html';
-                        return;
-                    }
-                    return;
+            item.addEventListener('click', function(event) {
+                // Получаем ID секции из data-атрибута
+                const sectionId = this.getAttribute('data-section');
+                // Получаем href
+                const href = this.getAttribute('href');
+
+                if (sectionId) {
+                    // Если есть data-section, показываем попап
+                    event.preventDefault(); // Отменяем стандартное поведение ТОЛЬКО для попапов
+                    showPopup(sectionId);
+                    // Закрываем меню
+                    menuOverlay.classList.remove('visible');
+                    overlayMask.classList.remove('visible');
+                    menuBtn.classList.remove('active');
+                } else if (href && href !== '#' && !href.startsWith('javascript:')) {
+                    // Если есть валидный href, позволяем браузеру перейти по ссылке.
+                    // Дополнительно закрываем меню, если оно было открыто
+                    menuOverlay.classList.remove('visible');
+                    overlayMask.classList.remove('visible');
+                    menuBtn.classList.remove('active');
+                    // Стандартный переход по href выполнится автоматически
+                } else {
+                    // Если нет ни sectionId, ни валидного href, отменяем действие
+                    event.preventDefault(); 
                 }
-                
-                console.log('Клик по пункту меню:', popupId);
-                showPopup(popupId);
-                
-                // Скрываем меню
-                menuOverlay.classList.remove('visible');
-                setTimeout(function() {
-                    menuOverlay.style.display = 'none';
-                }, 400);
             });
         });
     }

@@ -86,6 +86,11 @@ class ProjectGallery {
                         this.openFullscreen();
                     });
                 }
+
+                // Обработка открытия видео в полноэкранном режиме
+                if (mediaElement.tagName.toLowerCase() === 'video') {
+                    this.handleVideoFullscreen(mediaElement);
+                }
             });
 
             // Добавляем обработчики для кнопок
@@ -99,7 +104,17 @@ class ProjectGallery {
                 this.nextButton.addEventListener('click', () => this.showNextMedia());
             }
             if (this.backButton) {
-                this.backButton.addEventListener('click', () => window.location.href = '../projects.html');
+                this.backButton.addEventListener('click', () => {
+                    const currentPath = window.location.pathname;
+                    if (currentPath.includes('UNIVERSEхLedPulse.html')) {
+                        window.location.href = 'index.html';
+                    } else if (currentPath.includes('projects/')) {
+                        window.location.href = '../projects.html';
+                    } else {
+                        // Дефолтное поведение, если нужно
+                        window.location.href = 'index.html';
+                    }
+                });
             }
 
             // Добавляем обработчик клавиш
@@ -239,6 +254,26 @@ class ProjectGallery {
         } catch (error) {
             console.error('Error in ProjectGallery.removeSwipeListeners:', error);
         }
+    }
+
+    // Обработка открытия видео в полноэкранном режиме
+    handleVideoFullscreen(video) {
+        const fullscreenMedia = document.querySelector('.fullscreen-media');
+        const clonedVideo = video.cloneNode(true);
+        
+        // Сохраняем текущие атрибуты
+        clonedVideo.autoplay = true;
+        clonedVideo.loop = true;
+        clonedVideo.muted = true;
+        clonedVideo.playsinline = true;
+        
+        fullscreenMedia.innerHTML = '';
+        fullscreenMedia.appendChild(clonedVideo);
+        
+        // Автовоспроизведение при открытии
+        clonedVideo.play().catch(function(error) {
+            console.log("Autoplay prevented:", error);
+        });
     }
 }
 

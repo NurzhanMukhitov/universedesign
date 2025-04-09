@@ -266,11 +266,79 @@ canvas {
 }
 
 /* Стили для текста в About */
-#about .popup-content p {
-    font-size: 18px;
+#about .popup-content {
+    width: 100%;
+    max-width: min(800px, 95vw);
+    margin: 0 auto;
+    padding: clamp(20px, 5vw, 40px);
+    box-sizing: border-box;
+}
+
+.about-text {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #fff;
+    width: 100%;
+    max-width: min(700px, 90vw);
+    margin: 0 auto;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+}
+
+.about-text > * {
+    grid-column: 1 / -1; /* По умолчанию элементы занимают всю ширину */
+}
+
+.about-text p {
+    font-size: clamp(15px, 1.6vw, 16px);
+    line-height: 1.7;
+    margin: 0 0 clamp(15px, 2vw, 20px) 0;
+    opacity: 0.9;
+    text-align: left;
+    font-weight: 300;
+}
+
+.about-text p:first-child {
+    font-size: clamp(16px, 1.8vw, 18px);
     line-height: 1.6;
+    font-weight: 300;
+    grid-column: 1 / -1;
+}
+
+.about-text h3 {
+    font-size: clamp(16px, 1.8vw, 18px);
+    font-weight: 500;
+    margin: clamp(20px, 3vw, 30px) 0 clamp(15px, 2vw, 20px);
+    opacity: 0.95;
+    text-align: left;
+    grid-column: 1 / -1;
+}
+
+.about-text ul {
+    list-style: none;
+    padding: 0;
     margin: 0;
-    max-width: 600px;
+    text-align: left;
+    grid-column: 1 / -1;
+    display: grid;
+    gap: clamp(10px, 1.5vw, 15px);
+}
+
+.about-text li {
+    font-size: clamp(15px, 1.6vw, 16px);
+    line-height: 1.7;
+    padding-left: 24px;
+    position: relative;
+    opacity: 0.85;
+    font-weight: 300;
+}
+
+.about-text li:before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: #fff;
 }
 
 /* Стили для LedPulse */
@@ -795,5 +863,43 @@ canvas {
     .social-icons a {
         width: 30px;
         height: 30px;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    #about .popup-content {
+        padding: 30px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .about-text {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 15px;
+    }
+    
+    #about .popup-content {
+        padding: 20px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .about-text {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+    
+    #about .popup-content {
+        padding: 15px;
+    }
+    
+    .about-text p,
+    .about-text li {
+        font-size: 15px;
+    }
+    
+    .about-text p:first-child,
+    .about-text h3 {
+        font-size: 16px;
     }
 }

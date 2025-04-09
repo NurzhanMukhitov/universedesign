@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon (пути от корня) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon/favicon-32x32.png?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon/favicon-16x16.png?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon/favicon/apple-touch-icon.png?v=2">
+    <title>UNIVERSE DESIGN | UNIVERSE х LedPulse</title>
+    <!-- Стили (пути от корня) -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="projects/projects.css"> 
+</head>
+<body>
+    <!-- Логотип (путь от корня) -->
+    <div class="logo-text">
+        <img src="logo/UNIVERSE.png" alt="UNIVERSE">
+    </div>
+
+    <!-- Контент проекта, структура как у intervals2023 -->
+    <div class="project-content">
+        <div class="project-gallery">
+            <!-- 1. Image 1 -->
+            <div class="gallery-item">
+                <img src="UNIVERSEхLedPulse/image1.jpeg" alt="UNIVERSE х LedPulse Image 1">
+            </div>
+
+            <!-- 2. Video (как GIF) -->
+            <div class="gallery-item video-item"> 
+                <video src="UNIVERSEхLedPulse/video.mp4" autoplay loop muted playsinline alt="UNIVERSE х LedPulse Video"></video>
+            </div>
+
+            <!-- 3. Image 2 - Image 10 -->
+            <div class="gallery-item">
+                <img src="UNIVERSEхLedPulse/image2.jpeg" alt="UNIVERSE х LedPulse Image 2">
+            </div>
+            <div class="gallery-item">
+                <img src="UNIVERSEхLedPulse/image3.jpeg" alt="UNIVERSE х LedPulse Image 3">
+            </div>
+            <div class="gallery-item">
+                <img src="UNIVERSEхLedPulse/image4.jpeg" alt="UNIVERSE х LedPulse Image 4">
+            </div>
+            <div class="gallery-item">
+                <img src="UNIVERSEхLedPulse/image5.jpeg" alt="UNIVERSE х LedPulse Image 5">
+            </div>
+            <div class="gallery-item">
+                <img src="UNIVERSEхLedPulse/image6.jpeg" alt="UNIVERSE х LedPulse Image 6">
+            </div>
+            <div class="gallery-item">
+                <img src="UNIVERSEхLedPulse/image7.jpeg" alt="UNIVERSE х LedPulse Image 7">
+            </div>
+            <div class="gallery-item">
+                <img src="UNIVERSEхLedPulse/image8.jpeg" alt="UNIVERSE х LedPulse Image 8">
+            </div>
+            <div class="gallery-item">
+                <img src="UNIVERSEхLedPulse/image9.jpeg" alt="UNIVERSE х LedPulse Image 9">
+            </div>
+            <div class="gallery-item">
+                <img src="UNIVERSEхLedPulse/image10.jpeg" alt="UNIVERSE х LedPulse Image 10">
+            </div>
+        </div>
+    </div>
+
+    <!-- Кнопка Назад (стиль из projects.css, логика из project-gallery.js) -->
+    <button class="back-button"></button> 
+    
+    <!-- Полноэкранный просмотр (структура как у intervals2023) -->
+    <div class="fullscreen-view">
+        <div class="fullscreen-content">
+            <div class="fullscreen-media"></div> <!-- Контент для фулскрина будет заполняться JS -->
+            <button class="close-fullscreen">×</button>
+            <button class="nav-button prev-button"></button>
+            <button class="nav-button next-button"></button>
+        </div>
+    </div>
+
+    <!-- Скрипт галереи (путь от корня) -->
+    <!-- Убедитесь, что этот скрипт корректно обрабатывает кнопку назад для страницы в корне -->
+    <script src="projects/project-gallery.js"></script> 
+</body>
+</html> 

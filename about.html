@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>About - UNIVERSE DESIGN</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon/favicon-32x32.png?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon/favicon-16x16.png?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon/favicon/apple-touch-icon.png?v=2">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="about.css">
+</head>
+<body class="about-page">
+    <button class="back-button" onclick="history.back()"></button>
+    
+    <div class="logo-text">
+        <img src="logo/UNIVERSE.png" alt="UNIVERSE design">
+    </div>
+
+    <main class="about-content">
+        <div class="about-text">
+            <p class="lead-paragraph">UNIVERSE design is a studio that combines art, technology and innovation. We create media art installations that transform space, engage the viewer and open up new boundaries of perception.</p>
+            
+            <p>Our key specialization is volumetric LED screens and their non-standard use in art, advertising and event spaces. We do not just use ready-made solutions that meet standards, we experiment with forms and develop original methods for introducing volumetric LED screens into large-scale projects.</p>
+            
+            <p>Our projects are not just a "screen with a picture" - a dynamic environment where light, volume and digital storytelling are an emotional experience. We believe that media art is the language of the future, and we find unexpected forms for it.</p>
+            
+            <h2>Why us?</h2>
+            <ul>
+                <li>Deep technical knowledge, our team combines knowledge in the field of engineering, programming and media design, which allows us to create complex turnkey installations.</li>
+                <li>We work with art galleries, music festivals, commercial brands and architectural spaces, adapting technologies to any tasks.</li>
+                <li>Research approach - testing new ways of interaction (sensors, generative content) so that the viewer becomes part of the installation.</li>
+                <li>Full production cycle - from concept and 3D visualization to production of the installation and content creation.</li>
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Показываем логотип при загрузке страницы
+            const logoText = document.querySelector('.logo-text');
+            setTimeout(() => {
+                logoText.style.display = "block";
+                requestAnimationFrame(() => {
+                    logoText.classList.add('visible');
+                });
+            }, 100);
+
+            // Плавное появление контента
+            const aboutText = document.querySelector('.about-text');
+            aboutText.style.opacity = '0';
+            setTimeout(() => {
+                aboutText.style.opacity = '1';
+            }, 100);
+
+            // Обработка кнопки назад
+            const backButton = document.querySelector('.back-button');
+            backButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                aboutText.style.opacity = '0';
+                setTimeout(() => {
+                    history.back();
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html> 
