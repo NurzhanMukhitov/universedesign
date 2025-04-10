@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <button class="back-button" onclick="localStorage.setItem('showAssembledCube', 'true'); window.location.href = 'index.html'"></button>
+    <button class="back-button"></button>
     <script>
         // Показываем логотип при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
@@ -57,6 +57,19 @@
                     logoText.classList.add('visible');
                 });
             }, 100);
+
+            // Обработка кнопки назад
+            const backButton = document.querySelector('.back-button');
+            if (backButton) {
+                backButton.addEventListener('click', function() {
+                    // Устанавливаем флаг для показа собранного куба
+                    localStorage.setItem('showAssembledCube', 'true');
+                    // Устанавливаем флаг для открытия меню на главной
+                    sessionStorage.setItem('openMenuOnLoad', 'true');
+                    // Переходим на главную страницу
+                    window.location.href = 'index.html';
+                });
+            }
         });
     </script>
 </body>

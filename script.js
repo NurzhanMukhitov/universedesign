@@ -12,7 +12,17 @@ document.addEventListener('DOMContentLoaded', function() {
     var activePopup = null;
     var menuOverlay = document.querySelector('.overlay-menu');
     var resetButton = document.querySelector('.reset-button');
+    var backButton = document.querySelector('.back-button');
     var isMenuLocked = false;
+    
+    // Проверяем флаг для открытия меню при загрузке
+    if (sessionStorage.getItem('openMenuOnLoad') === 'true') {
+        console.log('Флаг openMenuOnLoad найден, открываем меню.');
+        openBurgerMenu(); // Вызываем функцию открытия меню
+        sessionStorage.removeItem('openMenuOnLoad'); // Удаляем флаг
+    } else {
+        console.log('Флаг openMenuOnLoad не найден.');
+    }
     
     // Настройка canvas с учётом devicePixelRatio для чёткости
     var dpr = window.devicePixelRatio || 1;
@@ -1084,5 +1094,32 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
     }, true); // Добавляем третий параметр true для фазы захвата
+
+    function openBurgerMenu() {
+        console.log('openBurgerMenu вызвана');
+        const menuOverlay = document.querySelector('.overlay-menu');
+        if (menuOverlay) {
+            console.log('Элемент .overlay-menu найден');
+            menuOverlay.style.display = 'block';
+            requestAnimationFrame(() => {
+                menuOverlay.classList.add('visible');
+                console.log('Класс visible добавлен к .overlay-menu');
+            });
+        } else {
+            console.error('Элемент .overlay-menu не найден');
+        }
+    }
+
+    // Пример вызова функции при возврате
+    if (backButton) {
+        console.log('backButton найден');
+        backButton.addEventListener('click', () => {
+            console.log('Клик по backButton');
+            // Логика возврата
+            window.location.href = '/'; // Пример: если нужно перейти на главную
+        });
+    } else {
+        console.error('backButton не найден на этой странице'); // Уточняем сообщение об ошибке
+    }
 });
 // Test comment
