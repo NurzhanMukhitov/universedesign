@@ -1,20 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Размеры экрана
-    var ww = window.innerWidth, wh = window.innerHeight;
+// Удаляем глобальный флаг
+// let isIndexPageInitialLoad = true; 
 
-    // Получаем DOM элементы
-    var canvas = document.getElementById("c");
-    var menuBtn = document.querySelector('.menu-btn');
-    var logoText = document.querySelector('.logo-text');
-    var overlayMask = document.querySelector('.overlay-mask');
-    var gestureHint = document.querySelector('.gesture-hint');
-    var gestureMask = document.querySelector('.gesture-mask');
-    var activePopup = null;
-    var menuOverlay = document.querySelector('.overlay-menu');
-    var resetButton = document.querySelector('.reset-button');
-    var backButton = document.querySelector('.back-button');
-    var isMenuLocked = false;
-    
+document.addEventListener('DOMContentLoaded', function() {
     // Проверяем тип навигации для открытия меню при возврате
     try {
         const navigationEntries = performance.getEntriesByType("navigation");
@@ -33,6 +20,22 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (error) {
         console.error('Error checking navigation type:', error);
     }
+
+    // Размеры экрана
+    var ww = window.innerWidth, wh = window.innerHeight;
+
+    // Получаем DOM элементы
+    var canvas = document.getElementById("c");
+    var menuBtn = document.querySelector('.menu-btn');
+    var logoText = document.querySelector('.logo-text');
+    var overlayMask = document.querySelector('.overlay-mask');
+    var gestureHint = document.querySelector('.gesture-hint');
+    var gestureMask = document.querySelector('.gesture-mask');
+    var activePopup = null;
+    var menuOverlay = document.querySelector('.overlay-menu');
+    var resetButton = document.querySelector('.reset-button');
+    var backButton = document.querySelector('.back-button');
+    var isMenuLocked = false;
     
     // Настройка canvas с учётом devicePixelRatio для чёткости
     var dpr = window.devicePixelRatio || 1;
@@ -1132,4 +1135,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('backButton не найден на этой странице'); // Уточняем сообщение об ошибке
     }
 });
+
 // Test comment
