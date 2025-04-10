@@ -64,10 +64,8 @@
                 backButton.addEventListener('click', function() {
                     // Устанавливаем флаг для показа собранного куба
                     localStorage.setItem('showAssembledCube', 'true');
-                    // Устанавливаем флаг для открытия меню на главной
-                    sessionStorage.setItem('openMenuOnLoad', 'true');
-                    // Переходим на главную страницу
-                    window.location.href = 'index.html';
+                    // Переходим на предыдущую страницу в истории
+                    history.back();
                 });
             }
         });

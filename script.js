@@ -15,13 +15,23 @@ document.addEventListener('DOMContentLoaded', function() {
     var backButton = document.querySelector('.back-button');
     var isMenuLocked = false;
     
-    // Проверяем флаг для открытия меню при загрузке
-    if (sessionStorage.getItem('openMenuOnLoad') === 'true') {
-        console.log('Флаг openMenuOnLoad найден, открываем меню.');
-        openBurgerMenu(); // Вызываем функцию открытия меню
-        sessionStorage.removeItem('openMenuOnLoad'); // Удаляем флаг
-    } else {
-        console.log('Флаг openMenuOnLoad не найден.');
+    // Проверяем тип навигации для открытия меню при возврате
+    try {
+        const navigationEntries = performance.getEntriesByType("navigation");
+        // Проверяем, что API доступно и есть запись
+        if (navigationEntries && navigationEntries.length > 0) {
+             // Первый элемент ([0]) содержит информацию о текущей навигации
+            if (navigationEntries[0].type === 'back_forward') {
+                console.log('Navigation type is back_forward. Opening menu.');
+                openBurgerMenu(); // Открываем меню
+            } else {
+                console.log('Navigation type is:', navigationEntries[0].type);
+            }
+        } else {
+             console.log('PerformanceNavigationTiming API not available or no entries found.');
+        }
+    } catch (error) {
+        console.error('Error checking navigation type:', error);
     }
     
     // Настройка canvas с учётом devicePixelRatio для чёткости

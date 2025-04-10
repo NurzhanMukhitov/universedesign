@@ -106,19 +106,9 @@ class ProjectGallery {
             if (this.backButton) {
                 this.backButton.addEventListener('click', () => {
                     const currentPath = window.location.pathname;
-                    // Устанавливаем флаг для открытия меню на главной
-                    sessionStorage.setItem('openMenuOnLoad', 'true');
                     
-                    if (currentPath.includes('UNIVERSEхLedPulse.html')) {
-                        // Перенаправляем на главную
-                        window.location.href = 'index.html'; // Или можно просто '/'
-                    } else if (currentPath.includes('projects/')) {
-                        // Перенаправляем на страницу проектов (если нужно)
-                        window.location.href = '../projects.html';
-                    } else {
-                        // Дефолтное перенаправление на главную
-                        window.location.href = 'index.html'; // Или можно просто '/'
-                    }
+                    // Всегда возвращаемся назад по истории
+                    history.back();
                 });
             }
 

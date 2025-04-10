@@ -58,8 +58,6 @@
             backButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 aboutText.style.opacity = '0';
-                // Устанавливаем флаг для открытия меню на главной
-                sessionStorage.setItem('openMenuOnLoad', 'true');
                 setTimeout(() => {
                     history.back();
                 }, 300);
