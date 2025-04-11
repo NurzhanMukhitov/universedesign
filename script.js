@@ -2,23 +2,12 @@
 // let isIndexPageInitialLoad = true; 
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Проверяем тип навигации для открытия меню при возврате
-    try {
-        const navigationEntries = performance.getEntriesByType("navigation");
-        // Проверяем, что API доступно и есть запись
-        if (navigationEntries && navigationEntries.length > 0) {
-             // Первый элемент ([0]) содержит информацию о текущей навигации
-            if (navigationEntries[0].type === 'back_forward') {
-                console.log('Navigation type is back_forward. Opening menu.');
-                openBurgerMenu(); // Открываем меню
-            } else {
-                console.log('Navigation type is:', navigationEntries[0].type);
-            }
-        } else {
-             console.log('PerformanceNavigationTiming API not available or no entries found.');
-        }
-    } catch (error) {
-        console.error('Error checking navigation type:', error);
+    // Проверяем флаг возврата с другой страницы
+    if (sessionStorage.getItem('justLeftIndex') === 'true') {
+        console.log("Обнаружен флаг justLeftIndex, открываем меню.");
+        openBurgerMenu(); // Открываем меню
+        sessionStorage.removeItem('justLeftIndex'); // Удаляем флаг
+        console.log("Флаг justLeftIndex удален из sessionStorage.");
     }
 
     // Размеры экрана
@@ -573,6 +562,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const sectionId = this.getAttribute('data-section');
                 // Получаем href
                 const href = this.getAttribute('href');
+
+                // Устанавливаем флаг в sessionStorage перед переходом, если это не попап
+                if (!sectionId && href && href !== '#' && !href.startsWith('javascript:')) {
+                    sessionStorage.setItem('justLeftIndex', 'true');
+                    console.log("Установлен флаг justLeftIndex в sessionStorage");
+                }
 
                 if (sectionId) {
                     // Если есть data-section, показываем попап
@@ -1134,6 +1129,14 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error('backButton не найден на этой странице'); // Уточняем сообщение об ошибке
     }
+
+    // Добавляем обработчик pageshow для корректной работы с bfcache
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            // Если страница восстановлена из bfcache, вызываем функцию для открытия меню
+            openBurgerMenu();
+        }
+    });
 });
 
 // Test comment
