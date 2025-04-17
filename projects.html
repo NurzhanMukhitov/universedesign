@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon/favicon-32x32.png?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon/favicon-16x16.png?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon/favicon/apple-touch-icon.png?v=2">
+    <title>UNIVERSE DESIGN | Projects</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="projects/projects.css">
+    <script src="https://player.vimeo.com/api/player.js"></script>
+</head>
+<body>
+    <div class="logo-text">
+        <img src="logo/UNIVERSE.png" alt="UNIVERSE">
+    </div>
+    
+    <div class="projects-container">
+        <div class="projects-grid">
+            <a href="projects/pre_event_outline_2025.html" class="project-item">
+                <div class="project-image">
+                    <img src="projects/pre_event_outline_2025/covers/cover.jpg" alt="PRE-EVENT OUTLINE 2025">
+                </div>
+                <span>PRE-EVENT OUTLINE 2025</span>
+            </a>
+            <a href="projects/intervals2023.html" class="project-item">
+                <div class="project-image">
+                    <img src="projects/intervals2023/covers/cover.jpg" alt="INTERVALS 2023">
+                </div>
+                <span>INTERVALS 2023</span>
+            </a>
+            <a href="projects/t1_finopolis.html" class="project-item">
+                <div class="project-image">
+                    <img src="projects/t1_finopolis/covers/cover.jpg" alt="FINOPOLIS 2022 | T1">
+                </div>
+                <span>FINOPOLIS 2022 | T1</span>
+            </a>
+            <a href="projects/lada_vesta.html" class="project-item">
+                <div class="project-image">
+                    <img src="projects/lada_vesta/covers/cover.jpg" alt="LADA VESTA SW CROSS">
+                </div>
+                <span>LADA VESTA SW CROSS</span>
+            </a>
+        </div>
+    </div>
+
+    <button class="back-button"></button>
+    <script>
+        // Показываем логотип при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoText = document.querySelector('.logo-text');
+            setTimeout(() => {
+                logoText.style.display = "block";
+                requestAnimationFrame(() => {
+                    logoText.classList.add('visible');
+                });
+            }, 100);
+
+            // Обработка кнопки назад
+            const backButton = document.querySelector('.back-button');
+            if (backButton) {
+                backButton.addEventListener('click', function() {
+                    // Устанавливаем флаг для показа собранного куба
+                    localStorage.setItem('showAssembledCube', 'true');
+                    // Переходим на предыдущую страницу в истории
+                    history.back();
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

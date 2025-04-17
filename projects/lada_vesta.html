@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LADA VESTA - UNIVERSE DESIGN</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../projects/projects.css">
+    <script src="https://player.vimeo.com/api/player.js"></script>
+</head>
+<body>
+    <div class="logo-text">
+        <img src="../logo/UNIVERSE.png" alt="UNIVERSE">
+    </div>
+
+    <div class="project-content">
+        <div class="project-gallery">
+            <div class="gallery-item">
+                <img src="lada_vesta/gallery/image1.jpg" alt="LADA VESTA Design" onclick="openFullscreen(this)">
+            </div>
+            
+            <div class="vimeo-container">
+                <div>
+                    <iframe src="https://player.vimeo.com/video/953543284?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" 
+                            frameborder="0" 
+                            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
+                            title="LADA VESTA SW CROSS">
+                    </iframe>
+                </div>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="lada_vesta/gallery/image2.jpg" alt="LADA VESTA Design" onclick="openFullscreen(this)">
+            </div>
+            
+            <div class="gallery-item">
+                <img src="lada_vesta/gallery/image3.jpg" alt="LADA VESTA Design" onclick="openFullscreen(this)">
+            </div>
+            
+            <div class="gallery-item">
+                <img src="lada_vesta/gallery/image4.jpg" alt="LADA VESTA Design" onclick="openFullscreen(this)">
+            </div>
+            
+            <div class="gallery-item">
+                <img src="lada_vesta/gallery/image5.jpg" alt="LADA VESTA Design" onclick="openFullscreen(this)">
+            </div>
+        </div>
+    </div>
+
+    <button class="back-button" onclick="history.back()"></button>
+    
+    <div class="fullscreen-view">
+        <div class="fullscreen-content">
+            <div class="fullscreen-media"></div>
+            <button class="close-fullscreen" onclick="closeFullscreen()">×</button>
+            <button class="nav-button prev-button" onclick="showPrevImage()"></button>
+            <button class="nav-button next-button" onclick="showNextImage()"></button>
+        </div>
+    </div>
+
+    <script>
+        let currentItemIndex = 0;
+        let galleryItems = [];
+        
+        function openFullscreen(img) {
+            const fullscreenView = document.querySelector('.fullscreen-view');
+            const mediaContainer = fullscreenView.querySelector('.fullscreen-media');
+            
+            // Получаем все элементы галереи (изображения И видео)
+            const imgItems = Array.from(document.querySelectorAll('.gallery-item img'));
+            const vimeoContainer = document.querySelector('.vimeo-container');
+            
+            galleryItems = []; // Очищаем массив
+            
+            // Добавляем все изображения и видео в массив элементов галереи
+            // с метаданными о типе (image/video)
+            imgItems.forEach(imgItem => {
+                galleryItems.push({ type: 'image', element: imgItem });
+            });
+            
+            // Вставляем видео в нужное место в массиве (после первого изображения)
+            galleryItems.splice(1, 0, { 
+                type: 'video', 
+                element: vimeoContainer,
+                url: 'https://player.vimeo.com/video/953543284?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+                title: 'LADA VESTA SW CROSS'
+            });
+            
+            // Находим индекс текущего элемента
+            if (img) {
+                for (let i = 0; i < galleryItems.length; i++) {
+                    if (galleryItems[i].type === 'image' && galleryItems[i].element === img) {
+                        currentItemIndex = i;
+                        break;
+                    }
+                }
+            } else {
+                currentItemIndex = 0;
+            }
+            
+            updateFullscreenContent();
+            fullscreenView.classList.add('active');
+            
+            document.addEventListener('keydown', handleKeyPress);
+        }
+        
+        function updateFullscreenContent() {
+            const mediaContainer = document.querySelector('.fullscreen-media');
+            const currentItem = galleryItems[currentItemIndex];
+            
+            if (currentItem.type === 'image') {
+                const img = currentItem.element;
+                mediaContainer.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
+                
+                // Показываем навигационные кнопки
+                document.querySelector('.prev-button').style.display = 'block';
+                document.querySelector('.next-button').style.display = 'block';
+            } else if (currentItem.type === 'video') {
+                // Вставляем видео Vimeo
+                mediaContainer.innerHTML = `
+                    <div class="video-container">
+                        <iframe src="${currentItem.url}" 
+                                frameborder="0" 
+                                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
+                                title="${currentItem.title}">
+                        </iframe>
+                    </div>
+                `;
+                
+                // Показываем навигационные кнопки и для видео
+                document.querySelector('.prev-button').style.display = 'block';
+                document.querySelector('.next-button').style.display = 'block';
+            }
+        }
+        
+        function closeFullscreen() {
+            const fullscreenView = document.querySelector('.fullscreen-view');
+            fullscreenView.classList.remove('active');
+            document.removeEventListener('keydown', handleKeyPress);
+        }
+        
+        function showNextImage() {
+            currentItemIndex = (currentItemIndex + 1) % galleryItems.length;
+            updateFullscreenContent();
+        }
+        
+        function showPrevImage() {
+            currentItemIndex = (currentItemIndex - 1 + galleryItems.length) % galleryItems.length;
+            updateFullscreenContent();
+        }
+        
+        function handleKeyPress(e) {
+            if (e.key === 'Escape') closeFullscreen();
+            else if (e.key === 'ArrowRight') showNextImage();
+            else if (e.key === 'ArrowLeft') showPrevImage();
+        }
+        
+        // Показываем логотип при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoText = document.querySelector('.logo-text');
+            setTimeout(() => {
+                logoText.style.display = "block";
+                requestAnimationFrame(() => {
+                    logoText.classList.add('visible');
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html> 

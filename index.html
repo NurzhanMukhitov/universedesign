@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Основные мета-теги -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="We create stunning visual experiences that bring your ideas to life">
+  <meta name="keywords" content="universe design, motion design, 3D animation, visual effects, creative studio">
+  <meta name="author" content="UNIVERSE DESIGN">
+  
+  <!-- Open Graph мета-теги -->
+  <meta property="og:title" content="UNIVERSE DESIGN">
+  <meta property="og:description" content="We create stunning visual experiences that bring your ideas to life">
+  <meta property="og:image" content="https://universe-design.com/logo/og-image.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="UNIVERSE DESIGN">
+  
+  <!-- LinkedIn специфичные мета-теги -->
+  <meta name="author" content="UNIVERSE DESIGN">
+  <meta name="description" content="We create stunning visual experiences that bring your ideas to life">
+  
+  <!-- Twitter Card мета-теги -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="UNIVERSE DESIGN">
+  <meta name="twitter:description" content="We create stunning visual experiences that bring your ideas to life">
+  <meta property="twitter:image" content="https://universe-design.com/logo/og-image.jpg">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon/favicon/apple-touch-icon.png">
+  <link rel="manifest" href="icon/favicon/site.webmanifest">
+  
+  <title>UNIVERSE DESIGN — We create stunning visual experiences that bring your ideas to life</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Проверяем наличие флага в sessionStorage
+    if (!sessionStorage.getItem('cube_session_started')) {
+      // Устанавливаем флаг для принудительного режима хаотичного куба
+      localStorage.setItem('force_chaotic_cube', 'true');
+      // Отмечаем, что сессия началась
+      sessionStorage.setItem('cube_session_started', 'true');
+      console.log("Force chaotic mode enabled (new session)");
+    }
+  </script>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div class="menu">
+    <div class="menu-btn">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  <!-- Логотип вынесен отдельно, чтобы всегда быть в правом верхнем углу -->
+  <div class="logo-text">
+    <img src="logo/UNIVERSE.png" alt="UNIVERSE design">
+  </div>
+  <div class="overlay-menu">
+    <ul>
+      <li><a href="projects.html">PROJECTS</a></li>
+      <li><a href="UNIVERSEхLedPulse.html">UNIVERSE х LedPulse</a></li>
+      <li><a href="about.html">ABOUT</a></li>
+      <li><a data-section="contacts">CONTACTS</a></li>
+    </ul>
+  </div>
+  <div class="overlay-mask"></div>
+  <div class="popup-block" id="contacts">
+    <div class="popup-content">
+      <div class="contact-info">
+        <div class="contact-person">
+          <h3>Yuriy Khotsinskiy</h3>
+          <div class="contact-links">
+            <a href="https://t.me/yurahoc" class="telegram-link" target="_blank">@yurahoc</a>
+            <p>+7 926 824 0607</p>
+            <a href="mailto:y.khotsinskiy@universe-design.com">y.khotsinskiy@universe-design.com</a>
+          </div>
+        </div>
+
+        <div class="contact-person">
+          <h3>Dmitry Khotsinskiy</h3>
+          <div class="contact-links">
+            <a href="https://t.me/dimahoc" class="telegram-link" target="_blank">@dimahoc</a>
+            <p>+7 926 916 9386</p>
+            <a href="mailto:d.khotsinskiy@universe-design.com">d.khotsinskiy@universe-design.com</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="social-icons">
+        <a href="https://www.instagram.com/universe_design_studio" target="_blank">
+          <img src="logo/instagram.png" alt="Instagram">
+        </a>
+        <a href="https://t.me/universe_design_studio" target="_blank">
+          <img src="logo/telegram.png" alt="Telegram">
+        </a>
+        <a href="https://www.behance.net/dimahoc" target="_blank">
+          <img src="logo/behance.png" alt="Behance">
+        </a>
+        <a href="https://vimeo.com/user28929903" target="_blank">
+          <img src="logo/vimeo.png" alt="Vimeo">
+        </a>
+        <a href="https://dprofile.ru/universe_design" target="_blank">
+          <img src="logo/Dprofile.png" alt="Dprofile">
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="fullscreen-view">
+    <div class="fullscreen-content">
+      <div class="fullscreen-media"></div>
+      <button class="close-fullscreen">×</button>
+    </div>
+  </div>
+  <!-- Иконка жеста для подсказки -->
+  <div class="gesture-mask"></div>
+  <div class="gesture-hint">
+    <img src="icon/swipe.svg" alt="Swipe Gesture" class="gesture-icon">
+  </div>
+  <!-- Кнопка сброса куба -->
+  <div class="reset-button">↺</div>
+  <!-- Конец иконки жеста -->
+  <script src="script.js"></script>
+</body>
+</html>
