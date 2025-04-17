@@ -641,7 +641,7 @@ canvas {
     width: clamp(40px, 10vw, 80px);
     height: auto;
     filter: invert(1) opacity(0.85);
-    animation: pulse 2.5s ease-in-out infinite;
+    animation: moveUpDown 2s ease-in-out infinite;
 }
 
 /* Маска для блокировки взаимодействия */
@@ -671,10 +671,10 @@ canvas {
     100% { opacity: 0; display: none; }
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); opacity: 0.85; }
-    50% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); opacity: 0.85; }
+@keyframes moveUpDown {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
 }
 
 /* Специальные стили для блока проектов */

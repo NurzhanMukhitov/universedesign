@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Параметры для подсветки букв
     var highlightedPoints = new Set();
     var currentLetterIndex = 0;
-    var letterHighlightDuration = 12000;
+    var letterHighlightDuration = 8000; // Уменьшаем общую длительность цикла
     var lastHighlightTime = 0;
     var highlightIntensity = 0;
     var fadeSpeed = 0.1;
@@ -153,8 +153,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     Point.prototype.draw = function(i, j) {
         var scale = focale / (focale + this.z);
-        var idx = i * linesY + pointsPerLine + j * pointsPerLine;
+        var idx = i * linesY * pointsPerLine + j * pointsPerLine;
 
+        // >>> ОПРЕДЕЛЯЕМ РАЗМЕР ШРИФТА <<<
+        var w = window.innerWidth;
+        var baseFontSize = (w < 768) ? 8 : 14; // Базовый размер
+        var boldFontSize = (w < 768) ? 8 : 14; // Одинаковый размер для всех состояний
+        
         if (tParam >= 0.9 && highlightedPoints.has(idx)) {
             // Подсвеченные буквы
             ctx.font = `bold ${boldFontSize}px OneDay`;
@@ -163,10 +168,20 @@ document.addEventListener('DOMContentLoaded', function() {
             zBrightness = Math.max(0.4, Math.min(1, zBrightness)); // Ограничиваем минимальную яркость
             var finalOpacity = zBrightness * (0.6 + highlightIntensity * 0.4);
             ctx.fillStyle = `rgba(255, 255, 255, ${finalOpacity})`;
+            // Добавляем эффект свечения
+            ctx.shadowColor = `rgba(255, 255, 255, ${finalOpacity * 0.8})`;
+            ctx.shadowBlur = 20 * zBrightness;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
         } else if (j === linesY - 1 && tParam <= 0.1) {
             // Собранное состояние
             ctx.font = `bold ${boldFontSize}px OneDay`;
             ctx.fillStyle = "#ffffff";
+            // Сбрасываем тени
+            ctx.shadowColor = "transparent";
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
         } else {
             // Обычное состояние
             ctx.font = `${baseFontSize}px OneDay`;
@@ -174,6 +189,11 @@ document.addEventListener('DOMContentLoaded', function() {
             bf = Math.max(0, Math.min(1, bf));
             var shade = Math.floor(20 + bf * 127); // Делаем неподсвеченные буквы еще темнее
             ctx.fillStyle = `rgb(${shade}, ${shade}, ${shade})`;
+            // Сбрасываем тени
+            ctx.shadowColor = "transparent";
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
         }
         
         var xPos = ww / 2 + this.x * scale;
@@ -699,7 +719,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!canStartHighlight || tParam < 0.9) {
             highlightedPoints.clear();
-        return;
+            return;
         }
 
         var deltaTime = time - lastHighlightTime;
