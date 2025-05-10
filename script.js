@@ -1,23 +1,23 @@
-// Удаляем глобальный флаг
+// Remove global flag
 // let isIndexPageInitialLoad = true; 
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Проверяем флаг возврата с другой страницы
+    // Check flag for returning from another page
     if (sessionStorage.getItem('justLeftIndex') === 'true') {
-        console.log("Обнаружен флаг justLeftIndex, планируем открыть меню.");
-        // Оборачиваем открытие меню в setTimeout, чтобы дать браузеру время на отрисовку
+        console.log("Found justLeftIndex flag, planning to open menu.");
+        // Wrap menu opening in setTimeout to give browser time to render
         setTimeout(function() {
-            openBurgerMenu(); // Открываем меню
-            console.log("Меню открыто после небольшой задержки.");
-        }, 0); // Минимальная задержка
-        sessionStorage.removeItem('justLeftIndex'); // Удаляем флаг сразу
-        console.log("Флаг justLeftIndex удален из sessionStorage.");
+            openBurgerMenu(); // Open menu
+            console.log("Menu opened after small delay.");
+        }, 0); // Minimum delay
+        sessionStorage.removeItem('justLeftIndex'); // Remove flag immediately
+        console.log("justLeftIndex flag removed from sessionStorage.");
     }
 
-    // Размеры экрана
+    // Screen dimensions
     var ww = window.innerWidth, wh = window.innerHeight;
 
-    // Получаем DOM элементы
+    // Get DOM elements
     var canvas = document.getElementById("c");
     var menuBtn = document.querySelector('.menu-btn');
     var logoText = document.querySelector('.logo-text');
@@ -30,10 +30,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var backButton = document.querySelector('.back-button');
     var isMenuLocked = false;
 
-    // Настройка canvas с учётом devicePixelRatio для чёткости
-    // --- Возвращаем dpr к исходному значению ---
+    // Canvas setup with devicePixelRatio for better clarity
+    // --- Restore original dpr value ---
     var dpr = window.devicePixelRatio || 1;
-    // --- Конец возврата dpr ---
+    // --- End of dpr restore ---
     canvas.width = ww * dpr;
     canvas.height = wh * dpr;
     var ctx = canvas.getContext("2d");
@@ -41,34 +41,34 @@ document.addEventListener('DOMContentLoaded', function() {
     canvas.style.width = ww + "px";
     canvas.style.height = wh + "px";
 
-    // Параметры куба
+    // Cube parameters
     var linesX = 14;
-    var linesY = 14; // Всегда 14
-    var pointsPerLine = getPointsPerLine(); // Динамическое значение
+    var linesY = 14; // Always 14
+    var pointsPerLine = getPointsPerLine(); // Dynamic value
     var letters = "UNIVERSEDESIGN";
-    var focale = 500; // Статичное значение для всех
+    var focale = 500; // Static value for all
     var defaultRotationX = -0.4, defaultRotationY = 0.5;
     var autoRotateSpeed = 0.0002;
     
-    // >>> Глобальные переменные для оптимизации вращения <<<
+    // >>> GLOBAL VARIABLES FOR ROTATION OPTIMIZATION <<<
     var currentSinX = 0, currentCosX = 1, currentSinY = 0, currentCosY = 1;
-    // >>> Конец глобальных переменных <<<
+    // >>> END OF GLOBAL VARIABLES <<<
 
-    // >>> ОБЪЯВЛЯЕМ ПЕРЕМЕННЫЕ ШРИФТА ГЛОБАЛЬНО <<<
+    // >>> DECLARE FONT VARIABLES GLOBALLY <<<
     var baseFontSize;
     var boldFontSize;
-    // >>> КОНЕЦ ОБЪЯВЛЕНИЯ <<<
+    // >>> END OF DECLARATION <<<
 
-    // Параметры для подсветки букв
+    // Letter highlighting parameters
     var highlightedPoints = new Set();
     var currentLetterIndex = 0;
-    var letterHighlightDuration = 8000; // Уменьшаем общую длительность цикла
+    var letterHighlightDuration = 8000; // Reduce overall cycle duration
     var lastHighlightTime = 0;
     var highlightIntensity = 0;
     var fadeSpeed = 0.1;
     var canStartHighlight = false;
 
-    // Определяем состояние куба на основе localStorage
+    // Determine cube state based on localStorage
     var forceChaotic = localStorage.getItem('force_chaotic_cube') === 'true';
     
     if (forceChaotic) {
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Управление жестами
+    // Gesture control
     var drag = false;
     var oldX = 0;
     var oldY = 0;
@@ -118,13 +118,18 @@ document.addEventListener('DOMContentLoaded', function() {
     var scrollThreshold = 100;
     var touchStartY = 0;
 
-    // Для анимации
+    // For animation
     var lastTime = 0;
 
-    // Массив точек
+    // Points array
     var pointsArray = [];
 
-    // Класс Point
+    /**
+     * Point class for 3D cube points
+     * @param {number} x - X coordinate
+     * @param {number} y - Y coordinate
+     * @param {number} z - Z coordinate
+     */
     function Point(x, y, z) {
         this.x = x;
         this.y = y;
@@ -137,6 +142,10 @@ document.addEventListener('DOMContentLoaded', function() {
         this.scatterZ = Math.random() * 2000 - 1000;
     }
 
+    /**
+     * Rotate point around X axis
+     * @param {number} angle - Rotation angle in radians
+     */
     Point.prototype.rotateX = function(angle) {
         var cosA = Math.cos(angle), sinA = Math.sin(angle);
         var y = this.y * cosA - this.z * sinA;
@@ -144,6 +153,10 @@ document.addEventListener('DOMContentLoaded', function() {
         this.y = y; this.z = z;
     };
 
+    /**
+     * Rotate point around Y axis
+     * @param {number} angle - Rotation angle in radians
+     */
     Point.prototype.rotateY = function(angle) {
         var cosA = Math.cos(angle), sinA = Math.sin(angle);
         var x = this.x * cosA + this.z * sinA;
@@ -151,45 +164,50 @@ document.addEventListener('DOMContentLoaded', function() {
         this.x = x; this.z = z;
     };
 
+    /**
+     * Draw point on canvas with appropriate styling
+     * @param {number} i - X index
+     * @param {number} j - Y index
+     */
     Point.prototype.draw = function(i, j) {
         var scale = focale / (focale + this.z);
         var idx = i * linesY * pointsPerLine + j * pointsPerLine;
 
-        // >>> ОПРЕДЕЛЯЕМ РАЗМЕР ШРИФТА <<<
+        // >>> DETERMINE FONT SIZE <<<
         var w = window.innerWidth;
-        var baseFontSize = (w < 768) ? 8 : 14; // Базовый размер
-        var boldFontSize = (w < 768) ? 8 : 14; // Одинаковый размер для всех состояний
+        var baseFontSize = (w < 768) ? 8 : 14; // Base size
+        var boldFontSize = (w < 768) ? 8 : 14; // Same size for all states
         
         if (tParam >= 0.9 && highlightedPoints.has(idx)) {
-            // Подсвеченные буквы
+            // Highlighted letters
             ctx.font = `bold ${boldFontSize}px OneDay`;
-            // Используем z-координату для расчета яркости
+            // Use z-coordinate for brightness calculation
             var zBrightness = 1 - (this.z + 1000) / 2000;
-            zBrightness = Math.max(0.4, Math.min(1, zBrightness)); // Ограничиваем минимальную яркость
+            zBrightness = Math.max(0.4, Math.min(1, zBrightness)); // Limit minimum brightness
             var finalOpacity = zBrightness * (0.6 + highlightIntensity * 0.4);
             ctx.fillStyle = `rgba(255, 255, 255, ${finalOpacity})`;
-            // Добавляем эффект свечения
+            // Add glow effect
             ctx.shadowColor = `rgba(255, 255, 255, ${finalOpacity * 0.8})`;
             ctx.shadowBlur = 20 * zBrightness;
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
         } else if (j === linesY - 1 && tParam <= 0.1) {
-            // Собранное состояние
+            // Gathered state
             ctx.font = `bold ${boldFontSize}px OneDay`;
             ctx.fillStyle = "#ffffff";
-            // Сбрасываем тени
+            // Reset shadows
             ctx.shadowColor = "transparent";
             ctx.shadowBlur = 0;
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
         } else {
-            // Обычное состояние
+            // Normal state
             ctx.font = `${baseFontSize}px OneDay`;
             var bf = 1 - (this.z + 1000) / 2000;
             bf = Math.max(0, Math.min(1, bf));
-            var shade = Math.floor(20 + bf * 127); // Делаем неподсвеченные буквы еще темнее
+            var shade = Math.floor(20 + bf * 127); // Make non-highlighted letters darker
             ctx.fillStyle = `rgb(${shade}, ${shade}, ${shade})`;
-            // Сбрасываем тени
+            // Reset shadows
             ctx.shadowColor = "transparent";
             ctx.shadowBlur = 0;
             ctx.shadowOffsetX = 0;
@@ -202,32 +220,41 @@ document.addEventListener('DOMContentLoaded', function() {
         ctx.fillText(text, xPos, yPos);
     };
 
-    // Новая функция для определения глубины куба
+    /**
+     * Determines the number of points per line based on screen width
+     * @returns {number} Number of points per line (8 for mobile, 10 for desktop)
+     */
     function getPointsPerLine() {
         var w = window.innerWidth;
-        if (w < 768) return 8; // Мобильные: 8 рядов
-        return 10; // Десктоп: 10 рядов
+        if (w < 768) return 8; // Mobile: 8 rows
+        return 10; // Desktop: 10 rows
     }
 
-    // Измененная функция для определения размера куба
+    /**
+     * Determines the cube size based on screen width
+     * @returns {number} Cube size in pixels
+     */
     function getCubeSize() {
         var w = window.innerWidth;
-        if (w < 576) return 220; // Вернем 220 (было 200)
-        if (w < 768) return 280; // Сделаем чуть больше (было 260)
-        // Остальные размеры без изменений
+        if (w < 576) return 220; // Return 220 (was 200)
+        if (w < 768) return 280; // Make slightly larger (was 260)
+        // Other sizes unchanged
         if (w < 992) return 260;
         if (w < 1200) return 300;
         if (w < 1400) return 340;
         return 360;
     }
 
+    /**
+     * Creates all 3D points for the cube
+     */
     function createPoints() {
         pointsArray = [];
         var cubeSize = getCubeSize();
-        // >>> ВОЗВРАЩАЕМ СТАНДАРТНЫЙ Z-РАСЧЕТ <<<
+        // >>> RESTORE STANDARD Z-CALCULATION <<<
         var topZ = cubeSize / 2;
         var botZ = -cubeSize / 2;
-        // >>> КОНЕЦ ИЗМЕНЕНИЯ <<<
+        // >>> END OF CHANGE <<<
         var spaceX = cubeSize / linesX;
         var spaceY = cubeSize / linesY;
 
@@ -235,9 +262,9 @@ document.addEventListener('DOMContentLoaded', function() {
             for (var i = 0; i < linesX; i++) {
                 var x = -cubeSize / 2 + i * spaceX;
                 var y = -cubeSize / 2 + j * spaceY;
-                // pointsPerLine остается динамическим (8 или 10)
+                // pointsPerLine remains dynamic (8 or 10)
                 for (var k = 0; k < pointsPerLine; k++) {
-                    // Используем стандартные topZ/botZ
+                    // Use standard topZ/botZ
                     var z = topZ + (botZ - topZ) / pointsPerLine * k;
                     var point = new Point(x, y, z);
                     pointsArray.push(point);
@@ -247,30 +274,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     createPoints();
 
+    /**
+     * Draws all points of the cube
+     */
     function drawPoints() {
         for (var i = 0; i < linesX; i++) {
             for (var j = 0; j < linesY; j++) {
                 for (var k = 0; k < pointsPerLine; k++) {
                     var idx = i * linesY * pointsPerLine + j * pointsPerLine + k;
                     var point = pointsArray[idx];
-                    // Интерполяция координат
+                    // Coordinate interpolation
                     var px = (1 - tParam) * point.originalX + tParam * point.scatterX;
                     var py = (1 - tParam) * point.originalY + tParam * point.scatterY;
                     var pz = (1 - tParam) * point.originalZ + tParam * point.scatterZ;
                     
-                    // >>> Применение вращений напрямую <<<
-                    // Вращение вокруг X
+                    // >>> Direct rotation application <<<
+                    // X rotation
                     var rotatedY1 = py * currentCosX - pz * currentSinX;
                     var rotatedZ1 = py * currentSinX + pz * currentCosX;
-                    // Вращение вокруг Y
+                    // Y rotation
                     var rotatedX2 = px * currentCosY + rotatedZ1 * currentSinY;
                     var rotatedZ2 = -px * currentSinY + rotatedZ1 * currentCosY;
                     
-                    // Обновляем координаты точки перед отрисовкой
+                    // Update point coordinates before drawing
                     point.x = rotatedX2;
                     point.y = rotatedY1;
                     point.z = rotatedZ2;
-                    // >>> Конец применения вращений <<<
+                    // >>> End of rotation application <<<
                     
                     point.draw(i, j);
                 }
@@ -278,19 +308,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    /**
+     * Main render function called on each animation frame
+     * @param {number} time - Current timestamp
+     */
     function render(time) {
-        // >>> РАССЧИТЫВАЕМ ШРИФТЫ ОДИН РАЗ ЗА КАДР <<<
+        // >>> CALCULATE FONTS ONCE PER FRAME <<<
         var w = window.innerWidth;
         baseFontSize = (w < 768) ? 8 : 14;
         boldFontSize = (w < 768) ? 12 : 14;
-        // >>> КОНЕЦ РАСЧЕТА ШРИФТОВ <<<
+        // >>> END OF FONT CALCULATION <<<
 
-        // >>> ВЫЧИСЛЯЕМ SIN/COS ДЛЯ ВРАЩЕНИЯ ОДИН РАЗ ЗА КАДР <<<
+        // >>> CALCULATE SIN/COS FOR ROTATION ONCE PER FRAME <<<
         currentSinX = Math.sin(rotationX);
         currentCosX = Math.cos(rotationX);
         currentSinY = Math.sin(rotationY);
         currentCosY = Math.cos(rotationY);
-        // >>> КОНЕЦ ВЫЧИСЛЕНИЯ SIN/COS <<<
+        // >>> END OF SIN/COS CALCULATION <<<
 
         var deltaTime = time - lastTime;
         lastTime = time;
@@ -300,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, ww, wh);
 
-        // Обновляем подсветку букв
+        // Update letter highlighting
         updateLetterHighlight(time);
         
         drawPoints();
@@ -309,32 +343,32 @@ document.addEventListener('DOMContentLoaded', function() {
             rotationY += autoRotateSpeed * deltaTime;
         }
         
-        // Проверяем состояние куба и обновляем видимость элементов
+        // Check cube state and update element visibility
         if (tParam === 0) {
-            // Куб собран - показываем элементы и фиксируем меню
+            // Cube is gathered - show elements and lock menu
             if (menuBtn.style.display !== "block") {
                 menuBtn.style.display = "block";
                 logoText.style.display = "block";
                 menuBtn.classList.add('visible');
                 logoText.classList.add('visible');
-                isMenuLocked = true; // Фиксируем меню при сборке куба
-                // Автоматически открываем меню
+                isMenuLocked = true; // Lock menu when cube is gathered
+                // Automatically open menu
                 menuOverlay.style.display = "block";
                 requestAnimationFrame(() => {
                     menuOverlay.classList.add('visible');
                 });
             }
-            // Всегда поддерживаем фиксацию меню при собранном кубе
+            // Always maintain menu lock when cube is gathered
             isMenuLocked = true;
         } else {
-            // Куб рассеян - скрываем элементы и снимаем фиксацию меню
+            // Cube is scattered - hide elements and unlock menu
             if (menuBtn.style.display !== "none") {
                 menuBtn.classList.remove('visible');
                 logoText.classList.remove('visible');
                 menuBtn.style.display = "none";
                 logoText.style.display = "none";
-                isMenuLocked = false; // Снимаем фиксацию меню
-                // Скрываем меню
+                isMenuLocked = false; // Unlock menu
+                // Hide menu
                 menuOverlay.classList.remove('visible');
                 setTimeout(() => {
                     menuOverlay.style.display = "none";
@@ -346,47 +380,52 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     requestAnimationFrame(render);
 
-    // Функция для обработки изменения размера окна
+    /**
+     * Handles window resize event
+     */
     function handleResize() {
-        // Обновляем размеры окна
+        // Update window dimensions
         ww = window.innerWidth;
         wh = window.innerHeight;
 
-        // Обновляем размеры canvas с учетом devicePixelRatio
-        // --- Возвращаем dpr к исходному значению ---
+        // Update canvas dimensions with devicePixelRatio
+        // --- Restore original dpr value ---
         var dpr = window.devicePixelRatio || 1;
-        // --- Конец возврата dpr ---
-        // Проверяем, существует ли canvas и ctx перед использованием
+        // --- End of dpr restore ---
+        // Check if canvas and ctx exist before using
         if (canvas && ctx) {
-        canvas.width = ww * dpr;
-        canvas.height = wh * dpr;
-            ctx.scale(dpr, dpr); // Важно сбросить и применить scale заново
-        canvas.style.width = ww + "px";
-        canvas.style.height = wh + "px";
+            canvas.width = ww * dpr;
+            canvas.height = wh * dpr;
+            ctx.scale(dpr, dpr); // Important to reset and reapply scale
+            canvas.style.width = ww + "px";
+            canvas.style.height = wh + "px";
         } else {
-            console.error("Canvas или context не найдены при ресайзе.");
-            return; // Прерываем выполнение, если canvas/ctx нет
+            console.error("Canvas or context not found during resize.");
+            return; // Stop execution if canvas/ctx doesn't exist
         }
 
-        // Обновляем параметры куба
+        // Update cube parameters
         pointsPerLine = getPointsPerLine();
 
-        // Пересоздаем точки с новыми параметрами
+        // Recreate points with new parameters
         createPoints();
 
-        // Обновляем лог, используя статичное значение focale
+        // Update log with static focale value
         console.log(`Resized. New params: Size=${getCubeSize()}, Focale=${focale}, LinesY=${linesY}, PointsPerLine=${pointsPerLine}`);
     }
 
-    // Добавляем обработчик события resize
-    // Проверим, нет ли уже существующего обработчика, чтобы не дублировать
-    // (Простой способ - добавить в любом случае, но лучше бы проверить)
-    // Пока просто добавляем:
+    // Add resize event handler
+    // Check if there's already an existing handler to avoid duplication
+    // (Simple approach - add anyway, but better to check)
+    // For now, just add:
     window.addEventListener('resize', handleResize);
 
-    // Убедимся, что первоначальный вызов createPoints() происходит после определения handleResize
-    // (В вашем коде createPoints() вызывается раньше, что нормально для первого вызова)
+    // Ensure first initial call to createPoints() happens after handleResize is determined
+    // (In your code createPoints() is called before first call, which is normal for first call)
 
+    /**
+     * Event listeners for mouse interactions
+     */
     canvas.addEventListener('mousedown', function(e) {
         handleStart(e.pageX, e.pageY);
     });
@@ -396,6 +435,9 @@ document.addEventListener('DOMContentLoaded', function() {
     canvas.addEventListener('mouseup', handleEnd);
     canvas.addEventListener('mouseleave', handleEnd);
 
+    /**
+     * Event listeners for touch interactions
+     */
     canvas.addEventListener('touchstart', function(e) {
         e.preventDefault();
         touchStartY = e.touches[0].pageY;
@@ -416,6 +458,11 @@ document.addEventListener('DOMContentLoaded', function() {
         handleEnd();
     }, { passive: false });
 
+    /**
+     * Handles mouse/touch movement for rotation
+     * @param {number} x - X coordinate
+     * @param {number} y - Y coordinate
+     */
     function handleMove(x, y) {
         if (drag) {
             rotationY += (x - oldX) * 0.01;
@@ -425,16 +472,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    /**
+     * Handles start of mouse/touch interaction
+     * @param {number} x - X coordinate
+     * @param {number} y - Y coordinate
+     */
     function handleStart(x, y) {
         drag = true;
         oldX = x;
         oldY = y;
     }
 
+    /**
+     * Handles end of mouse/touch interaction
+     */
     function handleEnd() {
         drag = false;
     }
 
+    /**
+     * Handles scroll for cube transformation
+     * @param {number} deltaY - Scroll delta
+     */
     function handleScroll(deltaY) {
         scrollAccumulator += deltaY;
         
@@ -447,15 +506,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Wheel event listener
     canvas.addEventListener('wheel', function(e) {
         e.preventDefault();
         handleScroll(e.deltaY);
     });
 
+    /**
+     * Animates cube gathering (from scattered to compact state)
+     */
     function animateGather() {
         console.log("Animating gather");
         
-        // Если куб уже собран, ничего не делаем
+        // If cube is already gathered, do nothing
         if (tParam === 0) {
             console.log("Cube already gathered");
             return;
@@ -465,6 +528,10 @@ document.addEventListener('DOMContentLoaded', function() {
         var initT = tParam;
         var duration = 1500;
         
+        /**
+         * Animation step function
+         * @param {number} currentTime - Current animation timestamp
+         */
         function step(currentTime) {
             var elapsed = currentTime - startTime;
             var progress = Math.min(elapsed / duration, 1);
@@ -478,16 +545,19 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(step);
     }
 
+    /**
+     * Animates cube scattering (from compact to scattered state)
+     */
     function animateScatter() {
         console.log("Animating scatter");
         
-        // Если куб уже рассеян, ничего не делаем
+        // If cube is already scattered, do nothing
         if (tParam === 1) {
             console.log("Cube already scattered");
             return;
         }
         
-        // Скрываем все оверлеи при начале рассеивания
+        // Hide all overlays when scattering starts
         var overlays = document.querySelectorAll('.overlay-menu, .popup-block, .overlay-mask');
         overlays.forEach(function(el) {
             if (el.style.display !== "none") {
@@ -502,6 +572,10 @@ document.addEventListener('DOMContentLoaded', function() {
         var initT = tParam;
         var duration = 1500;
         
+        /**
+         * Animation step function
+         * @param {number} currentTime - Current animation timestamp
+         */
         function step(currentTime) {
             var elapsed = currentTime - startTime;
             var progress = Math.min(elapsed / duration, 1);
@@ -515,7 +589,615 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(step);
     }
 
-    var menuOverlay = document.querySelector('.overlay-menu');
+    /**
+     * Opens the burger menu
+     */
+    function openBurgerMenu() {
+        console.log('openBurgerMenu called');
+        const menuOverlay = document.querySelector('.overlay-menu');
+        if (menuOverlay) {
+            console.log('Element .overlay-menu found');
+            menuOverlay.style.display = 'block';
+            requestAnimationFrame(() => {
+                menuOverlay.classList.add('visible');
+                console.log('visible class added to .overlay-menu');
+            });
+        } else {
+            console.error('Element .overlay-menu not found');
+        }
+    }
+
+    if (logoText) {
+        // Remove logo click handler
+        logoText.style.pointerEvents = 'none';
+        logoText.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    }
+
+    // Check if all elements are found
+    console.log('DOM Elements:', {
+        overlayMask: overlayMask,
+        menuOverlay: menuOverlay,
+        menuBtn: menuBtn
+    });
+
+    // Mask click handler
+    if (overlayMask) {
+        overlayMask.addEventListener('click', function(e) {
+            console.log('Mask click:', {
+                target: e.target,
+                isMask: e.target === overlayMask,
+                activePopup: activePopup ? activePopup.id : null
+            });
+            
+            // Hide popup when clicking on mask
+            hidePopup();
+        });
+    }
+
+    // Outside popup click handler
+    document.addEventListener('click', function(e) {
+        if (!activePopup) return;
+        
+        // Check if click was inside popup content
+        const isClickInsideContent = e.target.closest('.popup-content');
+        // Check if click was on menu
+        const isClickOnMenu = e.target.closest('.overlay-menu') || e.target.closest('.menu-btn');
+        // Check if click was on mask
+        const isClickOnMask = e.target === overlayMask;
+        
+        console.log('Click:', {
+            target: e.target,
+            isClickInsideContent,
+            isClickOnMenu,
+            isClickOnMask,
+            activePopupId: activePopup ? activePopup.id : null
+        });
+
+        // Hide popup only if click was outside popup content and not on menu
+        if (!isClickInsideContent && !isClickOnMenu) {
+            hidePopup();
+        }
+    });
+
+    // Escape key handler
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && activePopup) {
+            console.log("Closing popup by Escape");
+            hidePopup();
+        }
+    });
+
+    /**
+     * Hides the popup element
+     */
+    function hidePopup() {
+        if (!activePopup) return;
+        
+        console.log('Closing popup:', activePopup.id);
+        
+        overlayMask.classList.remove('visible');
+        activePopup.classList.remove('visible');
+        
+        setTimeout(function() {
+            overlayMask.style.display = 'none';
+            activePopup.style.display = 'none';
+            activePopup = null;
+            }, 400);
+        }
+
+    /**
+     * Shows a popup by ID
+     * @param {string} popupId - ID of the popup element to show
+     */
+    function showPopup(popupId) {
+        var popup = document.getElementById(popupId);
+        if (!popup) {
+            console.error('Popup not found:', popupId);
+            return;
+        }
+        
+        console.log('Showing popup:', popupId);
+        
+        // Hide previous popup if it exists
+        if (activePopup) {
+            hidePopup();
+        }
+        
+        activePopup = popup;
+        
+        // Show mask and popup
+        overlayMask.style.display = 'block';
+        popup.style.display = 'block';
+        
+        // Give browser time to process display change
+        requestAnimationFrame(function() {
+            overlayMask.classList.add('visible');
+            popup.classList.add('visible');
+        });
+    }
+
+    // Menu handlers
+    if (menuOverlay) {
+        var menuItems = menuOverlay.querySelectorAll('li a');
+        menuItems.forEach(function(item) {
+            item.addEventListener('click', function(event) {
+                // Get section ID from data-attribute
+                const sectionId = this.getAttribute('data-section');
+                // Get href
+                const href = this.getAttribute('href');
+
+                // Set flag in sessionStorage before transition, if it's not a popup
+                if (!sectionId && href && href !== '#' && !href.startsWith('javascript:')) {
+                    sessionStorage.setItem('justLeftIndex', 'true');
+                    console.log("justLeftIndex flag set in sessionStorage");
+                }
+
+                if (sectionId) {
+                    // If there's data-section, show popup
+                    event.preventDefault(); // Cancel standard behavior ONLY for popups
+                    showPopup(sectionId);
+                    // Close menu
+                    menuOverlay.classList.remove('visible');
+                    overlayMask.classList.remove('visible');
+                    menuBtn.classList.remove('active');
+                } else if (href && href !== '#' && !href.startsWith('javascript:')) {
+                    // If there's a valid href, allow browser to navigate
+                    // Also close menu if it was open
+                    menuOverlay.classList.remove('visible');
+                    overlayMask.classList.remove('visible');
+                    menuBtn.classList.remove('active');
+                    // Standard href navigation will happen automatically
+                } else {
+                    // If there's no sectionId, nor valid href, cancel action
+                    event.preventDefault(); 
+                }
+            });
+        });
+    }
+
+    /**
+     * Hides the gesture hint element
+     */
+    function hideGestureHint() {
+        if (gestureHint && gestureHint.classList.contains('visible')) {
+            gestureHint.classList.remove('visible');
+            gestureMask.classList.remove('visible');
+            setTimeout(() => {
+                gestureHint.style.display = 'none';
+                gestureMask.style.display = 'none';
+            }, 450);
+        }
+    }
+
+    // Add gesture hint hiding event listeners
+    canvas.addEventListener('mousedown', hideGestureHint);
+    canvas.addEventListener('touchstart', hideGestureHint);
+    canvas.addEventListener('wheel', hideGestureHint);
+
+    /**
+     * Gets random point index for a specific letter
+     * @param {string} letter - The letter to find points for
+     * @returns {number} Random point index for the specified letter
+     */
+    function getRandomPointIndexForLetter(letter) {
+        var indices = [];
+        for (var i = 0; i < linesX; i++) {
+            for (var j = 0; j < linesY; j++) {
+                for (var k = 0; k < pointsPerLine; k++) {
+                    var idx = i * linesY * pointsPerLine + j * pointsPerLine + k;
+                    if (letters[i % letters.length] === letter) {
+                        indices.push(idx);
+                    }
+                }
+            }
+        }
+        return indices[Math.floor(Math.random() * indices.length)];
+    }
+
+    /**
+     * Updates letter highlighting effect
+     * @param {number} time - Current animation timestamp
+     */
+    function updateLetterHighlight(time) {
+        if (!lastHighlightTime) lastHighlightTime = time;
+        
+        if (!canStartHighlight || tParam < 0.9) {
+            highlightedPoints.clear();
+            return;
+        }
+
+        var deltaTime = time - lastHighlightTime;
+        
+        // Update highlighting intensity with smoother pulsation
+        if (highlightedPoints.size > 0) {
+            // Combine several sine waves with different frequencies for smoother pulsation
+            var pulse1 = Math.sin(time * 0.0005) * 0.5; // Very slow pulsation
+            var pulse2 = Math.sin(time * 0.001) * 0.3; // Medium pulsation
+            var pulse3 = Math.sin(time * 0.002) * 0.2; // Fast pulsation
+            highlightIntensity = (pulse1 + pulse2 + pulse3 + 1) / 2; // Normalize to 0-1 range
+        }
+
+        // Check if new letter needs to be added
+        if (deltaTime > letterHighlightDuration / letters.length) {
+            // Find all possible indices for current letter
+            var indices = [];
+            var currentLetter = letters[currentLetterIndex];
+            
+            for (var i = 0; i < linesX; i++) {
+                for (var j = 0; j < linesY; j++) {
+                    for (var k = 0; k < pointsPerLine; k++) {
+                        var idx = i * linesY * pointsPerLine + j * pointsPerLine + k;
+                        if (letters[i % letters.length] === currentLetter) {
+                            indices.push(idx);
+                        }
+                    }
+                }
+            }
+            
+            // Add more points for current letter
+            var pointsToAdd = Math.min(8, indices.length); // Increase number of highlighted points
+            for (var p = 0; p < pointsToAdd; p++) {
+                if (indices.length > 0) {
+                    var randomIndex = Math.floor(Math.random() * indices.length);
+                    highlightedPoints.add(indices[randomIndex]);
+                    indices.splice(randomIndex, 1);
+                }
+            }
+            
+            // Move to next letter
+            currentLetterIndex = (currentLetterIndex + 1) % letters.length;
+            
+            // If started new word, DO NOT clear old highlights
+            // Removed: if (currentLetterIndex === 0) { highlightedPoints.clear(); }
+            
+            lastHighlightTime = time;
+        }
+    }
+
+    // Reset button handler
+    if (resetButton) {
+        resetButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Set flag for forced update
+            localStorage.setItem('force_chaotic_cube', 'true');
+            
+            // Reload page
+            window.location.reload();
+        });
+    }
+    
+    // Cmd+Shift+R (and Ctrl+Shift+R for Windows/Linux) key combination handler
+    document.addEventListener('keydown', function(e) {
+        // Check key combination (Cmd/Ctrl + Shift + R)
+        if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 'r' || e.key === 'R')) {
+            console.log("Key combination for reset detected");
+            
+            // Prevent standard browser behavior
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Set flag for forced update
+            localStorage.setItem('force_chaotic_cube', 'true');
+            
+            // Reload page
+            setTimeout(function() {
+                window.location.reload();
+            }, 50);
+            
+            return false;
+        }
+    }, true); // Add third parameter true for capture phase
+
+    // Fullscreen viewing functions
+    let currentFullscreenIndex = 0;
+    let fullscreenImages = [];
+
+    /**
+     * Opens fullscreen view for a media element
+     * @param {HTMLElement} mediaElement - Image or video element to show in fullscreen
+     */
+    function openFullscreen(mediaElement) {
+        // Remove old fullscreenView if it exists
+        if (fullscreenView) {
+            fullscreenView.remove();
+        }
+
+        // Create new fullscreenView each time
+        fullscreenView = document.createElement('div');
+        fullscreenView.style.backgroundColor = "#000"; // Black background
+        fullscreenView.className = 'fullscreen-view';
+        document.body.appendChild(fullscreenView);
+        
+        // Block page scrolling
+        console.log("Setting overflow: hidden on html and body");
+        document.documentElement.style.setProperty('overflow', 'hidden', 'important'); // For html
+        document.body.style.setProperty('overflow', 'hidden', 'important'); // For body
+
+        const content = document.createElement('div');
+        content.className = 'fullscreen-content';
+        fullscreenView.appendChild(content);
+
+        const mediaContainer = document.createElement('div');
+        mediaContainer.className = 'fullscreen-media';
+        content.appendChild(mediaContainer);
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'close-fullscreen';
+        closeBtn.innerHTML = '×';
+        content.appendChild(closeBtn);
+
+        // Add next button only for desktops
+        if (window.innerWidth > 768) {
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'next-fullscreen';
+            content.appendChild(nextBtn);
+
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                showNextImage();
+            });
+        }
+        
+        // Add event handlers
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeFullscreen();
+        });
+
+        fullscreenMedia = mediaContainer;
+
+        // Get all images and videos in current project
+        const projectContent = mediaElement.closest('.modal-slides');
+        fullscreenImages = Array.from(projectContent.querySelectorAll('.slide img, iframe:not([src*="player.vimeo.com/api"])'));
+        currentFullscreenIndex = fullscreenImages.indexOf(mediaElement);
+
+        // Show content
+        showCurrentMedia();
+        
+        // Add key handlers
+        document.addEventListener('keydown', handleFullscreenKeyPress);
+
+        // Activate fullscreen mode
+        requestAnimationFrame(() => {
+            fullscreenView.classList.add('active');
+        });
+
+        // Swipe handlers for mobile devices
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isSwiping = false; // Swipe flag
+        
+        /**
+         * Handles touch start event
+         * @param {TouchEvent} e - Touch event
+         */
+        function handleTouchStart(e) {
+            if (e.touches.length !== 1) return; // Only one touch
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            isSwiping = true; // Start tracking swipe
+            console.log(`TouchStart: x=${touchStartX.toFixed(2)}, y=${touchStartY.toFixed(2)}`);
+        }
+        
+        /**
+         * Handles touch move event
+         * @param {TouchEvent} e - Touch event
+         */
+        function handleTouchMove(e) {
+            if (!isSwiping || e.touches.length !== 1) return;
+            console.log(`TouchMove: x=${e.touches[0].clientX.toFixed(2)}, y=${e.touches[0].clientY.toFixed(2)}`);
+            // Block page scrolling during swipe
+            e.preventDefault();
+        }
+        
+        /**
+         * Handles touch end event
+         * @param {TouchEvent} e - Touch event
+         */
+        function handleTouchEnd(e) {
+            if (!isSwiping || e.changedTouches.length !== 1) {
+                isSwiping = false;
+                return;
+            }
+            
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            
+            // Calculate swipe distance
+            const swipeDistanceX = touchEndX - touchStartX;
+            const swipeDistanceY = touchEndY - touchStartY; // Don't use Math.abs here for direction determination
+            
+            console.log(`TouchEnd: x=${touchEndX.toFixed(2)}, y=${touchEndY.toFixed(2)}`);
+            console.log(`Swipe Distance: dX=${swipeDistanceX.toFixed(2)}, dY=${swipeDistanceY.toFixed(2)}`);
+            
+            isSwiping = false; // Swipe ended
+
+            // Check if swipe was predominantly horizontal (|dx| > |dy| * 1.5 - increase threshold)
+            if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY) * 1.5) {
+                // Minimum swipe distance - 10% of screen width
+                const minSwipeDistance = window.innerWidth * 0.1;
+                console.log(`Horizontal swipe detected. Min distance: ${minSwipeDistance.toFixed(2)}`);
+                
+                if (Math.abs(swipeDistanceX) > minSwipeDistance) {
+                    console.log("Swipe distance threshold met.");
+                    if (swipeDistanceX > 0) {
+                        console.log("Executing showPreviousImage()");
+                        // Swipe right - previous image
+                        showPreviousImage();
+                    } else {
+                        console.log("Executing showNextImage()");
+                        // Swipe left - next image
+                        showNextImage();
+                    }
+                } else {
+                    console.log("Swipe distance threshold NOT met.");
+                }
+            } else {
+                console.log("Swipe is more vertical or diagonal, ignored.");
+            }
+        }
+        
+        // Add swipe handlers
+        fullscreenView.addEventListener('touchstart', handleTouchStart, { passive: false });
+        fullscreenView.addEventListener('touchmove', handleTouchMove, { passive: false });
+        fullscreenView.addEventListener('touchend', handleTouchEnd, { passive: false });
+        
+        // Save references to handlers for removal when closing
+        fullscreenView.touchHandlers = {
+            start: handleTouchStart,
+            move: handleTouchMove,
+            end: handleTouchEnd
+        };
+
+        // Add swipe indicator for mobile
+        if (window.innerWidth <= 768) {
+            const swipeIndicator = document.createElement('div');
+            swipeIndicator.className = 'swipe-indicator';
+            swipeIndicator.textContent = 'Swipe for navigation';
+            content.appendChild(swipeIndicator);
+            
+            // Hide indicator after 3 seconds
+            setTimeout(() => {
+                swipeIndicator.remove();
+            }, 3000);
+        }
+    }
+
+    /**
+     * Shows current media in fullscreen view
+     */
+    function showCurrentMedia() {
+        const media = fullscreenImages[currentFullscreenIndex];
+        
+        // Clear container
+        fullscreenMedia.innerHTML = '';
+        
+        if (media.tagName.toLowerCase() === 'iframe') {
+            // Create static preloader
+            const preloader = document.createElement('div');
+            preloader.textContent = 'Loading video...'; // Video preloader text
+            preloader.style.fontSize = '18px';
+            preloader.style.color = '#fff';
+            preloader.style.textAlign = 'center';
+            preloader.style.padding = '20px';
+            fullscreenMedia.appendChild(preloader);
+            
+            // Load video after preloader
+            const iframe = document.createElement('iframe');
+            iframe.src = media.src;
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.style.aspectRatio = '16/9';
+            iframe.frameBorder = '0';
+            iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+            iframe.onload = function() {
+                fullscreenMedia.innerHTML = ''; // Clear container before adding video
+                fullscreenMedia.appendChild(iframe);
+            };
+        } else {
+            // Clone image
+            const clone = media.cloneNode();
+            fullscreenMedia.appendChild(clone);
+        }
+    }
+
+    /**
+     * Shows next image in fullscreen view
+     */
+    function showNextImage() {
+        currentFullscreenIndex = (currentFullscreenIndex + 1) % fullscreenImages.length;
+        showCurrentMedia();
+    }
+
+    /**
+     * Shows previous image in fullscreen view
+     */
+    function showPreviousImage() {
+        currentFullscreenIndex = (currentFullscreenIndex - 1 + fullscreenImages.length) % fullscreenImages.length;
+        showCurrentMedia();
+    }
+
+    /**
+     * Handles key press events in fullscreen mode
+     * @param {KeyboardEvent} e - Keyboard event
+     */
+    function handleFullscreenKeyPress(e) {
+        if (e.key === 'Escape') {
+            closeFullscreen();
+        } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+            e.key === 'ArrowRight' ? showNextImage() : showPreviousImage();
+        }
+    }
+
+    /**
+     * Closes fullscreen view
+     */
+    function closeFullscreen() {
+        if (fullscreenView) {
+            // Unblock page scrolling
+            console.log("Removing overflow: hidden from html and body");
+            document.documentElement.style.removeProperty('overflow'); // For html
+            document.body.style.removeProperty('overflow'); // For body
+            
+            // Remove event handlers
+            document.removeEventListener('keydown', handleFullscreenKeyPress);
+            
+            // Remove swipe handlers
+            if (fullscreenView.touchHandlers) {
+                fullscreenView.removeEventListener('touchstart', fullscreenView.touchHandlers.start);
+                fullscreenView.removeEventListener('touchmove', fullscreenView.touchHandlers.move);
+                fullscreenView.removeEventListener('touchend', fullscreenView.touchHandlers.end);
+            }
+            
+            fullscreenView.classList.remove('active');
+            
+            // Stop video when closing
+            const iframe = fullscreenMedia.querySelector('iframe');
+            if (iframe) {
+                iframe.src = '';
+            }
+
+            // Remove element after animation
+            setTimeout(() => {
+                if (fullscreenView) {
+                    fullscreenView.remove();
+                    fullscreenView = null;
+                    fullscreenMedia = null;
+                }
+            }, 300);
+        }
+    }
+
+    // Back button handler (example)
+    if (backButton) {
+        console.log('backButton found');
+        backButton.addEventListener('click', () => {
+            console.log('backButton click');
+            // Return logic
+            window.location.href = '/'; // Example: if you need to go to main page
+        });
+    } else {
+        console.error('backButton not found on this page');
+    }
+
+    // Add pageshow event handler for correct bfcache work
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            // If page restored from bfcache, call function to open menu
+            openBurgerMenu();
+        }
+    });
+
+    /**
+     * Menu button click handler
+     */
     if (menuBtn) {
         menuBtn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -535,588 +1217,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (logoText) {
-        // Удаляем обработчик клика с логотипа
-        logoText.style.pointerEvents = 'none';
-        logoText.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        });
-    }
-
-    // Проверяем, что все элементы найдены
-    console.log('Элементы DOM:', {
-        overlayMask: overlayMask,
-        menuOverlay: menuOverlay,
-        menuBtn: menuBtn
-    });
-
-    // Обработчик клика на маску
-    if (overlayMask) {
-        overlayMask.addEventListener('click', function(e) {
-            console.log('Клик на маску:', {
-                target: e.target,
-                isMask: e.target === overlayMask,
-                activePopup: activePopup ? activePopup.id : null
-            });
-            
-            // Закрываем попап при клике на маску
-            hidePopup();
-        });
-    }
-
-    // Обработчик клика вне попапа
-    document.addEventListener('click', function(e) {
-        if (!activePopup) return;
-        
-        // Проверяем, был ли клик внутри контента попапа
-        const isClickInsideContent = e.target.closest('.popup-content');
-        // Проверяем, был ли клик на меню
-        const isClickOnMenu = e.target.closest('.overlay-menu') || e.target.closest('.menu-btn');
-        // Проверяем, был ли клик на маске
-        const isClickOnMask = e.target === overlayMask;
-        
-        console.log('Клик:', {
-            target: e.target,
-            isClickInsideContent,
-            isClickOnMenu,
-            isClickOnMask,
-            activePopupId: activePopup ? activePopup.id : null
-        });
-
-        // Закрываем попап только если клик был вне контента попапа и не на меню
-        if (!isClickInsideContent && !isClickOnMenu) {
-            hidePopup();
-        }
-    });
-
-    // Обработчик клавиши Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && activePopup) {
-            console.log("Закрываем попап по Escape");
-            hidePopup();
-        }
-    });
-
-    // Функция закрытия попапа
-    function hidePopup() {
-        if (!activePopup) return;
-        
-        console.log('Закрываем попап:', activePopup.id);
-        
-        overlayMask.classList.remove('visible');
-        activePopup.classList.remove('visible');
-        
-        setTimeout(function() {
-            overlayMask.style.display = 'none';
-            activePopup.style.display = 'none';
-            activePopup = null;
-            }, 400);
-        }
-
-    // Функция показа попапа
-    function showPopup(popupId) {
-        var popup = document.getElementById(popupId);
-        if (!popup) {
-            console.error('Попап не найден:', popupId);
-            return;
-        }
-        
-        console.log('Показываем попап:', popupId);
-        
-        // Скрываем предыдущий попап, если он есть
-        if (activePopup) {
-            hidePopup();
-        }
-        
-        activePopup = popup;
-        
-        // Показываем маску и попап
-        overlayMask.style.display = 'block';
-        popup.style.display = 'block';
-        
-        // Даем время браузеру обработать изменение display
-        requestAnimationFrame(function() {
-            overlayMask.classList.add('visible');
-            popup.classList.add('visible');
-        });
-    }
-
-    // Обработчики меню
-    if (menuOverlay) {
-        var menuItems = menuOverlay.querySelectorAll('li a');
-        menuItems.forEach(function(item) {
-            item.addEventListener('click', function(event) {
-                // Получаем ID секции из data-атрибута
-                const sectionId = this.getAttribute('data-section');
-                // Получаем href
-                const href = this.getAttribute('href');
-
-                // Устанавливаем флаг в sessionStorage перед переходом, если это не попап
-                if (!sectionId && href && href !== '#' && !href.startsWith('javascript:')) {
-                    sessionStorage.setItem('justLeftIndex', 'true');
-                    console.log("Установлен флаг justLeftIndex в sessionStorage");
-                }
-
-                if (sectionId) {
-                    // Если есть data-section, показываем попап
-                    event.preventDefault(); // Отменяем стандартное поведение ТОЛЬКО для попапов
-                    showPopup(sectionId);
-                    // Закрываем меню
-                    menuOverlay.classList.remove('visible');
-                    overlayMask.classList.remove('visible');
-                    menuBtn.classList.remove('active');
-                } else if (href && href !== '#' && !href.startsWith('javascript:')) {
-                    // Если есть валидный href, позволяем браузеру перейти по ссылке.
-                    // Дополнительно закрываем меню, если оно было открыто
-                    menuOverlay.classList.remove('visible');
-                    overlayMask.classList.remove('visible');
-                    menuBtn.classList.remove('active');
-                    // Стандартный переход по href выполнится автоматически
-                } else {
-                    // Если нет ни sectionId, ни валидного href, отменяем действие
-                    event.preventDefault(); 
-                }
-            });
-        });
-    }
-
-    // Обработчики событий для скрытия gesture-hint при взаимодействии
-    function hideGestureHint() {
-        if (gestureHint && gestureHint.classList.contains('visible')) {
-            gestureHint.classList.remove('visible');
-            gestureMask.classList.remove('visible');
-            setTimeout(() => {
-                gestureHint.style.display = 'none';
-                gestureMask.style.display = 'none';
-            }, 450);
-        }
-    }
-
-    canvas.addEventListener('mousedown', hideGestureHint);
-    canvas.addEventListener('touchstart', hideGestureHint);
-    canvas.addEventListener('wheel', hideGestureHint);
-
-    // Функция для получения случайного индекса точки для текущей буквы
-    function getRandomPointIndexForLetter(letter) {
-        var indices = [];
-        for (var i = 0; i < linesX; i++) {
-            for (var j = 0; j < linesY; j++) {
-                for (var k = 0; k < pointsPerLine; k++) {
-                    var idx = i * linesY * pointsPerLine + j * pointsPerLine + k;
-                    if (letters[i % letters.length] === letter) {
-                        indices.push(idx);
-                    }
-                }
-            }
-        }
-        return indices[Math.floor(Math.random() * indices.length)];
-    }
-
-    // Функция обновления подсветки букв
-    function updateLetterHighlight(time) {
-        if (!lastHighlightTime) lastHighlightTime = time;
-        
-        if (!canStartHighlight || tParam < 0.9) {
-            highlightedPoints.clear();
-            return;
-        }
-
-        var deltaTime = time - lastHighlightTime;
-        
-        // Обновляем интенсивность подсветки с более плавной пульсацией
-        if (highlightedPoints.size > 0) {
-            // Комбинируем несколько синусоид с разными частотами для более естественной пульсации
-            var pulse1 = Math.sin(time * 0.0005) * 0.5; // Очень медленная пульсация
-            var pulse2 = Math.sin(time * 0.001) * 0.3; // Средняя пульсация
-            var pulse3 = Math.sin(time * 0.002) * 0.2; // Быстрая пульсация
-            highlightIntensity = (pulse1 + pulse2 + pulse3 + 1) / 2; // Нормализуем к диапазону 0-1
-        }
-
-        // Проверяем, нужно ли добавить новую букву
-        if (deltaTime > letterHighlightDuration / letters.length) {
-            // Находим все возможные индексы для текущей буквы
-            var indices = [];
-            var currentLetter = letters[currentLetterIndex];
-            
-            for (var i = 0; i < linesX; i++) {
-                for (var j = 0; j < linesY; j++) {
-                    for (var k = 0; k < pointsPerLine; k++) {
-                        var idx = i * linesY * pointsPerLine + j * pointsPerLine + k;
-                        if (letters[i % letters.length] === currentLetter) {
-                            indices.push(idx);
-                        }
-                    }
-                }
-            }
-            
-            // Добавляем больше точек для текущей буквы
-            var pointsToAdd = Math.min(8, indices.length); // Увеличиваем количество подсвеченных точек
-            for (var p = 0; p < pointsToAdd; p++) {
-                if (indices.length > 0) {
-                    var randomIndex = Math.floor(Math.random() * indices.length);
-                    highlightedPoints.add(indices[randomIndex]);
-                    indices.splice(randomIndex, 1);
-                }
-            }
-            
-            // Переходим к следующей букве
-            currentLetterIndex = (currentLetterIndex + 1) % letters.length;
-            
-            // Если начали новое слово, НЕ очищаем старые подсветки
-            // Удалено: if (currentLetterIndex === 0) { highlightedPoints.clear(); }
-            
-            lastHighlightTime = time;
-        }
-    }
-
-    // Обработчик клика на кнопку сброса
-    if (resetButton) {
-        resetButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Устанавливаем флаг принудительного обновления
-            localStorage.setItem('force_chaotic_cube', 'true');
-            
-            // Перезагружаем страницу
-            window.location.reload();
-        });
-    }
-    
-    // Обработчик комбинации клавиш Cmd+Shift+R (и Ctrl+Shift+R для Windows/Linux)
-    document.addEventListener('keydown', function(e) {
-        // Проверяем комбинацию клавиш (Cmd/Ctrl + Shift + R)
-        if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 'r' || e.key === 'R')) {
-            console.log("Комбинация клавиш для сброса обнаружена");
-            
-            // Предотвращаем стандартное поведение браузера
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Устанавливаем флаг принудительного обновления
-            localStorage.setItem('force_chaotic_cube', 'true');
-            
-            // Перезагружаем страницу
-            setTimeout(function() {
-                window.location.reload();
-            }, 50);
-            
-            return false;
-        }
-    }, true); // Добавляем третий параметр true для фазы захвата
-
-    // Функции для полноэкранного просмотра
-    let currentFullscreenIndex = 0;
-    let fullscreenImages = [];
-
-    function openFullscreen(mediaElement) {
-        // Удаляем старый fullscreenView, если он существует
-        if (fullscreenView) {
-            fullscreenView.remove();
-        }
-
-        // Создаем новый fullscreenView каждый раз
-        fullscreenView = document.createElement('div');
-        fullscreenView.style.backgroundColor = "#000"; // Черный фон
-        fullscreenView.className = 'fullscreen-view';
-        document.body.appendChild(fullscreenView);
-        
-        // Блокируем прокрутку страницы
-        console.log("Setting overflow: hidden on html and body");
-        document.documentElement.style.setProperty('overflow', 'hidden', 'important'); // Для html
-        document.body.style.setProperty('overflow', 'hidden', 'important'); // Для body
-
-        const content = document.createElement('div');
-        content.className = 'fullscreen-content';
-        fullscreenView.appendChild(content);
-
-        const mediaContainer = document.createElement('div');
-        mediaContainer.className = 'fullscreen-media';
-        content.appendChild(mediaContainer);
-
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'close-fullscreen';
-        closeBtn.innerHTML = '×';
-        content.appendChild(closeBtn);
-
-        // Добавляем кнопку next только для десктопов
-        if (window.innerWidth > 768) {
-        const nextBtn = document.createElement('button');
-        nextBtn.className = 'next-fullscreen';
-        content.appendChild(nextBtn);
-
-            nextBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-                showNextImage();
-        });
-        }
-        
-        // Добавляем обработчики событий
-        closeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeFullscreen();
-        });
-
-        fullscreenMedia = mediaContainer;
-
-        // Получаем все изображения и видео в текущем проекте
-        const projectContent = mediaElement.closest('.modal-slides');
-        fullscreenImages = Array.from(projectContent.querySelectorAll('.slide img, iframe:not([src*="player.vimeo.com/api"])'));
-        currentFullscreenIndex = fullscreenImages.indexOf(mediaElement);
-
-        // Показываем контент
-        showCurrentMedia();
-        
-        // Добавляем обработчики клавиш
-        document.addEventListener('keydown', handleFullscreenKeyPress);
-
-        // Активируем полноэкранный режим
-        requestAnimationFrame(() => {
-            fullscreenView.classList.add('active');
-        });
-
-        // Обработчики для свайпов на мобильных устройствах
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let isSwiping = false; // Флаг, что идет свайп
-        
-        function handleTouchStart(e) {
-            if (e.touches.length !== 1) return; // Только одно касание
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-            isSwiping = true; // Начинаем отслеживать свайп
-            console.log(`TouchStart: x=${touchStartX.toFixed(2)}, y=${touchStartY.toFixed(2)}`);
-        }
-        
-        function handleTouchMove(e) {
-            if (!isSwiping || e.touches.length !== 1) return;
-            console.log(`TouchMove: x=${e.touches[0].clientX.toFixed(2)}, y=${e.touches[0].clientY.toFixed(2)}`);
-            // Блокируем прокрутку страницы при свайпе
-            e.preventDefault();
-        }
-        
-        function handleTouchEnd(e) {
-            if (!isSwiping || e.changedTouches.length !== 1) {
-                isSwiping = false;
-                return;
-            }
-            
-            const touchEndX = e.changedTouches[0].clientX;
-            const touchEndY = e.changedTouches[0].clientY;
-            
-            // Рассчитываем дистанцию свайпа
-            const swipeDistanceX = touchEndX - touchStartX;
-            const swipeDistanceY = touchEndY - touchStartY; // Не используем Math.abs здесь для определения направления
-            
-            console.log(`TouchEnd: x=${touchEndX.toFixed(2)}, y=${touchEndY.toFixed(2)}`);
-            console.log(`Swipe Distance: dX=${swipeDistanceX.toFixed(2)}, dY=${swipeDistanceY.toFixed(2)}`);
-            
-            isSwiping = false; // Завершили свайп
-
-            // Проверяем, что свайп был преимущественно горизонтальным (|dx| > |dy| * 1.5 - увеличиваем порог)
-            if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY) * 1.5) {
-                // Минимальная дистанция свайпа - 10% от ширины экрана
-                const minSwipeDistance = window.innerWidth * 0.1;
-                console.log(`Horizontal swipe detected. Min distance: ${minSwipeDistance.toFixed(2)}`);
-                
-                if (Math.abs(swipeDistanceX) > minSwipeDistance) {
-                    console.log("Swipe distance threshold met.");
-                    if (swipeDistanceX > 0) {
-                        console.log("Executing showPreviousImage()");
-                    // Свайп вправо - предыдущее изображение
-                    showPreviousImage();
-                } else {
-                        console.log("Executing showNextImage()");
-                    // Свайп влево - следующее изображение
-                    showNextImage();
-                }
-                } else {
-                    console.log("Swipe distance threshold NOT met.");
-                }
-            } else {
-                 console.log("Swipe is more vertical or diagonal, ignored.");
-            }
-        }
-        
-        // Добавляем обработчики свайпа
-        fullscreenView.addEventListener('touchstart', handleTouchStart, { passive: false });
-        fullscreenView.addEventListener('touchmove', handleTouchMove, { passive: false });
-        fullscreenView.addEventListener('touchend', handleTouchEnd, { passive: false });
-        
-        // Сохраняем ссылки на обработчики для удаления при закрытии
-        fullscreenView.touchHandlers = {
-            start: handleTouchStart,
-            move: handleTouchMove,
-            end: handleTouchEnd
-        };
-
-        // Добавляем индикатор свайпа для мобильных
-        if (window.innerWidth <= 768) {
-            const swipeIndicator = document.createElement('div');
-            swipeIndicator.className = 'swipe-indicator';
-            swipeIndicator.textContent = 'Свайпните для навигации';
-            content.appendChild(swipeIndicator);
-            
-            // Скрываем индикатор через 3 секунды
-            setTimeout(() => {
-                swipeIndicator.remove();
-            }, 3000);
-        }
-    }
-
-    // Функция для показа текущего медиа
-    function showCurrentMedia() {
-        const media = fullscreenImages[currentFullscreenIndex];
-        
-        // Очищаем контейнер
-        fullscreenMedia.innerHTML = '';
-        
-        if (media.tagName.toLowerCase() === 'iframe') {
-            // Создаем статичный прелоадер
-            const preloader = document.createElement('div');
-            preloader.textContent = 'Загрузка видео...'; // Текст прелоадера
-            preloader.style.fontSize = '18px';
-            preloader.style.color = '#fff';
-            preloader.style.textAlign = 'center';
-            preloader.style.padding = '20px';
-            fullscreenMedia.appendChild(preloader);
-            
-            // Загружаем видео после прелоадера
-            const iframe = document.createElement('iframe');
-            iframe.src = media.src;
-            iframe.width = '100%';
-            iframe.height = '100%';
-            iframe.style.aspectRatio = '16/9';
-            iframe.frameBorder = '0';
-            iframe.allow = 'autoplay; fullscreen; picture-in-picture';
-            iframe.onload = function() {
-                fullscreenMedia.innerHTML = ''; // Очищаем контейнер перед добавлением видео
-                fullscreenMedia.appendChild(iframe);
-            };
-        } else {
-            // Клонируем изображение
-            const clone = media.cloneNode();
-            fullscreenMedia.appendChild(clone);
-        }
-    }
-
-    // Функция для показа следующего изображения
-    function showNextImage() {
-        currentFullscreenIndex = (currentFullscreenIndex + 1) % fullscreenImages.length;
-        showCurrentMedia();
-    }
-
-    // Функция для показа предыдущего изображения
-    function showPreviousImage() {
-        currentFullscreenIndex = (currentFullscreenIndex - 1 + fullscreenImages.length) % fullscreenImages.length;
-        showCurrentMedia();
-    }
-
-    // Обработчик нажатий клавиш в полноэкранном режиме
-    function handleFullscreenKeyPress(e) {
-        if (e.key === 'Escape') {
-            closeFullscreen();
-        } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-            e.key === 'ArrowRight' ? showNextImage() : showPreviousImage();
-        }
-    }
-
-    // Функция закрытия полноэкранного режима
-    function closeFullscreen() {
-        if (fullscreenView) {
-            // Разблокируем прокрутку страницы
-            console.log("Removing overflow: hidden from html and body");
-            document.documentElement.style.removeProperty('overflow'); // Для html
-            document.body.style.removeProperty('overflow'); // Для body
-            
-            // Удаляем обработчики событий
-            document.removeEventListener('keydown', handleFullscreenKeyPress);
-            
-            // Удаляем обработчики свайпа
-            if (fullscreenView.touchHandlers) {
-                fullscreenView.removeEventListener('touchstart', fullscreenView.touchHandlers.start);
-                fullscreenView.removeEventListener('touchmove', fullscreenView.touchHandlers.move);
-                fullscreenView.removeEventListener('touchend', fullscreenView.touchHandlers.end);
-            }
-            
-            fullscreenView.classList.remove('active');
-            
-            // Останавливаем видео при закрытии
-            const iframe = fullscreenMedia.querySelector('iframe');
-            if (iframe) {
-                iframe.src = '';
-            }
-
-            // Удаляем элемент после анимации
-            setTimeout(() => {
-                if (fullscreenView) {
-                fullscreenView.remove();
-                fullscreenView = null;
-                fullscreenMedia = null;
-                }
-            }, 300);
-        }
-    }
-
     if (menuOverlay) {
         menuOverlay.addEventListener('click', function(e) {
             e.stopPropagation();
         });
     }
-
-    // Обработчики событий для скрытия gesture-hint при взаимодействии
-    function hideGestureHint() {
-        if (gestureHint && gestureHint.classList.contains('visible')) {
-            gestureHint.classList.remove('visible');
-            gestureMask.classList.remove('visible');
-            setTimeout(() => {
-                gestureHint.style.display = 'none';
-                gestureMask.style.display = 'none';
-            }, 450);
-        }
-    }
-
-    canvas.addEventListener('mousedown', hideGestureHint);
-    canvas.addEventListener('touchstart', hideGestureHint);
-    canvas.addEventListener('wheel', hideGestureHint);
-
-    function openBurgerMenu() {
-        console.log('openBurgerMenu вызвана');
-        const menuOverlay = document.querySelector('.overlay-menu');
-        if (menuOverlay) {
-            console.log('Элемент .overlay-menu найден');
-            menuOverlay.style.display = 'block';
-            requestAnimationFrame(() => {
-                menuOverlay.classList.add('visible');
-                console.log('Класс visible добавлен к .overlay-menu');
-            });
-        } else {
-            console.error('Элемент .overlay-menu не найден');
-        }
-    }
-
-    // Пример вызова функции при возврате
-    if (backButton) {
-        console.log('backButton найден');
-        backButton.addEventListener('click', () => {
-            console.log('Клик по backButton');
-            // Логика возврата
-            window.location.href = '/'; // Пример: если нужно перейти на главную
-        });
-    } else {
-        console.error('backButton не найден на этой странице'); // Уточняем сообщение об ошибке
-    }
-
-    // Добавляем обработчик pageshow для корректной работы с bfcache
-    window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
-            // Если страница восстановлена из bfcache, вызываем функцию для открытия меню
-            openBurgerMenu();
-        }
-    });
 });
 
 // Test comment
