@@ -15,6 +15,9 @@
 - Медиа проекта: `projects/<slug>/covers/cover.jpg` и `projects/<slug>/gallery/*`.
 - Логика полноэкранной галереи проектов: `projects/project-gallery.js`.
 - Обнаружение поисковиками и AI-агентами: `robots.txt` и `sitemap.xml` в корне.
+- Текстовый слой для LLM-агентов: `llms.txt` в корне + `.md`-зеркало каждой страницы
+  по тому же пути (`about.html` → `about.md`, `projects/echo_2.0.html` → `projects/echo_2.0.md`).
+- `.nojekyll` в корне обязателен: без него GitHub Pages прогоняет `.md` через Jekyll.
 
 ## Как обычно добавлять новый проект
 1. Создать папку `projects/<slug>/` с:
@@ -29,7 +32,10 @@
    - запись в JSON-LD (`itemListElement`).
 4. **Дописать URL страницы в `sitemap.xml`.** Сборки нет, файл статический — сам он не обновится.
    Если в имени файла есть кириллица, URL percent-энкодить (пример: `UNIVERSE%D1%85LedPulse.html`).
-5. Проверить мобильную и десктопную верстку (особенно GIF и iframe-видео).
+5. **Создать `projects/<slug>.md`** по образцу соседнего проекта (описание, ссылки на видео,
+   обложку и файлы галереи), добавить `<link rel="alternate" type="text/markdown">` в `<head>`
+   HTML-страницы и запись о проекте в `llms.txt` и `projects.md`.
+6. Проверить мобильную и десктопную верстку (особенно GIF и iframe-видео).
 
 ## Важные практики для правок
 - `.DS_Store` закрыт в `.gitignore` — руками ничего делать не нужно.

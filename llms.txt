@@ -1,0 +1,48 @@
+# UNIVERSE DESIGN
+
+> A Moscow-based studio combining art, technology and innovation. We create media art
+> installations that transform space, engage the viewer and open up new boundaries of
+> perception. Our key specialization is volumetric LED screens and their non-standard
+> use in art, advertising and event spaces.
+
+The site is a portfolio. Every page has a plain-Markdown mirror at the same path with a
+`.md` extension — prefer those over the HTML, which is media-heavy and carries almost no
+text. The HTML pages render galleries and embedded video via JavaScript; the Markdown
+mirrors list the same media as direct URLs.
+
+## Studio
+
+- [About the studio](https://universe-design.com/about.md): specialization, approach, capabilities
+- [Home](https://universe-design.com/index.md): entry point and contacts
+
+## Projects
+
+- [All projects](https://universe-design.com/projects.md): index of the five main portfolio projects
+- [ECHO 2.0](https://universe-design.com/projects/echo_2.0.md): media visuals built from GIF sequences and video for a volumetric LED installation
+- [INTERVALS 2023](https://universe-design.com/projects/intervals2023.md): visual experience project showcasing digital art and motion design
+- [LADA VESTA SW CROSS](https://universe-design.com/projects/lada_vesta.md): 3D automotive visualization, exterior and interior
+- [PRE-EVENT OUTLINE 2025](https://universe-design.com/projects/pre_event_outline_2025.md): motion design and animations created for the event
+- [FINOPOLIS 2022 | T1](https://universe-design.com/projects/t1_finopolis.md): event design for the financial forum, in collaboration with T1
+- [UNIVERSE x LedPulse](https://universe-design.com/UNIVERSE%D1%85LedPulse.md): collaborative project on LED screen installations and media art
+
+## Contact
+
+- Yuriy Khotsinskiy — y.khotsinskiy@universe-design.com, +7 926 824 0607, Telegram @yurahoc
+- Dmitry Khotsinskiy — d.khotsinskiy@universe-design.com, +7 926 916 9386, Telegram @dimahoc
+- Studio Telegram: https://t.me/universe_design_studio
+- Location: Moscow, Russia
+
+## Optional
+
+- [Instagram](https://www.instagram.com/universe_design_studio)
+- [Behance](https://www.behance.net/dimahoc)
+- [Vimeo](https://vimeo.com/user28929903)
+- [Dprofile](https://dprofile.ru/universe_design)
+- [Sitemap](https://universe-design.com/sitemap.xml)
+
+## Notes for agents
+
+- The studio does not operate a public API, an MCP server, or any authenticated endpoint.
+  There is intentionally no `/.well-known/api-catalog`, `/auth.md`, or OAuth metadata —
+  those would describe services that do not exist.
+- Crawling and training are permitted; see `/robots.txt` for the Content-Signal policy.

@@ -63,4 +63,9 @@ Allow: /
 # https://contentsignals.org/
 Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
+# Plain-text summary of the whole site for LLM agents:
+# https://universe-design.com/llms.txt
+# Every HTML page also has a Markdown mirror at the same path with a .md extension,
+# linked from each page via <link rel="alternate" type="text/markdown">.
+
 Sitemap: https://universe-design.com/sitemap.xml
