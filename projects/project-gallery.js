@@ -13,7 +13,7 @@ function debounce(func, wait) {
 
 // Настройки по умолчанию
 const defaultConfig = {
-    galleryItemsQuery: '.gallery-item img, .youtube-container iframe, .vimeo-container iframe',
+    galleryItemsQuery: '.gallery-item img, .gallery-item video, .youtube-container iframe, .vimeo-container iframe',
     fullscreenViewClass: 'fullscreen-view',
     fullscreenContentClass: 'fullscreen-content',
     fullscreenMediaClass: 'fullscreen-media',
@@ -71,8 +71,8 @@ class ProjectGallery {
         try {
             // Добавляем обработчики для каждого элемента галереи
             this.mediaElements.forEach((mediaElement, index) => {
-                const clickableElement = mediaElement.tagName === 'IMG' ? 
-                    mediaElement : 
+                const clickableElement = (mediaElement.tagName === 'IMG' || mediaElement.tagName === 'VIDEO') ?
+                    mediaElement :
                     mediaElement.closest('.youtube-container, .vimeo-container');
 
                 if (clickableElement) {
@@ -85,11 +85,6 @@ class ProjectGallery {
                         this.showMedia(this.currentMediaIndex);
                         this.openFullscreen();
                     });
-                }
-
-                // Обработка открытия видео в полноэкранном режиме
-                if (mediaElement.tagName.toLowerCase() === 'video') {
-                    this.handleVideoFullscreen(mediaElement);
                 }
             });
 
@@ -140,20 +135,25 @@ class ProjectGallery {
                 img.src = currentElement.src;
                 img.alt = currentElement.alt || '';
                 
-                // Добавляем обработку ошибок загрузки
-                img.onerror = () => {
-                    console.error('Error loading image:', currentElement.src);
-                    img.src = 'path/to/fallback-image.jpg'; // Путь к запасному изображению
-                };
-                
-                // Добавляем индикатор загрузки
+                // Плавное появление после загрузки
                 img.style.opacity = '0';
                 img.onload = () => {
                     img.style.transition = 'opacity 0.3s ease';
                     img.style.opacity = '1';
                 };
-                
+
                 this.fullscreenMediaContainer.appendChild(img);
+            } else if (currentElement.tagName === 'VIDEO') {
+                const video = document.createElement('video');
+                video.src = currentElement.currentSrc || currentElement.src;
+                video.poster = currentElement.poster;
+                video.setAttribute('aria-label', currentElement.getAttribute('aria-label') || '');
+                video.loop = true;
+                video.muted = true;
+                video.playsInline = true;
+                video.controls = false;
+                this.fullscreenMediaContainer.appendChild(video);
+                video.play().catch(() => { /* автовоспроизведение может быть запрещено политикой браузера */ });
             } else if (currentElement.tagName === 'IFRAME') {
                 const container = document.createElement('div');
                 container.className = this.config.videoContainerClass;
@@ -251,32 +251,46 @@ class ProjectGallery {
         }
     }
 
-    // Обработка открытия видео в полноэкранном режиме
-    handleVideoFullscreen(video) {
-        const fullscreenMedia = document.querySelector('.fullscreen-media');
-        const clonedVideo = video.cloneNode(true);
-        
-        // Сохраняем текущие атрибуты
-        clonedVideo.autoplay = true;
-        clonedVideo.loop = true;
-        clonedVideo.muted = true;
-        clonedVideo.playsinline = true;
-        
-        fullscreenMedia.innerHTML = '';
-        fullscreenMedia.appendChild(clonedVideo);
-        
-        // Автовоспроизведение при открытии
-        clonedVideo.play().catch(function(error) {
-            console.log("Autoplay prevented:", error);
-        });
+}
+
+/**
+ * Ленивое воспроизведение галерейных видео.
+ *
+ * У <video> нет аналога loading="lazy", а autoplay заставил бы браузер скачать
+ * все ролики сразу. Поэтому теги стоят с preload="none" и показывают poster,
+ * а загрузка и проигрывание запускаются, когда элемент попадает в область видимости.
+ */
+function initLazyGalleryVideos() {
+    const videos = document.querySelectorAll('.gallery-item video[preload="none"]');
+    if (!videos.length) return;
+
+    // Без IntersectionObserver просто включаем всё — лучше лишний трафик, чем статичные постеры
+    if (!('IntersectionObserver' in window)) {
+        videos.forEach(v => { v.preload = 'auto'; v.play().catch(() => {}); });
+        return;
     }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const video = entry.target;
+            if (entry.isIntersecting) {
+                if (video.preload === 'none') video.preload = 'auto';
+                video.play().catch(() => { /* политика автовоспроизведения — остаётся постер */ });
+            } else {
+                video.pause();
+            }
+        });
+    }, { rootMargin: '200px 0px' });
+
+    videos.forEach(v => observer.observe(v));
 }
 
 // Автоматическая инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     try {
         new ProjectGallery();
-        
+        initLazyGalleryVideos();
+
         // Показываем логотип
         const logoText = document.querySelector('.logo-text');
         if (logoText) {

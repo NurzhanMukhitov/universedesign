@@ -11,3 +11,7 @@
 
 # Logs
 *.log
+
+# Playwright MCP
+.playwright-mcp/
+.claude/
