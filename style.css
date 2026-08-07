@@ -988,6 +988,11 @@ canvas {
 .logo-text .logo-home {
     display: block;
     line-height: 0;
+    cursor: pointer;
+    /* Обёртка логотипа пропускает клики насквозь (pointer-events: none на
+       .logo-text), чтобы не перехватывать вращение куба. Самой ссылке реакцию
+       возвращаем — иначе по ней невозможно попасть мышью. */
+    pointer-events: auto;
     transition: opacity .25s ease;
 }
 

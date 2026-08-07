@@ -671,8 +671,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    if (logoText) {
-        // Remove logo click handler
+    // На внутренних страницах логотип обёрнут в ссылку на главную — там гасить
+    // клики нельзя. Глушим их только на главной, где логотип ничего не открывает
+    // и не должен мешать вращать куб.
+    if (logoText && !logoText.querySelector('.logo-home')) {
         logoText.style.pointerEvents = 'none';
         logoText.addEventListener('click', function(e) {
             e.preventDefault();
