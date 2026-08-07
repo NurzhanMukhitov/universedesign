@@ -606,8 +606,10 @@ body {
     width: 100%;
     max-width: 1280px;
     position: relative;
-    padding-bottom: 56.25%; /* Соотношение сторон 16:9 */
-    height: 0;
+    /* Как и у .youtube-container: padding-bottom считал высоту от ширины
+       РОДИТЕЛЯ, а ширина ограничена max-width — плеер выходил 4:3 вместо 16:9
+       и дёргал вёрстку. aspect-ratio берёт собственную ширину. */
+    aspect-ratio: 16 / 9;
     overflow: hidden;
 }
 
@@ -637,11 +639,11 @@ body {
     .project-content {
         padding: 60px 30px;
     }
-    
-    .gallery-item {
-        max-width: 1000px;
-    }
-    
+}
+
+/* Плеер и одиночные кадры ужимаем только там, где 1280 действительно не влезает */
+@media (max-width: 1340px) {
+    .gallery-item,
     .vimeo-container {
         max-width: 1000px;
     }
@@ -916,4 +918,112 @@ and (max-width: 767px) {
     line-height: 0;
     cursor: pointer;
     pointer-events: auto;
+}
+
+/* ---------- Вводный блок проекта: текст слева, кадр справа ----------
+   Живёт в той же сетке, что и остальные ряды галереи: полная ширина 1340,
+   внутри две половины с тем же зазором 10px, что между всеми плитками.
+
+   Верхний отступ уводит заголовок из-под переключателя языка (он висит
+   на 74px от верха), левый повторяет поле, которое в проекте Outline
+   нарисовано прямо внутри баннера. */
+
+.project-intro {
+    align-items: stretch;
+    padding-top: 56px;
+}
+
+/* Пропорция снята с баннера Outline: текстовая часть 60% ширины, кадр 40%.
+   Замер по скриншоту — текст 769px и картинка 500px внутри баннера 1280. */
+.project-intro .intro-text {
+    width: calc(60% - 5px);
+    flex: 0 0 calc(60% - 5px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px 40px 8px 96px;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #fff;
+}
+
+/* Параметры взяты из исходного макета Outline (Keynote): Helvetica Light,
+   30pt при слайде 1920 → около 20px в экспорте 1280, выключка по формату,
+   одинарный интервал. Заголовок набран тем же кеглем, что и текст. */
+
+.project-intro .intro-title,
+.project-intro .intro-subtitle,
+.project-intro .intro-text p {
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 1.2;
+    color: #fff;
+    margin: 0;
+}
+
+.project-intro .intro-subtitle {
+    margin-bottom: 24px;
+}
+
+.project-intro .intro-text p {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    margin-bottom: 20px;
+}
+
+.project-intro .intro-credits {
+    margin-top: 4px;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.2;
+    text-align: left;
+    color: #fff;
+}
+
+.project-intro .intro-credits a {
+    color: rgba(255, 255, 255, .8);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(255, 255, 255, .3);
+    transition: color .25s ease;
+}
+
+.project-intro .intro-credits a:hover {
+    color: #fff;
+}
+
+.project-intro .gallery-item {
+    width: calc(40% - 5px);
+    flex: 0 0 calc(40% - 5px);
+}
+
+@media screen and (max-width: 900px) {
+    /* На узком экране колонки встают друг под друга: читать текст в половину
+       телефонного экрана невозможно. */
+    .project-intro .intro-text,
+    .project-intro .gallery-item {
+        width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .project-intro {
+        padding-top: 40px;
+    }
+
+    .project-intro .intro-text {
+        padding: 8px 0 22px 0;
+    }
+
+    .project-intro .intro-title,
+    .project-intro .intro-subtitle,
+    .project-intro .intro-text p {
+        font-size: 16px;
+    }
+
+    /* На узкой колонке выключка по формату рвёт строки пробелами */
+    .project-intro .intro-text p {
+        text-align: left;
+    }
 }

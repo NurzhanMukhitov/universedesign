@@ -5,6 +5,15 @@
 
 Markdown mirror of <https://universe-design.com/en/projects.html>.
 
+## REFRACTION
+
+A light installation at the NUR International Media Art Festival in Kazan.
+A work by the media.tribe art collective, supported by UNIVERSE DESIGN studio.
+
+- Details: <https://universe-design.com/en/projects/refraction.md>
+- Page: <https://universe-design.com/en/projects/refraction.html>
+- Cover: <https://universe-design.com/projects/refraction/covers/cover.jpg>
+
 ## PRE-EVENT OUTLINE 2025
 
 Motion design and animations created for the PRE-EVENT OUTLINE 2025 event.

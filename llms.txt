@@ -31,6 +31,7 @@ the Markdown mirrors list the same media as direct URLs.
 ## Projects
 
 - [All projects](https://universe-design.com/projects.md): index of the five main portfolio projects
+- [REFRACTION](https://universe-design.com/projects/refraction.md): light installation at the NUR International Media Art Festival in Kazan, by media.tribe with UNIVERSE DESIGN support
 - [ECHO 2.0](https://universe-design.com/projects/echo_2.0.md): media visuals built from GIF sequences and video for a volumetric LED installation
 - [INTERVALS 2023](https://universe-design.com/projects/intervals2023.md): visual experience project showcasing digital art and motion design
 - [LADA VESTA SW CROSS](https://universe-design.com/projects/lada_vesta.md): 3D automotive visualization, exterior and interior

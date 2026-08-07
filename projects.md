@@ -5,6 +5,15 @@
 
 Markdown-зеркало страницы <https://universe-design.com/projects.html>.
 
+## REFRACTION
+
+Световая инсталляция на международном фестивале медиаискусства NUR в Казани.
+Работа арт-коллектива media.tribe при поддержке студии UNIVERSE DESIGN.
+
+- Подробнее: <https://universe-design.com/projects/refraction.md>
+- Страница: <https://universe-design.com/projects/refraction.html>
+- Обложка: <https://universe-design.com/projects/refraction/covers/cover.jpg>
+
 ## PRE-EVENT OUTLINE 2025
 
 Моушн-дизайн и анимации, созданные для мероприятия PRE-EVENT OUTLINE 2025.
