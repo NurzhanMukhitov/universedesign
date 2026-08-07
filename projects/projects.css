@@ -757,21 +757,23 @@ body {
 }
 
 /* Брейкпоинты для адаптивности */
+/* Верхний отступ держит контент ниже переключателя языка: он висит на 74px
+   от верха (на узких экранах — 62px) и раньше перекрывал первый блок. */
 @media (max-width: 1920px) {
     .project-content {
-        padding: 0 40px;
+        padding: 104px 40px 0;
     }
 }
 
 @media (max-width: 1440px) {
     .project-content {
-        padding: 0 30px;
+        padding: 104px 30px 0;
     }
 }
 
 @media (max-width: 1024px) {
     .project-content {
-        padding: 0 20px;
+        padding: 100px 20px 0;
     }
     .gallery-item {
         margin-bottom: 30px;
@@ -780,7 +782,7 @@ body {
 
 @media (max-width: 768px) {
     .project-content {
-        padding: 0 15px;
+        padding: 96px 15px 0;
     }
     .gallery-item {
         margin-bottom: 20px;
@@ -789,7 +791,7 @@ body {
 
 @media (max-width: 480px) {
     .project-content {
-        padding: 0 10px;
+        padding: 92px 10px 0;
     }
     .gallery-item {
         margin-bottom: 15px;
@@ -930,7 +932,6 @@ and (max-width: 767px) {
 
 .project-intro {
     align-items: stretch;
-    padding-top: 56px;
 }
 
 /* Пропорция снята с баннера Outline: текстовая часть 60% ширины, кадр 40%.
@@ -974,7 +975,8 @@ and (max-width: 767px) {
 }
 
 .project-intro .intro-credits {
-    margin-top: 4px;
+    margin-top: 0;
+    margin-bottom: 20px;
     font-size: 20px;
     font-weight: 300;
     line-height: 1.2;
@@ -1006,10 +1008,6 @@ and (max-width: 767px) {
     .project-intro .gallery-item {
         width: 100%;
         flex: 0 0 100%;
-    }
-
-    .project-intro {
-        padding-top: 40px;
     }
 
     .project-intro .intro-text {
