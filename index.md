@@ -34,7 +34,7 @@ Markdown-зеркало страницы <https://universe-design.com/>. HTML-в
 - Telegram: [@dimahoc](https://t.me/dimahoc)
 
 **Студия**
-- Адрес: 127015, Москва, Большая Новодмитровская улица, 23, Дизайн-завод «Флакон»
+- Адрес: 127015, Москва, Большая Новодмитровская улица, 23
 - Telegram: <https://t.me/universe_design_studio>
 - [Instagram](https://www.instagram.com/universe_design_studio)
 - [Behance](https://www.behance.net/dimahoc)

@@ -65,8 +65,8 @@
     </script>
     
     <title>FINOPOLIS 2022 | T1 — оформление форума | UNIVERSE DESIGN</title>
-    <link rel="stylesheet" href="../style.css?v=20260807b">
-    <link rel="stylesheet" href="../projects/projects.css?v=20260807b">
+    <link rel="stylesheet" href="../style.css?v=20260807d">
+    <link rel="stylesheet" href="../projects/projects.css?v=20260807d">
     <script src="https://player.vimeo.com/api/player.js"></script>
 
   <!-- Yandex.Metrika counter -->
@@ -87,7 +87,7 @@
     <nav class="lang-switch" aria-label="Язык сайта"><span class="is-active">RU</span><span class="sep">/</span><a href="/en/projects/t1_finopolis.html" hreflang="en">EN</a></nav>
 
     <div class="logo-text">
-        <img src="../logo/UNIVERSE.png" alt="UNIVERSE DESIGN Studio Logo">
+        <a class="logo-home" href="/" aria-label="На главную"><img src="../logo/UNIVERSE.png" alt="UNIVERSE DESIGN Studio Logo"></a>
     </div>
 
     <div class="project-content">
@@ -135,7 +135,7 @@
         </div>
     </div>
 
-    <script src="project-gallery.js?v=20260807b"></script>
+    <script src="project-gallery.js?v=20260807d"></script>
 
 
 
@@ -163,6 +163,15 @@
                 window.location.replace(link.href);
             });
         });
+
+        var logoHome = document.querySelector('.logo-home');
+        if (logoHome) {
+            logoHome.addEventListener('click', function () {
+                // куб на главной должен быть собран: флаг сессии не даёт запустить интро
+                try { sessionStorage.setItem('cube_session_started', 'true'); } catch (e) { /* storage закрыт */ }
+                raiseMenuFlag();
+            }, true);
+        }
 
         // Скролл внутри раздела прячет переключатель. Пороги разведены (48 и 16),
         // чтобы у верхнего края он не мигал от каждого мелкого движения колеса.

@@ -1,6 +1,6 @@
 # Контакты — UNIVERSE DESIGN
 
-> Студия объёмных LED-инсталляций, медиаарта и 3D-анимации. Москва, Дизайн-завод «Флакон».
+> Студия объёмных LED-инсталляций, медиаарта и 3D-анимации в Москве.
 
 Markdown-зеркало страницы <https://universe-design.com/contacts.html>.
 
@@ -8,10 +8,9 @@ Markdown-зеркало страницы <https://universe-design.com/contacts.h
 
 **UNIVERSE DESIGN**
 127015, Россия, Москва, Большая Новодмитровская улица, 23
-Дизайн-завод «Флакон»
 Координаты: 55.8040 N, 37.5814 E
 
-English: Flacon Design Factory, 127015, Bolshaya Novodmitrovskaya St., 23, Moscow, Russia.
+English: 127015, Moscow, Bolshaya Novodmitrovskaya St., 23, Russia.
 
 ## Люди
 

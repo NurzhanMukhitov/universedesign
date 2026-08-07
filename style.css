@@ -983,3 +983,15 @@ canvas {
         font-size: 11px;
     }
 }
+
+/* Логотип на внутренних страницах ведёт на главную своего языка */
+.logo-text .logo-home {
+    display: block;
+    line-height: 0;
+    transition: opacity .25s ease;
+}
+
+.logo-text .logo-home:hover,
+.logo-text .logo-home:focus-visible {
+    opacity: .75;
+}

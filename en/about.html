@@ -61,8 +61,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon/favicon-32x32.png?v=2">
     <link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon/favicon-16x16.png?v=2">
     <link rel="apple-touch-icon" sizes="180x180" href="/icon/favicon/apple-touch-icon.png?v=2">
-    <link rel="stylesheet" href="/style.css?v=20260807b">
-    <link rel="stylesheet" href="/about.css?v=20260807b">
+    <link rel="stylesheet" href="/style.css?v=20260807d">
+    <link rel="stylesheet" href="/about.css?v=20260807d">
 
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
@@ -84,7 +84,7 @@
     <button class="back-button" onclick="history.back()"></button>
     
     <div class="logo-text">
-        <img src="/logo/UNIVERSE.png" alt="UNIVERSE DESIGN Studio Logo">
+        <a class="logo-home" href="/en/" aria-label="Home"><img src="/logo/UNIVERSE.png" alt="UNIVERSE DESIGN Studio Logo"></a>
     </div>
 
     <main class="about-content">
@@ -161,6 +161,15 @@
                 window.location.replace(link.href);
             });
         });
+
+        var logoHome = document.querySelector('.logo-home');
+        if (logoHome) {
+            logoHome.addEventListener('click', function () {
+                // куб на главной должен быть собран: флаг сессии не даёт запустить интро
+                try { sessionStorage.setItem('cube_session_started', 'true'); } catch (e) { /* storage закрыт */ }
+                raiseMenuFlag();
+            }, true);
+        }
 
         // Скролл внутри раздела прячет переключатель. Пороги разведены (48 и 16),
         // чтобы у верхнего края он не мигал от каждого мелкого движения колеса.

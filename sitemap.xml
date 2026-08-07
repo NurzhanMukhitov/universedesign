@@ -205,4 +205,24 @@
     <priority>0.5</priority>
   </url>
 
+  <url>
+    <loc>https://universe-design.com/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/privacy.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://universe-design.com/en/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/privacy.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+
 </urlset>

@@ -210,3 +210,22 @@
         transition: none;
     }
 }
+
+/* Ссылка на политику — тише всего остального: обязательная сноска, а не навигация */
+.privacy-note {
+    margin: 36px 0 0;
+    text-align: center;
+}
+
+.privacy-note .privacy-link {
+    font-size: 12px;
+    letter-spacing: .04em;
+    color: rgba(255, 255, 255, .4);
+    text-decoration: none;
+    transition: color .25s ease;
+}
+
+.privacy-note .privacy-link:hover,
+.privacy-note .privacy-link:focus-visible {
+    color: rgba(255, 255, 255, .8);
+}

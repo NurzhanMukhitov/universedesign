@@ -19,12 +19,14 @@ the Markdown mirrors list the same media as direct URLs.
 - [About the studio](https://universe-design.com/about.md): specialization, approach, capabilities
 - [Contacts](https://universe-design.com/contacts.md): studio address in Moscow, phones, email, Telegram
 - [Home](https://universe-design.com/index.md): entry point and contacts
+- [Privacy policy](https://universe-design.com/privacy.md): what Yandex.Metrica collects and how to opt out
 
 ## Studio (English)
 
 - [About the studio](https://universe-design.com/en/about.md)
 - [Contacts](https://universe-design.com/en/contacts.md)
 - [Home](https://universe-design.com/en/index.md)
+- [Privacy policy](https://universe-design.com/en/privacy.md)
 
 ## Projects
 
@@ -41,8 +43,8 @@ the Markdown mirrors list the same media as direct URLs.
 - Yuriy Khotsinskiy — y.khotsinskiy@universe-design.com, +7 926 824 0607, Telegram @yurahoc
 - Dmitry Khotsinskiy — d.khotsinskiy@universe-design.com, +7 926 916 9386, Telegram @dimahoc
 - Studio Telegram: https://t.me/universe_design_studio
-- Address: Flacon Design Factory, Bolshaya Novodmitrovskaya St. 23, 127015 Moscow, Russia
-  (в русском написании: 127015, Москва, Большая Новодмитровская улица, 23, Дизайн-завод «Флакон»)
+- Address: 127015, Moscow, Bolshaya Novodmitrovskaya St. 23, Russia
+  (в русском написании: 127015, Москва, Большая Новодмитровская улица, 23)
 
 ## Optional
 

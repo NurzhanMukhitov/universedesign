@@ -64,8 +64,8 @@
     </script>
 
     <title>UNIVERSE DESIGN | ECHO 2.0</title>
-    <link rel="stylesheet" href="/style.css?v=20260807b">
-    <link rel="stylesheet" href="/projects/projects.css?v=20260807b">
+    <link rel="stylesheet" href="/style.css?v=20260807d">
+    <link rel="stylesheet" href="/projects/projects.css?v=20260807d">
     <script src="https://player.vimeo.com/api/player.js"></script>
     <style>
         @media (max-width: 767px) {
@@ -93,7 +93,7 @@
     <nav class="lang-switch" aria-label="Язык сайта"><a href="/projects/echo_2.0.html" hreflang="ru">RU</a><span class="sep">/</span><span class="is-active">EN</span></nav>
 
     <div class="logo-text">
-        <img src="/logo/UNIVERSE.png" alt="UNIVERSE DESIGN Studio Logo">
+        <a class="logo-home" href="/en/" aria-label="Home"><img src="/logo/UNIVERSE.png" alt="UNIVERSE DESIGN Studio Logo"></a>
     </div>
 
     <div class="project-content">
@@ -216,7 +216,7 @@
 
     <button class="back-button"></button>
 
-    <script src="/projects/project-gallery.js?v=20260807b"></script>
+    <script src="/projects/project-gallery.js?v=20260807d"></script>
 
 
 
@@ -244,6 +244,15 @@
                 window.location.replace(link.href);
             });
         });
+
+        var logoHome = document.querySelector('.logo-home');
+        if (logoHome) {
+            logoHome.addEventListener('click', function () {
+                // куб на главной должен быть собран: флаг сессии не даёт запустить интро
+                try { sessionStorage.setItem('cube_session_started', 'true'); } catch (e) { /* storage закрыт */ }
+                raiseMenuFlag();
+            }, true);
+        }
 
         // Скролл внутри раздела прячет переключатель. Пороги разведены (48 и 16),
         // чтобы у верхнего края он не мигал от каждого мелкого движения колеса.

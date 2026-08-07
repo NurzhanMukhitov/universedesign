@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Contacts of UNIVERSE DESIGN studio: Flacon Design Factory, Bolshaya Novodmitrovskaya St. 23, Moscow. Phones, email, Telegram. Volumetric LED installations, media art, 3D animation.">
+    <meta name="description" content="Contacts of UNIVERSE DESIGN studio: Moscow, Bolshaya Novodmitrovskaya St. 23. Phones, email, Telegram. Volumetric LED installations, media art, 3D animation.">
     <meta name="author" content="UNIVERSE DESIGN">
     <link rel="canonical" href="https://universe-design.com/en/contacts.html">
     <link rel="alternate" hreflang="ru" href="https://universe-design.com/contacts.html">
@@ -13,7 +13,7 @@
 
     <!-- Open Graph -->
     <meta property="og:title" content="Contacts — UNIVERSE DESIGN">
-    <meta property="og:description" content="Studio of volumetric LED installations and media art. Bolshaya Novodmitrovskaya St. 23, Moscow.">
+    <meta property="og:description" content="Studio of volumetric LED installations and media art. Moscow, Bolshaya Novodmitrovskaya St. 23.">
     <meta property="og:image" content="https://universe-design.com/logo/og-image.jpg">
     <meta property="og:url" content="https://universe-design.com/en/contacts.html">
     <meta property="og:type" content="website">
@@ -21,7 +21,7 @@
     <meta property="og:site_name" content="UNIVERSE DESIGN">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Contacts — UNIVERSE DESIGN">
-    <meta name="twitter:description" content="Studio of volumetric LED installations and media art. Bolshaya Novodmitrovskaya St. 23, Moscow.">
+    <meta name="twitter:description" content="Studio of volumetric LED installations and media art. Moscow, Bolshaya Novodmitrovskaya St. 23.">
     <meta name="twitter:image" content="https://universe-design.com/logo/og-image.jpg">
 
     <!-- Структурированные данные JSON-LD: один связный граф, узлы сшиты через @id -->
@@ -110,8 +110,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon/favicon-32x32.png?v=2">
     <link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon/favicon-16x16.png?v=2">
     <link rel="apple-touch-icon" sizes="180x180" href="/icon/favicon/apple-touch-icon.png?v=2">
-    <link rel="stylesheet" href="/style.css?v=20260807b">
-    <link rel="stylesheet" href="/contacts.css?v=20260807b">
+    <link rel="stylesheet" href="/style.css?v=20260807d">
+    <link rel="stylesheet" href="/contacts.css?v=20260807d">
     <!-- Интро-режим куба (разлёт точек) намеренно не включаем: на странице
          контактов куб работает подложкой в собранном виде. -->
 
@@ -138,7 +138,7 @@
     <button class="back-button" onclick="history.back()" aria-label="Back"></button>
 
     <div class="logo-text">
-        <img src="/logo/UNIVERSE.png" alt="UNIVERSE DESIGN Studio Logo">
+        <a class="logo-home" href="/en/" aria-label="Home"><img src="/logo/UNIVERSE.png" alt="UNIVERSE DESIGN Studio Logo"></a>
     </div>
 
     <main class="contacts-view">
@@ -167,8 +167,7 @@
         </div>
 
         <address class="studio-address">
-          <span class="addr-line">Flacon Design Factory</span>
-          <span class="addr-line">127015, Bolshaya Novodmitrovskaya St., 23, Moscow</span>
+          <span class="addr-line">127015, Moscow, Bolshaya Novodmitrovskaya St., 23</span>
         </address>
 
         <div class="social-icons">
@@ -189,6 +188,8 @@
           </a>
         </div>
 
+        <p class="privacy-note"><a class="privacy-link" href="/en/privacy.html">Privacy Policy</a></p>
+
       </div>
     </main>
 
@@ -206,7 +207,7 @@
             requestAnimationFrame(function () { sheet.classList.add('visible'); });
         });
     </script>
-    <script src="/script.js?v=20260807b"></script>
+    <script src="/script.js?v=20260807d"></script>
 
 
 
@@ -234,6 +235,15 @@
                 window.location.replace(link.href);
             });
         });
+
+        var logoHome = document.querySelector('.logo-home');
+        if (logoHome) {
+            logoHome.addEventListener('click', function () {
+                // куб на главной должен быть собран: флаг сессии не даёт запустить интро
+                try { sessionStorage.setItem('cube_session_started', 'true'); } catch (e) { /* storage закрыт */ }
+                raiseMenuFlag();
+            }, true);
+        }
 
         // Скролл внутри раздела прячет переключатель. Пороги разведены (48 и 16),
         // чтобы у верхнего края он не мигал от каждого мелкого движения колеса.

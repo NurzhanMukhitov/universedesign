@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Контакты студии UNIVERSE DESIGN: Москва, Большая Новодмитровская улица, 23, Дизайн-завод «Флакон». Телефоны, почта, Telegram. Объёмные LED-инсталляции, медиаарт, 3D-анимация.">
+    <meta name="description" content="Контакты студии UNIVERSE DESIGN: Москва, Большая Новодмитровская улица, 23. Телефоны, почта, Telegram. Объёмные LED-инсталляции, медиаарт, 3D-анимация.">
     <meta name="author" content="UNIVERSE DESIGN">
     <link rel="canonical" href="https://universe-design.com/contacts.html">
     <link rel="alternate" hreflang="ru" href="https://universe-design.com/contacts.html">
@@ -110,8 +110,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon/favicon-32x32.png?v=2">
     <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon/favicon-16x16.png?v=2">
     <link rel="apple-touch-icon" sizes="180x180" href="icon/favicon/apple-touch-icon.png?v=2">
-    <link rel="stylesheet" href="style.css?v=20260807b">
-    <link rel="stylesheet" href="contacts.css?v=20260807b">
+    <link rel="stylesheet" href="style.css?v=20260807d">
+    <link rel="stylesheet" href="contacts.css?v=20260807d">
     <!-- Интро-режим куба (разлёт точек) намеренно не включаем: на странице
          контактов куб работает подложкой в собранном виде. -->
 
@@ -138,7 +138,7 @@
     <button class="back-button" onclick="history.back()" aria-label="Назад"></button>
 
     <div class="logo-text">
-        <img src="logo/UNIVERSE.png" alt="UNIVERSE DESIGN Studio Logo">
+        <a class="logo-home" href="/" aria-label="На главную"><img src="logo/UNIVERSE.png" alt="UNIVERSE DESIGN Studio Logo"></a>
     </div>
 
     <main class="contacts-view">
@@ -167,7 +167,6 @@
         </div>
 
         <address class="studio-address">
-          <span class="addr-line">Дизайн-завод «Флакон»</span>
           <span class="addr-line">127015, Москва, Большая Новодмитровская улица, 23</span>
         </address>
 
@@ -189,6 +188,8 @@
           </a>
         </div>
 
+        <p class="privacy-note"><a class="privacy-link" href="privacy.html">Политика конфиденциальности</a></p>
+
       </div>
     </main>
 
@@ -206,7 +207,7 @@
             requestAnimationFrame(function () { sheet.classList.add('visible'); });
         });
     </script>
-    <script src="script.js?v=20260807b"></script>
+    <script src="script.js?v=20260807d"></script>
 
 
 
@@ -234,6 +235,15 @@
                 window.location.replace(link.href);
             });
         });
+
+        var logoHome = document.querySelector('.logo-home');
+        if (logoHome) {
+            logoHome.addEventListener('click', function () {
+                // куб на главной должен быть собран: флаг сессии не даёт запустить интро
+                try { sessionStorage.setItem('cube_session_started', 'true'); } catch (e) { /* storage закрыт */ }
+                raiseMenuFlag();
+            }, true);
+        }
 
         // Скролл внутри раздела прячет переключатель. Пороги разведены (48 и 16),
         // чтобы у верхнего края он не мигал от каждого мелкого движения колеса.
