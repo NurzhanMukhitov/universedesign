@@ -996,24 +996,24 @@ canvas {
     opacity: .75;
 }
 
-/* ---------- Уведомление о cookie ---------- */
-/* Полоса у нижнего края: не перекрывает работы и не требует закрытия,
-   чтобы смотреть сайт. Показывается один раз — согласие живёт в localStorage. */
+/* ---------- Уведомление о cookie ----------
+   Не полоса во всю ширину, а компактная плашка по центру внизу: куб продолжает
+   вращаться и просвечивать сквозь неё. Разделительной линии нет — форму держит
+   сама подложка. */
 
 .cookie-notice {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 26px;
     z-index: 2200;
     display: none;
-    padding: 18px 24px;
-    background: rgba(10, 10, 10, .94);
-    border-top: 1px solid rgba(255, 255, 255, .14);
+    padding: 0 20px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     opacity: 0;
-    transform: translateY(12px);
-    transition: opacity .45s ease, transform .45s ease;
+    transform: translateY(16px);
+    transition: opacity .7s ease, transform .7s ease;
+    pointer-events: none;
 }
 
 .cookie-notice.visible {
@@ -1022,45 +1022,63 @@ canvas {
 }
 
 .cookie-notice__inner {
-    max-width: 1100px;
+    width: fit-content;
+    max-width: min(1120px, calc(100vw - 48px));
     margin: 0 auto;
+    padding: 12px 22px;
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    gap: 28px;
+    justify-content: center;
+    gap: 16px;
+    text-align: center;
+    /* Подложка держит читаемость, но остаётся прозрачной: куб виден и вращается
+       сквозь неё. Сильное размытие глушило его целиком, поэтому оставлена дымка. */
+    background: rgba(0, 0, 0, .34);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 4px;
+    pointer-events: auto;
 }
 
 .cookie-notice__text {
     margin: 0;
-    font-size: 13px;
-    line-height: 1.55;
-    color: rgba(255, 255, 255, .8);
+    font-size: 11.5px;
+    line-height: 1.5;
+    letter-spacing: .01em;
+    color: rgba(255, 255, 255, .72);
 }
 
-.cookie-notice__text a {
-    color: rgba(255, 255, 255, .8);
+/* Ссылка идёт той же строкой, что и текст */
+.cookie-notice__link {
+    display: inline;
+    margin-left: 6px;
+    font-size: 11.5px;
+    white-space: nowrap;
+
+    color: rgba(255, 255, 255, .72);
     text-decoration: underline;
     text-underline-offset: 3px;
-    text-decoration-color: rgba(255, 255, 255, .3);
+    text-decoration-color: rgba(255, 255, 255, .28);
     transition: color .25s ease, text-decoration-color .25s ease;
 }
 
-.cookie-notice__text a:hover {
+.cookie-notice__link:hover,
+.cookie-notice__link:focus-visible {
     color: #fff;
-    text-decoration-color: rgba(255, 255, 255, .8);
+    text-decoration-color: rgba(255, 255, 255, .7);
 }
 
 .cookie-notice__button {
     flex: 0 0 auto;
-    min-height: 40px;
-    padding: 11px 30px;
+    padding: 8px 24px;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, .45);
+    border: 1px solid rgba(255, 255, 255, .4);
     border-radius: 0;
-    color: #fff;
+    color: rgba(255, 255, 255, .9);
     font-family: inherit;
-    font-size: 13px;
-    letter-spacing: .08em;
+    font-size: 11px;
+    letter-spacing: .1em;
     text-transform: uppercase;
     cursor: pointer;
     transition: background-color .25s ease, border-color .25s ease, color .25s ease;
@@ -1073,23 +1091,40 @@ canvas {
     color: #000;
 }
 
+/* Одна строка держится только на широком экране: ниже фраза не влезает
+   и её перенос выглядит естественнее, чем сжатый текст */
+@media screen and (min-width: 1180px) {
+    .cookie-notice__text {
+        white-space: nowrap;
+    }
+}
+
 @media screen and (max-width: 700px) {
     .cookie-notice {
-        padding: 16px 18px calc(16px + env(safe-area-inset-bottom));
+        bottom: calc(18px + env(safe-area-inset-bottom));
+        padding: 0 16px;
     }
 
+    /* В одну строку фраза не помещается — на узком экране возвращаем стек */
     .cookie-notice__inner {
         flex-direction: column;
-        align-items: stretch;
-        gap: 14px;
+        padding: 14px 18px 16px;
+        gap: 11px;
     }
 
-    .cookie-notice__text {
-        font-size: 12.5px;
+    .cookie-notice__text,
+    .cookie-notice__link {
+        white-space: normal;
     }
 
-    .cookie-notice__button {
-        width: 100%;
+    .cookie-notice__link {
+        display: block;
+        margin: 4px 0 0;
+    }
+
+    .cookie-notice__text,
+    .cookie-notice__link {
+        font-size: 11px;
     }
 }
 

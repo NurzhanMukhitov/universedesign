@@ -94,8 +94,8 @@
     
     <title>UNIVERSE DESIGN | UNIVERSE х LedPulse</title>
     <!-- Стили (пути от корня) -->
-    <link rel="stylesheet" href="/style.css?v=20260807g">
-    <link rel="stylesheet" href="/projects/projects.css?v=20260807g"> 
+    <link rel="stylesheet" href="/style.css?v=20260807k">
+    <link rel="stylesheet" href="/projects/projects.css?v=20260807k"> 
 
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
@@ -180,7 +180,7 @@
 
     <!-- Скрипт галереи (путь от корня) -->
     <!-- Убедитесь, что этот скрипт корректно обрабатывает кнопку назад для страницы в корне -->
-    <script src="/projects/project-gallery.js?v=20260807g"></script> 
+    <script src="/projects/project-gallery.js?v=20260807k"></script> 
 
 
 
@@ -242,7 +242,7 @@
     <div class="cookie-notice__inner">
       <p class="cookie-notice__text">This site uses cookies to provide all of its features.
       By using our site you agree to the use of cookies.
-      <a href="/en/privacy.html">Privacy Policy</a></p>
+      <a class="cookie-notice__link" href="/en/privacy.html">Privacy Policy</a></p>
       <button type="button" class="cookie-notice__button" id="cookie-accept">Accept</button>
     </div>
   </div>
@@ -265,7 +265,13 @@
       if (shown) return;
       shown = true;
       notice.style.display = 'block';
-      requestAnimationFrame(function () { notice.classList.add('visible'); });
+      // Принудительный пересчёт стилей: без него браузер объединяет display и
+      // добавление класса в один кадр, начальное состояние (opacity 0) не
+      // фиксируется и плашка появляется рывком вместо плавного проявления.
+      void notice.offsetHeight;
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { notice.classList.add('visible'); });
+      });
     }
     // главная зовёт это сама, когда куб собран (см. script.js)
     window.showCookieNotice = show;

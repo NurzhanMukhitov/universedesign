@@ -61,8 +61,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon/favicon-32x32.png?v=2">
     <link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon/favicon-16x16.png?v=2">
     <link rel="apple-touch-icon" sizes="180x180" href="/icon/favicon/apple-touch-icon.png?v=2">
-    <link rel="stylesheet" href="/style.css?v=20260807g">
-    <link rel="stylesheet" href="/about.css?v=20260807g">
+    <link rel="stylesheet" href="/style.css?v=20260807k">
+    <link rel="stylesheet" href="/about.css?v=20260807k">
 
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
@@ -195,7 +195,7 @@
     <div class="cookie-notice__inner">
       <p class="cookie-notice__text">This site uses cookies to provide all of its features.
       By using our site you agree to the use of cookies.
-      <a href="/en/privacy.html">Privacy Policy</a></p>
+      <a class="cookie-notice__link" href="/en/privacy.html">Privacy Policy</a></p>
       <button type="button" class="cookie-notice__button" id="cookie-accept">Accept</button>
     </div>
   </div>
@@ -218,7 +218,13 @@
       if (shown) return;
       shown = true;
       notice.style.display = 'block';
-      requestAnimationFrame(function () { notice.classList.add('visible'); });
+      // Принудительный пересчёт стилей: без него браузер объединяет display и
+      // добавление класса в один кадр, начальное состояние (opacity 0) не
+      // фиксируется и плашка появляется рывком вместо плавного проявления.
+      void notice.offsetHeight;
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { notice.classList.add('visible'); });
+      });
     }
     // главная зовёт это сама, когда куб собран (см. script.js)
     window.showCookieNotice = show;

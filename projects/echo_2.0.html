@@ -64,8 +64,8 @@
     </script>
 
     <title>ECHO 2.0 — медиаарт-инсталляция | UNIVERSE DESIGN</title>
-    <link rel="stylesheet" href="../style.css?v=20260807g">
-    <link rel="stylesheet" href="../projects/projects.css?v=20260807g">
+    <link rel="stylesheet" href="../style.css?v=20260807k">
+    <link rel="stylesheet" href="../projects/projects.css?v=20260807k">
     <script src="https://player.vimeo.com/api/player.js"></script>
     <style>
         @media (max-width: 767px) {
@@ -216,7 +216,7 @@
 
     <button class="back-button"></button>
 
-    <script src="project-gallery.js?v=20260807g"></script>
+    <script src="project-gallery.js?v=20260807k"></script>
 
 
 
@@ -278,7 +278,7 @@
     <div class="cookie-notice__inner">
       <p class="cookie-notice__text">Сайт использует cookies для обеспечения всех его функций.
       Используя наш сайт, вы соглашаетесь на использование cookie файлов.
-      <a href="/privacy.html">Политика конфиденциальности</a></p>
+      <a class="cookie-notice__link" href="/privacy.html">Политика конфиденциальности</a></p>
       <button type="button" class="cookie-notice__button" id="cookie-accept">Принять</button>
     </div>
   </div>
@@ -301,7 +301,13 @@
       if (shown) return;
       shown = true;
       notice.style.display = 'block';
-      requestAnimationFrame(function () { notice.classList.add('visible'); });
+      // Принудительный пересчёт стилей: без него браузер объединяет display и
+      // добавление класса в один кадр, начальное состояние (opacity 0) не
+      // фиксируется и плашка появляется рывком вместо плавного проявления.
+      void notice.offsetHeight;
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { notice.classList.add('visible'); });
+      });
     }
     // главная зовёт это сама, когда куб собран (см. script.js)
     window.showCookieNotice = show;
