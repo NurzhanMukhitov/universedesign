@@ -112,7 +112,7 @@
   <!-- /Yandex.Metrika counter -->
 </head>
 <body>
-  <nav class="lang-switch" aria-label="Язык сайта"><span class="is-active">RU</span><span class="sep">/</span><a href="/en/" hreflang="en">EN</a></nav>
+  <nav class="lang-switch lang-switch--home" aria-label="Язык сайта"><span class="is-active">RU</span><span class="sep">/</span><a href="/en/" hreflang="en">EN</a></nav>
 
   <canvas id="c"></canvas>
   <div class="menu">
@@ -153,5 +153,22 @@
   <div class="reset-button">↺</div>
   <!-- Конец иконки жеста -->
   <script src="script.js?v=20260807"></script>
+
+    <script>
+    // Меню на главной раскрывается по флагу в sessionStorage: его читает script.js
+    // на DOMContentLoaded и на pageshow. Флаг ставят два действия:
+    //   1) стрелка «назад» — чтобы вернуться к раскрытому меню, а не к голому кубу;
+    //   2) переключатель языка — иначе после смены языка меню приходилось открывать руками.
+    (function () {
+        function raiseMenuFlag() {
+            try { sessionStorage.setItem('justLeftIndex', 'true'); } catch (e) { /* storage закрыт */ }
+        }
+        var back = document.querySelector('.back-button');
+        if (back) back.addEventListener('click', raiseMenuFlag, true);
+        document.querySelectorAll('.lang-switch a').forEach(function (link) {
+            link.addEventListener('click', raiseMenuFlag, true);
+        });
+    })();
+    </script>
 </body>
 </html>

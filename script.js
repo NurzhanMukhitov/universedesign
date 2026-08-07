@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var gestureMask = document.querySelector('.gesture-mask');
     var activePopup = null;
     var menuOverlay = document.querySelector('.overlay-menu');
+    var langSwitch = document.querySelector('.lang-switch--home');
     var resetButton = document.querySelector('.reset-button');
     var backButton = document.querySelector('.back-button');
     var isMenuLocked = false;
@@ -139,6 +140,13 @@ document.addEventListener('DOMContentLoaded', function() {
             logoText.style.display = 'block';
             menuBtn.classList.add('visible');
             logoText.classList.add('visible');
+        }
+
+        // Куб уже собран — переключатель языка показываем сразу.
+        // Эта ветка обходит render(), поэтому там его показать некому.
+        if (langSwitch) {
+            langSwitch.style.display = 'flex';
+            langSwitch.classList.add('visible');
         }
     }
 
@@ -391,6 +399,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 logoText.style.display = "block";
                 menuBtn.classList.add('visible');
                 logoText.classList.add('visible');
+                if (langSwitch) {
+                    langSwitch.style.display = "flex";
+                    requestAnimationFrame(function () { langSwitch.classList.add('visible'); });
+                }
                 isMenuLocked = true; // Lock menu when cube is gathered
                 // Automatically open menu
                 menuOverlay.style.display = "block";
@@ -407,6 +419,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 logoText.classList.remove('visible');
                 menuBtn.style.display = "none";
                 logoText.style.display = "none";
+                if (langSwitch) {
+                    langSwitch.classList.remove('visible');
+                    setTimeout(function () { langSwitch.style.display = "none"; }, 400);
+                }
                 isMenuLocked = false; // Unlock menu
                 // Hide menu
                 menuOverlay.classList.remove('visible');

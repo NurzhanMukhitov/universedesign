@@ -171,15 +171,21 @@
         });
     </script>
 
+
     <script>
-    // Возврат стрелкой «назад» должен приводить на главную с раскрытым меню,
-    // а не на голый куб. Флаг читает script.js на главной (pageshow/DOMContentLoaded).
+    // Меню на главной раскрывается по флагу в sessionStorage: его читает script.js
+    // на DOMContentLoaded и на pageshow. Флаг ставят два действия:
+    //   1) стрелка «назад» — чтобы вернуться к раскрытому меню, а не к голому кубу;
+    //   2) переключатель языка — иначе после смены языка меню приходилось открывать руками.
     (function () {
-        var back = document.querySelector('.back-button');
-        if (!back) return;
-        back.addEventListener('click', function () {
+        function raiseMenuFlag() {
             try { sessionStorage.setItem('justLeftIndex', 'true'); } catch (e) { /* storage закрыт */ }
-        }, true);
+        }
+        var back = document.querySelector('.back-button');
+        if (back) back.addEventListener('click', raiseMenuFlag, true);
+        document.querySelectorAll('.lang-switch a').forEach(function (link) {
+            link.addEventListener('click', raiseMenuFlag, true);
+        });
     })();
     </script>
 </body>
