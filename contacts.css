@@ -1,0 +1,212 @@
+/* Контакты — та же вёрстка, что у попапа на главной, плюс адрес */
+
+.contacts-page {
+    background-color: #000;
+    color: #fff;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.contacts-page .back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    z-index: 2001;
+    transition: transform .2s ease;
+}
+
+.contacts-page .back-button:before {
+    content: '←';
+    font-size: 32px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.contacts-page .back-button:hover {
+    transform: translateX(-5px);
+}
+
+.contacts-page .logo-text {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity .3s ease;
+    display: none;
+}
+
+.contacts-page .logo-text img {
+    width: 200px;
+    height: auto;
+}
+
+.contacts-page .logo-text.visible {
+    opacity: 1;
+    display: block;
+}
+
+/* Лист по центру экрана — как попап, только без маски */
+
+.contacts-view {
+    position: relative;
+    z-index: 2; /* поверх canvas с кубом (z-index: 1) */
+    min-height: 100vh;
+    /* см. .contacts-view::before — затемняющая подложка под контентом */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 20px 60px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* Полутёмная подложка поверх куба — та же плотность, что у .overlay-mask
+   на главной (rgba(0,0,0,.7)), иначе точки куба спорят с текстом */
+.contacts-view::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .7);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.contacts-sheet {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+    opacity: 0;
+    transition: opacity .4s ease-out;
+}
+
+.contacts-sheet.visible {
+    opacity: 1;
+}
+
+/* H1 убран с экрана, но оставлен в разметке: без него поисковик не понимает,
+   о чём страница. Текст совпадает с содержимым — это обычная a11y-практика,
+   а не скрытый текст ради ключей. */
+
+.contacts-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Имена — те же, что в попапе (там были h3, здесь h2 для структуры страницы) */
+
+.contacts-page .contact-person h2 {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0 0 15px 0;
+}
+
+.contacts-page .contact-person p a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    opacity: .8;
+}
+
+.contacts-page .contact-person p a:hover {
+    opacity: 1;
+}
+
+/* Адрес — между людьми и иконками */
+
+/* Все три блока — люди, адрес, иконки — живут в одной колонке одной ширины.
+   Иконки растянуты по её краям, поэтому ряд не вылезает за плашку. */
+
+.contacts-page .contact-info,
+.contacts-page .social-icons {
+    max-width: 620px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.contacts-page .social-icons {
+    justify-content: space-between;
+    gap: 0;
+}
+
+/* Колонки людей разведены по краям плашки: сам блок Дмитрия сдвинут вправо,
+   но текст внутри него остаётся выключенным влево, как у Юрия. */
+.contacts-page .contact-info {
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.contacts-page .contact-person {
+    flex: 0 1 auto;
+    min-width: 0;
+    text-align: left;
+}
+
+/* Адрес — по центру, той же типографикой, что телефоны в карточках людей */
+
+.studio-address {
+    display: block;
+    font-style: normal;
+    margin: 0 auto 40px;
+    max-width: 620px;
+    text-align: center;
+}
+
+.studio-address .addr-line {
+    display: block;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #fff;
+    opacity: .8;
+}
+
+@media screen and (max-width: 768px) {
+    .contacts-view {
+        padding: 90px 0 50px;
+    }
+
+    .studio-address {
+        padding: 0 20px;
+        margin-bottom: 32px;
+    }
+
+    .contacts-page .social-icons {
+        justify-content: space-between;
+        gap: 0;
+    }
+
+    .contacts-page .logo-text img {
+        width: 140px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .contacts-sheet,
+    .contacts-page .logo-text,
+    .contacts-page .back-button {
+        transition: none;
+    }
+}

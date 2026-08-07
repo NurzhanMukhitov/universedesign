@@ -367,7 +367,15 @@ document.addEventListener('DOMContentLoaded', function() {
             rotationY += autoRotateSpeed * deltaTime;
         }
         
-        // Check cube state and update element visibility
+        // Check cube state and update element visibility.
+        // На внутренних страницах (контакты и т.п.) куб живёт как подложка: меню,
+        // бургера и оверлея там нет, поэтому весь блок пропускается — иначе
+        // render() падал бы на null.style каждый кадр.
+        if (!menuBtn || !logoText || !menuOverlay) {
+            requestAnimationFrame(render);
+            return;
+        }
+
         if (tParam === 0) {
             // Cube is gathered - show elements and lock menu
             if (menuBtn.style.display !== "block") {
