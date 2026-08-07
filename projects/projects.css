@@ -15,11 +15,13 @@ body {
 }
 
 /* Стили для проектов */
+/* Верхний отступ считается от переключателя языка: он висит на 74px и раньше
+   перекрывал первую карточку — на десктопе на 6px, на телефоне на 33px. */
 .projects-container {
     width: 100%;
     max-width: 1440px;
     margin: 0 auto;
-    padding: 80px 40px;
+    padding: 104px 40px 80px;
 }
 
 .projects-grid {
@@ -136,7 +138,7 @@ body {
 /* Адаптивность */
 @media (max-width: 1200px) {
     .projects-container {
-        padding: 60px 30px;
+        padding: 100px 30px 60px;
     }
     .projects-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -146,7 +148,7 @@ body {
 
 @media (max-width: 768px) {
     .projects-container {
-        padding: 40px 20px;
+        padding: 96px 20px 40px;
     }
     .projects-grid {
         grid-template-columns: 1fr;
@@ -980,7 +982,8 @@ and (max-width: 767px) {
     font-size: 20px;
     font-weight: 300;
     line-height: 1.2;
-    text-align: left;
+    text-align: justify;
+    text-justify: inter-word;
     color: #fff;
 }
 
@@ -1021,7 +1024,8 @@ and (max-width: 767px) {
     }
 
     /* На узкой колонке выключка по формату рвёт строки пробелами */
-    .project-intro .intro-text p {
+    .project-intro .intro-text p,
+    .project-intro .intro-credits {
         text-align: left;
     }
 }

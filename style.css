@@ -911,10 +911,12 @@ canvas {
    под бургером и стрелкой «назад», чтобы не перекрывать их и не прыгать
    при переходах между разделами. */
 
+/* 22px — визуальный левый край стрелки «назад»: сама кнопка стоит на 20px,
+   а символ внутри неё смещён ещё на 4px. Совпадение проверено замером. */
 .lang-switch {
     position: fixed;
     top: 74px;
-    left: 22px;
+    left: 24px;
     z-index: 2100;
     display: flex;
     align-items: center;
@@ -979,7 +981,7 @@ canvas {
 @media screen and (max-width: 575px) {
     .lang-switch {
         top: 62px;
-        left: 18px;
+        left: 24px;
         font-size: 11px;
     }
 }
@@ -1156,7 +1158,7 @@ canvas {
 @media screen and (max-width: 575px) {
     .lang-switch--home {
         top: 52px;
-        left: 20px;
+        left: 24px;
     }
 
     .overlay-menu {
