@@ -7,7 +7,9 @@ Last updated 7 August 2026.
 
 ## Who processes the data
 
-UNIVERSE DESIGN studio, 127015, Moscow, Bolshaya Novodmitrovskaya St. 23, Russia.
+UNIVERSE DESIGN studio. Data controller — sole proprietor D. V. Khotsinskiy,
+registered in Russia.
+Address: 127015, Moscow, Bolshaya Novodmitrovskaya St. 23, Russia.
 
 For any question about data, reach either of us:
 

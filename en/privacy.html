@@ -24,8 +24,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon/favicon-32x32.png?v=2">
     <link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon/favicon-16x16.png?v=2">
     <link rel="apple-touch-icon" sizes="180x180" href="/icon/favicon/apple-touch-icon.png?v=2">
-    <link rel="stylesheet" href="/style.css?v=20260807d">
-    <link rel="stylesheet" href="/about.css?v=20260807d">
+    <link rel="stylesheet" href="/style.css?v=20260807g">
+    <link rel="stylesheet" href="/about.css?v=20260807g">
 
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
@@ -59,6 +59,7 @@
 
             <h2>Who processes the data</h2>
             <p>The site belongs to UNIVERSE DESIGN studio.<br>
+            Data controller — sole proprietor D. V. Khotsinskiy, registered in Russia.<br>
             Address: 127015, Moscow, Bolshaya Novodmitrovskaya St. 23, Russia.</p>
             <p>For any question about data, reach either of us:</p>
 
@@ -198,5 +199,50 @@
         }
     })();
     </script>
+
+  <!-- Cookie notice: shown once, the choice is remembered -->
+  <div class="cookie-notice" id="cookie-notice" role="region" aria-label="Cookie notice">
+    <div class="cookie-notice__inner">
+      <p class="cookie-notice__text">This site uses cookies to provide all of its features.
+      By using our site you agree to the use of cookies.
+      <a href="/en/privacy.html">Privacy Policy</a></p>
+      <button type="button" class="cookie-notice__button" id="cookie-accept">Accept</button>
+    </div>
+  </div>
+
+  <script>
+  // Уведомление о cookie. На главной ждём, пока соберётся куб: полоса поверх
+  // разлетающихся точек убивала бы весь эффект входа. На остальных страницах
+  // показываем через небольшую паузу после загрузки.
+  (function () {
+    var KEY = 'cookie_notice_accepted';
+    var notice = document.getElementById('cookie-notice');
+    if (!notice) return;
+
+    var accepted = false;
+    try { accepted = localStorage.getItem(KEY) === 'true'; } catch (e) { /* storage закрыт */ }
+    if (accepted) return;
+
+    var shown = false;
+    function show() {
+      if (shown) return;
+      shown = true;
+      notice.style.display = 'block';
+      requestAnimationFrame(function () { notice.classList.add('visible'); });
+    }
+    // главная зовёт это сама, когда куб собран (см. script.js)
+    window.showCookieNotice = show;
+
+    if (!document.querySelector('.lang-switch--home')) {
+      setTimeout(show, 900);
+    }
+
+    document.getElementById('cookie-accept').addEventListener('click', function () {
+      try { localStorage.setItem(KEY, 'true'); } catch (e) { /* storage закрыт */ }
+      notice.classList.remove('visible');
+      setTimeout(function () { notice.style.display = 'none'; }, 450);
+    });
+  })();
+  </script>
 </body>
 </html>

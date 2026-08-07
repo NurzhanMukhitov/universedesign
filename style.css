@@ -995,3 +995,147 @@ canvas {
 .logo-text .logo-home:focus-visible {
     opacity: .75;
 }
+
+/* ---------- Уведомление о cookie ---------- */
+/* Полоса у нижнего края: не перекрывает работы и не требует закрытия,
+   чтобы смотреть сайт. Показывается один раз — согласие живёт в localStorage. */
+
+.cookie-notice {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2200;
+    display: none;
+    padding: 18px 24px;
+    background: rgba(10, 10, 10, .94);
+    border-top: 1px solid rgba(255, 255, 255, .14);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity .45s ease, transform .45s ease;
+}
+
+.cookie-notice.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cookie-notice__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+}
+
+.cookie-notice__text {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, .8);
+}
+
+.cookie-notice__text a {
+    color: rgba(255, 255, 255, .8);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(255, 255, 255, .3);
+    transition: color .25s ease, text-decoration-color .25s ease;
+}
+
+.cookie-notice__text a:hover {
+    color: #fff;
+    text-decoration-color: rgba(255, 255, 255, .8);
+}
+
+.cookie-notice__button {
+    flex: 0 0 auto;
+    min-height: 40px;
+    padding: 11px 30px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, .45);
+    border-radius: 0;
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color .25s ease, border-color .25s ease, color .25s ease;
+}
+
+.cookie-notice__button:hover,
+.cookie-notice__button:focus-visible {
+    background: #fff;
+    border-color: #fff;
+    color: #000;
+}
+
+@media screen and (max-width: 700px) {
+    .cookie-notice {
+        padding: 16px 18px calc(16px + env(safe-area-inset-bottom));
+    }
+
+    .cookie-notice__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+
+    .cookie-notice__text {
+        font-size: 12.5px;
+    }
+
+    .cookie-notice__button {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cookie-notice {
+        transition: none;
+    }
+}
+
+/* ---------- Ритм левого верхнего угла ----------
+   Бургер, переключатель языка и список разделов стоят одной колонкой.
+   Раньше меню начиналось на 2px ниже переключателя — они слипались в одну
+   строку, особенно заметно на планшете и телефоне. Разводим по вертикали:
+   бургер 15–40, переключатель ~56, первый пункт меню ~112. */
+
+.lang-switch--home {
+    top: 56px;
+}
+
+.overlay-menu {
+    top: 92px;
+}
+
+@media screen and (max-width: 575px) {
+    .lang-switch--home {
+        top: 52px;
+        left: 20px;
+    }
+
+    .overlay-menu {
+        top: 86px;
+        left: 20px;
+    }
+}
+
+/* Альбомный телефон: высоты мало, поджимаем всю колонку вверх */
+@media screen and (max-height: 460px) and (orientation: landscape) {
+    .lang-switch--home {
+        top: 46px;
+    }
+
+    .overlay-menu {
+        top: 74px;
+    }
+
+    .overlay-menu ul li {
+        margin: 6px 0;
+    }
+}

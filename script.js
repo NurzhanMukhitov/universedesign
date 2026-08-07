@@ -148,6 +148,9 @@ document.addEventListener('DOMContentLoaded', function() {
             langSwitch.style.display = 'flex';
             langSwitch.classList.add('visible');
         }
+
+        // Та же причина для уведомления о cookie: ветка минует render().
+        if (typeof window.showCookieNotice === 'function') window.showCookieNotice();
     }
 
     // Gesture control
@@ -403,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     langSwitch.style.display = "flex";
                     requestAnimationFrame(function () { langSwitch.classList.add('visible'); });
                 }
+                if (typeof window.showCookieNotice === 'function') window.showCookieNotice();
                 isMenuLocked = true; // Lock menu when cube is gathered
                 // Automatically open menu
                 menuOverlay.style.display = "block";
@@ -1246,9 +1250,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Return logic
             window.location.href = '/'; // Example: if you need to go to main page
         });
-    } else {
-        console.error('backButton not found on this page');
     }
+    // Стрелки «назад» на главной нет и быть не должно — это не ошибка,
+    // поэтому здесь ничего не логируем.
 
     // Add pageshow event handler for correct bfcache work
     window.addEventListener('pageshow', function(event) {

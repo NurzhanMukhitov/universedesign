@@ -65,8 +65,8 @@
     </script>
     
     <title>UNIVERSE DESIGN | FINOPOLIS 2022</title>
-    <link rel="stylesheet" href="/style.css?v=20260807d">
-    <link rel="stylesheet" href="/projects/projects.css?v=20260807d">
+    <link rel="stylesheet" href="/style.css?v=20260807g">
+    <link rel="stylesheet" href="/projects/projects.css?v=20260807g">
     <script src="https://player.vimeo.com/api/player.js"></script>
 
   <!-- Yandex.Metrika counter -->
@@ -135,7 +135,7 @@
         </div>
     </div>
 
-    <script src="/projects/project-gallery.js?v=20260807d"></script>
+    <script src="/projects/project-gallery.js?v=20260807g"></script>
 
 
 
@@ -191,5 +191,50 @@
         }
     })();
     </script>
+
+  <!-- Cookie notice: shown once, the choice is remembered -->
+  <div class="cookie-notice" id="cookie-notice" role="region" aria-label="Cookie notice">
+    <div class="cookie-notice__inner">
+      <p class="cookie-notice__text">This site uses cookies to provide all of its features.
+      By using our site you agree to the use of cookies.
+      <a href="/en/privacy.html">Privacy Policy</a></p>
+      <button type="button" class="cookie-notice__button" id="cookie-accept">Accept</button>
+    </div>
+  </div>
+
+  <script>
+  // Уведомление о cookie. На главной ждём, пока соберётся куб: полоса поверх
+  // разлетающихся точек убивала бы весь эффект входа. На остальных страницах
+  // показываем через небольшую паузу после загрузки.
+  (function () {
+    var KEY = 'cookie_notice_accepted';
+    var notice = document.getElementById('cookie-notice');
+    if (!notice) return;
+
+    var accepted = false;
+    try { accepted = localStorage.getItem(KEY) === 'true'; } catch (e) { /* storage закрыт */ }
+    if (accepted) return;
+
+    var shown = false;
+    function show() {
+      if (shown) return;
+      shown = true;
+      notice.style.display = 'block';
+      requestAnimationFrame(function () { notice.classList.add('visible'); });
+    }
+    // главная зовёт это сама, когда куб собран (см. script.js)
+    window.showCookieNotice = show;
+
+    if (!document.querySelector('.lang-switch--home')) {
+      setTimeout(show, 900);
+    }
+
+    document.getElementById('cookie-accept').addEventListener('click', function () {
+      try { localStorage.setItem(KEY, 'true'); } catch (e) { /* storage закрыт */ }
+      notice.classList.remove('visible');
+      setTimeout(function () { notice.style.display = 'none'; }, 450);
+    });
+  })();
+  </script>
 </body>
 </html> 
