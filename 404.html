@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, follow">
+    <title>Страница не найдена — UNIVERSE DESIGN</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon/favicon-32x32.png?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon/favicon-16x16.png?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon/favicon/apple-touch-icon.png?v=2">
+    <link rel="stylesheet" href="/style.css?v=20260807n">
+    <style>
+        .notfound {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 24px 60px;
+            box-sizing: border-box;
+            text-align: center;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: #fff;
+        }
+
+        .notfound__code {
+            font-size: 13px;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .45);
+            margin: 0 0 18px;
+        }
+
+        .notfound__title {
+            font-size: 30px;
+            font-weight: 400;
+            letter-spacing: 0;
+            line-height: 1.2;
+            margin: 0 0 14px;
+        }
+
+        .notfound__text {
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, .7);
+            max-width: 420px;
+            margin: 0 0 34px;
+        }
+
+        .notfound__links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px 26px;
+        }
+
+        .notfound__links a {
+            font-size: 13px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .6);
+            text-decoration: none;
+            transition: color .25s ease;
+        }
+
+        .notfound__links a:hover,
+        .notfound__links a:focus-visible {
+            color: #fff;
+        }
+
+        @media screen and (max-width: 575px) {
+            .notfound__title { font-size: 24px; }
+            .notfound__text { font-size: 14px; }
+        }
+    </style>
+
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+     (function(m,e,t,r,i,k,a){
+         m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+         m[i].l=1*new Date();
+         for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+         k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111378362', 'ym');
+
+     ym(111378362, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+  </script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/111378362" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  <!-- /Yandex.Metrika counter -->
+</head>
+<body>
+    <canvas id="c"></canvas>
+
+    <div class="logo-text">
+        <a class="logo-home" href="/" aria-label="На главную"><img src="/logo/UNIVERSE.png" alt="UNIVERSE DESIGN Studio Logo"></a>
+    </div>
+
+    <main class="notfound">
+        <p class="notfound__code">404</p>
+        <h1 class="notfound__title">Такой страницы нет</h1>
+        <p class="notfound__text">Возможно, адрес набран с опечаткой или страница переехала.
+        Ниже — то, что точно на месте.</p>
+        <nav class="notfound__links">
+            <a href="/">Главная</a>
+            <a href="/projects.html">Проекты</a>
+            <a href="/about.html">О нас</a>
+            <a href="/contacts.html">Контакты</a>
+        </nav>
+    </main>
+
+    <script>
+        // Куб на фоне в собранном виде: страница ошибки — не место для интро.
+        document.addEventListener('DOMContentLoaded', function () {
+            var logoText = document.querySelector('.logo-text');
+            if (logoText) {
+                logoText.style.display = 'block';
+                requestAnimationFrame(function () { logoText.classList.add('visible'); });
+            }
+        });
+    </script>
+    <script src="/script.js?v=20260807n"></script>
+</body>
+</html>

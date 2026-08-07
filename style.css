@@ -1179,3 +1179,19 @@ canvas {
         margin: 6px 0;
     }
 }
+
+/* Заголовок страницы, скрытый от глаз, но доступный поиску и скринридерам.
+   Нужен там, где по замыслу страница — это галерея без текста: без H1
+   поисковик не понимает, о чём она. */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
