@@ -172,19 +172,29 @@
     </script>
 
 
+
     <script>
     // Меню на главной раскрывается по флагу в sessionStorage: его читает script.js
-    // на DOMContentLoaded и на pageshow. Флаг ставят два действия:
-    //   1) стрелка «назад» — чтобы вернуться к раскрытому меню, а не к голому кубу;
-    //   2) переключатель языка — иначе после смены языка меню приходилось открывать руками.
+    // на DOMContentLoaded и на pageshow. Флаг ставят стрелка «назад» и переключатель языка.
+    //
+    // Смена языка идёт через location.replace, а не обычным переходом: иначе она
+    // добавляла бы запись в историю, и «назад» сначала возвращал бы прежний язык
+    // вместо выхода из раздела. Модифицированные клики (Cmd, Ctrl, средняя кнопка)
+    // не перехватываем — пусть открываются в новой вкладке штатно.
     (function () {
         function raiseMenuFlag() {
             try { sessionStorage.setItem('justLeftIndex', 'true'); } catch (e) { /* storage закрыт */ }
         }
         var back = document.querySelector('.back-button');
         if (back) back.addEventListener('click', raiseMenuFlag, true);
+
         document.querySelectorAll('.lang-switch a').forEach(function (link) {
-            link.addEventListener('click', raiseMenuFlag, true);
+            link.addEventListener('click', function (event) {
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+                event.preventDefault();
+                raiseMenuFlag();
+                window.location.replace(link.href);
+            });
         });
     })();
     </script>
