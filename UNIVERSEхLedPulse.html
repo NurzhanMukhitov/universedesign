@@ -94,8 +94,8 @@
     
     <title>UNIVERSE х LedPulse — совместный проект по LED-экранам | UNIVERSE DESIGN</title>
     <!-- Стили (пути от корня) -->
-    <link rel="stylesheet" href="style.css?v=20260807">
-    <link rel="stylesheet" href="projects/projects.css?v=20260807"> 
+    <link rel="stylesheet" href="style.css?v=20260807b">
+    <link rel="stylesheet" href="projects/projects.css?v=20260807b"> 
 
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
@@ -180,7 +180,8 @@
 
     <!-- Скрипт галереи (путь от корня) -->
     <!-- Убедитесь, что этот скрипт корректно обрабатывает кнопку назад для страницы в корне -->
-    <script src="projects/project-gallery.js?v=20260807"></script> 
+    <script src="projects/project-gallery.js?v=20260807b"></script> 
+
 
 
 
@@ -207,6 +208,23 @@
                 window.location.replace(link.href);
             });
         });
+
+        // Скролл внутри раздела прячет переключатель. Пороги разведены (48 и 16),
+        // чтобы у верхнего края он не мигал от каждого мелкого движения колеса.
+        var langSwitch = document.querySelector('.lang-switch:not(.lang-switch--home)');
+        if (langSwitch) {
+            var ticking = false;
+            window.addEventListener('scroll', function () {
+                if (ticking) return;
+                ticking = true;
+                window.requestAnimationFrame(function () {
+                    var y = window.scrollY || document.documentElement.scrollTop;
+                    if (y > 48) langSwitch.classList.add('lang-switch--hidden');
+                    else if (y < 16) langSwitch.classList.remove('lang-switch--hidden');
+                    ticking = false;
+                });
+            }, { passive: true });
+        }
     })();
     </script>
 </body>

@@ -936,6 +936,20 @@ canvas {
     opacity: 1;
 }
 
+/* При скролле внутри раздела переключатель уходит: он нужен на входе
+   на страницу, а дальше только мешает смотреть работы. Возвращается,
+   когда пользователь снова у верхнего края. */
+.lang-switch {
+    transition: opacity .35s ease, transform .35s ease, visibility .35s;
+}
+
+.lang-switch--hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    pointer-events: none;
+}
+
 .lang-switch a,
 .lang-switch .is-active,
 .lang-switch .sep {
