@@ -1173,6 +1173,9 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Clone image
             const clone = media.cloneNode();
+            // Клон вынут из <picture>, поэтому сам бы взял запасной JPEG из src.
+            // Подставляем то, что браузер уже выбрал и держит в кэше, — обычно WebP.
+            if (clone.tagName === 'IMG' && media.currentSrc) clone.src = media.currentSrc;
             fullscreenMedia.appendChild(clone);
         }
     }

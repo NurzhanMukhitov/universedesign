@@ -132,7 +132,10 @@ class ProjectGallery {
 
             if (currentElement.tagName === 'IMG') {
                 const img = document.createElement('img');
-                img.src = currentElement.src;
+                // currentSrc — то, что браузер реально выбрал из <picture>: WebP там,
+                // где он поддерживается. Через .src во весь экран открывался бы
+                // тяжёлый запасной JPEG, хотя лёгкая версия уже в кэше.
+                img.src = currentElement.currentSrc || currentElement.src;
                 img.alt = currentElement.alt || '';
                 
                 // Плавное появление после загрузки
