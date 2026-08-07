@@ -145,8 +145,6 @@
             const backButton = document.querySelector('.back-button');
             if (backButton) {
                 backButton.addEventListener('click', function() {
-                    // Устанавливаем флаг для показа собранного куба
-                    localStorage.setItem('showAssembledCube', 'true');
                     // Переходим на предыдущую страницу в истории
                     history.back();
                 });

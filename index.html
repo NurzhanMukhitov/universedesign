@@ -74,13 +74,20 @@
   <title>UNIVERSE DESIGN — We create stunning visual experiences that bring your ideas to life</title>
   <link rel="stylesheet" href="style.css">
   <script>
-    // Проверяем наличие флага в sessionStorage
-    if (!sessionStorage.getItem('cube_session_started')) {
-      // Устанавливаем флаг для принудительного режима хаотичного куба
-      localStorage.setItem('force_chaotic_cube', 'true');
-      // Отмечаем, что сессия началась
-      sessionStorage.setItem('cube_session_started', 'true');
-      console.log("Force chaotic mode enabled (new session)");
+    // Этот блок выполняется до script.js, поэтому хелпер safeStore ему недоступен —
+    // оборачиваем вручную. При заблокированных cookie обращение к storage бросает
+    // SecurityError; в этом случае просто пропускаем интро-режим и показываем
+    // собранный куб.
+    try {
+      // Проверяем наличие флага в sessionStorage
+      if (!sessionStorage.getItem('cube_session_started')) {
+        // Устанавливаем флаг для принудительного режима хаотичного куба
+        localStorage.setItem('force_chaotic_cube', 'true');
+        // Отмечаем, что сессия началась
+        sessionStorage.setItem('cube_session_started', 'true');
+      }
+    } catch (e) {
+      /* storage недоступен — куб покажется собранным, это ожидаемое поведение */
     }
   </script>
 </head>

@@ -1,16 +1,40 @@
 // Remove global flag
-// let isIndexPageInitialLoad = true; 
+// let isIndexPageInitialLoad = true;
+
+/**
+ * Безопасный доступ к storage.
+ *
+ * В Safari и Chrome с настройкой «блокировать все cookie» обращение к
+ * localStorage/sessionStorage не возвращает null, а бросает SecurityError.
+ * Без этой обёртки исключение на первой же строке обработчика DOMContentLoaded
+ * уносило весь обработчик целиком: не настраивался canvas, не стартовал
+ * render-цикл, не навешивались обработчики меню — страница оставалась чёрной.
+ *
+ * При недоступном storage чтение возвращает null, запись молча игнорируется.
+ * Сайт при этом работает в дефолтном режиме: куб собран, меню открывается вручную.
+ */
+var safeStore = {
+    get: function (store, key) {
+        try { return window[store].getItem(key); } catch (e) { return null; }
+    },
+    set: function (store, key, value) {
+        try { window[store].setItem(key, value); } catch (e) { /* storage недоступен */ }
+    },
+    remove: function (store, key) {
+        try { window[store].removeItem(key); } catch (e) { /* storage недоступен */ }
+    }
+};
 
 document.addEventListener('DOMContentLoaded', function() {
     // Check flag for returning from another page
-    if (sessionStorage.getItem('justLeftIndex') === 'true') {
+    if (safeStore.get('sessionStorage', 'justLeftIndex') === 'true') {
         console.log("Found justLeftIndex flag, planning to open menu.");
         // Wrap menu opening in setTimeout to give browser time to render
         setTimeout(function() {
             openBurgerMenu(); // Open menu
             console.log("Menu opened after small delay.");
         }, 0); // Minimum delay
-        sessionStorage.removeItem('justLeftIndex'); // Remove flag immediately
+        safeStore.remove('sessionStorage', 'justLeftIndex'); // Remove flag immediately
         console.log("justLeftIndex flag removed from sessionStorage.");
     }
 
@@ -69,14 +93,14 @@ document.addEventListener('DOMContentLoaded', function() {
     var canStartHighlight = false;
 
     // Determine cube state based on localStorage
-    var forceChaotic = localStorage.getItem('force_chaotic_cube') === 'true';
+    var forceChaotic = safeStore.get('localStorage', 'force_chaotic_cube') === 'true';
     
     if (forceChaotic) {
         tParam = 1;
         rotationX = 0;
         rotationY = 0;
         
-        localStorage.removeItem('force_chaotic_cube');
+        safeStore.remove('localStorage', 'force_chaotic_cube');
         
         if (gestureHint && gestureMask) {
             gestureHint.style.display = 'flex';
@@ -656,8 +680,11 @@ document.addEventListener('DOMContentLoaded', function() {
             activePopupId: activePopup ? activePopup.id : null
         });
 
-        // Hide popup only if click was outside popup content and not on menu
-        if (!isClickInsideContent && !isClickOnMenu) {
+        // Hide popup only if click was outside popup content and not on menu.
+        // Клик по самой маске уже обрабатывается её собственным слушателем выше —
+        // без этой проверки hidePopup() вызывался бы дважды за один клик и второй
+        // таймаут падал бы на уже обнулённом activePopup.
+        if (!isClickInsideContent && !isClickOnMenu && !isClickOnMask) {
             hidePopup();
         }
     });
@@ -731,7 +758,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Set flag in sessionStorage before transition, if it's not a popup
                 if (!sectionId && href && href !== '#' && !href.startsWith('javascript:')) {
-                    sessionStorage.setItem('justLeftIndex', 'true');
+                    safeStore.set('sessionStorage', 'justLeftIndex', 'true');
                     console.log("justLeftIndex flag set in sessionStorage");
                 }
 
@@ -864,7 +891,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             
             // Set flag for forced update
-            localStorage.setItem('force_chaotic_cube', 'true');
+            safeStore.set('localStorage', 'force_chaotic_cube', 'true');
             
             // Reload page
             window.location.reload();
@@ -882,7 +909,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             
             // Set flag for forced update
-            localStorage.setItem('force_chaotic_cube', 'true');
+            safeStore.set('localStorage', 'force_chaotic_cube', 'true');
             
             // Reload page
             setTimeout(function() {
