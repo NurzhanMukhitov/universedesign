@@ -976,18 +976,22 @@ and (max-width: 767px) {
     margin-bottom: 20px;
 }
 
-.project-intro .intro-credits {
+/* Селектор с тегом: правило .project-intro .intro-text p весит больше, чем
+   .project-intro .intro-credits, и перебивало выравнивание. */
+.project-intro .intro-text p.intro-credits {
     margin-top: 0;
     margin-bottom: 20px;
     font-size: 20px;
     font-weight: 300;
     line-height: 1.2;
-    text-align: justify;
-    text-justify: inter-word;
+    /* Выключка по формату здесь вредит: строка авторства короткая, чуть длиннее
+       одной строки — браузер раздвигал пробелы до края и получались дыры.
+       На длинных абзацах ниже justify работает незаметно, на двух строках нет. */
+    text-align: left;
     color: #fff;
 }
 
-.project-intro .intro-credits a {
+.project-intro .intro-text p.intro-credits a {
     color: rgba(255, 255, 255, .8);
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -995,7 +999,7 @@ and (max-width: 767px) {
     transition: color .25s ease;
 }
 
-.project-intro .intro-credits a:hover {
+.project-intro .intro-text p.intro-credits a:hover {
     color: #fff;
 }
 
@@ -1025,7 +1029,7 @@ and (max-width: 767px) {
 
     /* На узкой колонке выключка по формату рвёт строки пробелами */
     .project-intro .intro-text p,
-    .project-intro .intro-credits {
+    .project-intro .intro-text p.intro-credits {
         text-align: left;
     }
 }
