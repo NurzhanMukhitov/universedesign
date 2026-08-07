@@ -1,20 +1,20 @@
 # INTERVALS 2023
 
-> A visual experience project showcasing digital art and motion design, created for the INTERVALS festival.
+> Визуальный проект, показывающий цифровое искусство и моушн-дизайн, созданный для фестиваля INTERVALS.
 
-**Studio:** UNIVERSE DESIGN  
-**Project page:** https://universe-design.com/projects/intervals2023.html  
-**Location:** Moscow, Russia
+**Студия:** UNIVERSE DESIGN  
+**Страница проекта:** https://universe-design.com/projects/intervals2023.html  
+**Локация:** Москва, Россия
 
-## About
+## О проекте
 
-A visual experience project showcasing digital art and motion design, created for the INTERVALS festival.
+Визуальный проект, показывающий цифровое искусство и моушн-дизайн, созданный для фестиваля INTERVALS.
 
-UNIVERSE DESIGN specializes in volumetric LED screens and their non-standard use in
-art, advertising and event spaces, covering the full production cycle from concept and
-3D visualization through installation and content creation.
+UNIVERSE DESIGN специализируется на волюметрических LED-экранах и их нестандартном
+применении в искусстве, рекламе и event-пространствах, закрывая полный цикл производства —
+от концепции и 3D-визуализации до монтажа инсталляции и создания контента.
 
-## Media
+## Медиа
 
 - Vimeo video: https://vimeo.com/902962085
 - Cover image: https://universe-design.com/projects/intervals2023/covers/cover.jpg
@@ -31,8 +31,12 @@ art, advertising and event spaces, covering the full production cycle from conce
 - https://universe-design.com/projects/intervals2023/gallery/image6.jpeg
 - https://universe-design.com/projects/intervals2023/gallery/image7.jpeg
 
-## Elsewhere on this site
+## Другие страницы сайта
 
 - All projects: https://universe-design.com/projects.md
 - About the studio: https://universe-design.com/about.md
 - Site index for agents: https://universe-design.com/llms.txt
+
+## Языки
+
+- English version: <https://universe-design.com/en/projects/intervals2023.md>

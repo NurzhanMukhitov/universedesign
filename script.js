@@ -25,18 +25,26 @@ var safeStore = {
     }
 };
 
+/**
+ * Открывает меню, если пользователь вернулся на главную из раздела.
+ *
+ * Вызывается дважды: на DOMContentLoaded (обычная загрузка) и на pageshow
+ * (возврат кнопкой «назад»). При возврате страница поднимается из bfcache —
+ * DOMContentLoaded там не срабатывает вообще, поэтому без pageshow меню
+ * оставалось закрытым и пользователь видел голый куб.
+ */
+function openMenuIfReturning() {
+    if (safeStore.get('sessionStorage', 'justLeftIndex') !== 'true') return;
+    safeStore.remove('sessionStorage', 'justLeftIndex');
+    setTimeout(function () {
+        if (typeof openBurgerMenu === 'function') openBurgerMenu();
+    }, 0);
+}
+
+window.addEventListener('pageshow', openMenuIfReturning);
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Check flag for returning from another page
-    if (safeStore.get('sessionStorage', 'justLeftIndex') === 'true') {
-        console.log("Found justLeftIndex flag, planning to open menu.");
-        // Wrap menu opening in setTimeout to give browser time to render
-        setTimeout(function() {
-            openBurgerMenu(); // Open menu
-            console.log("Menu opened after small delay.");
-        }, 0); // Minimum delay
-        safeStore.remove('sessionStorage', 'justLeftIndex'); // Remove flag immediately
-        console.log("justLeftIndex flag removed from sessionStorage.");
-    }
+    openMenuIfReturning();
 
     // Screen dimensions
     var ww = window.innerWidth, wh = window.innerHeight;
@@ -624,6 +632,10 @@ document.addEventListener('DOMContentLoaded', function() {
     /**
      * Opens the burger menu
      */
+    // Наружу — чтобы openMenuIfReturning() на pageshow мог её вызвать:
+    // сама функция объявлена внутри обработчика DOMContentLoaded.
+    window.openBurgerMenu = openBurgerMenu;
+
     function openBurgerMenu() {
         console.log('openBurgerMenu called');
         const menuOverlay = document.querySelector('.overlay-menu');

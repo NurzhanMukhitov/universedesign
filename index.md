@@ -1,42 +1,47 @@
 # UNIVERSE DESIGN
 
-> A Moscow studio combining art, technology and innovation. We create media art
-> installations that transform space, engage the viewer and open up new boundaries
-> of perception.
+> Московская студия, объединяющая искусство, технологии и инновации. Создаём
+> медиаарт-инсталляции, которые трансформируют пространство, вовлекают зрителя
+> и открывают новые границы восприятия.
 
-This is the Markdown mirror of <https://universe-design.com/>. The HTML version renders an
-interactive 3D cube on a canvas and carries almost no readable text — this file has the same
-information in plain form.
+Markdown-зеркало страницы <https://universe-design.com/>. HTML-версия рисует интерактивный
+3D-куб на canvas и почти не содержит читаемого текста — здесь та же информация в простом виде.
 
-## What we do
+## Чем занимаемся
 
-Our key specialization is volumetric LED screens and their non-standard use in art,
-advertising and event spaces. We do not just apply ready-made solutions that meet standards —
-we experiment with forms and develop original methods for introducing volumetric LED screens
-into large-scale projects.
+Ключевая специализация — волюметрические экраны и их нестандартное применение в искусстве,
+рекламе и event-пространствах. Мы не просто используем готовые решения, соответствующие
+стандартам, — мы экспериментируем с формами и разрабатываем авторские методы внедрения
+волюметрического экрана в масштабные проекты.
 
-## Sections
+## Разделы
 
-- [Projects](https://universe-design.com/projects.md) — the portfolio
-- [About](https://universe-design.com/about.md) — the studio, approach and capabilities
-- [UNIVERSE x LedPulse](https://universe-design.com/UNIVERSE%D1%85LedPulse.md) — collaboration project
+- [Проекты](https://universe-design.com/projects.md) — портфолио
+- [О нас](https://universe-design.com/about.md) — студия, подход, возможности
+- [Контакты](https://universe-design.com/contacts.md) — адрес в Москве, телефоны, почта
+- [UNIVERSE x LedPulse](https://universe-design.com/UNIVERSE%D1%85LedPulse.md) — совместный проект
 
-## Contacts
+## Контакты
 
-**Yuriy Khotsinskiy**
-- Email: y.khotsinskiy@universe-design.com
-- Phone: +7 926 824 0607
+**Юрий Хоцинский**
+- Почта: y.khotsinskiy@universe-design.com
+- Телефон: +7 926 824 0607
 - Telegram: [@yurahoc](https://t.me/yurahoc)
 
-**Dmitry Khotsinskiy**
-- Email: d.khotsinskiy@universe-design.com
-- Phone: +7 926 916 9386
+**Дмитрий Хоцинский**
+- Почта: d.khotsinskiy@universe-design.com
+- Телефон: +7 926 916 9386
 - Telegram: [@dimahoc](https://t.me/dimahoc)
 
-**Studio**
-- Telegram: [universe_design_studio](https://t.me/universe_design_studio)
-- Instagram: [universe_design_studio](https://www.instagram.com/universe_design_studio)
-- Behance: [dimahoc](https://www.behance.net/dimahoc)
-- Vimeo: [user28929903](https://vimeo.com/user28929903)
-- Dprofile: [universe_design](https://dprofile.ru/universe_design)
-- Location: Moscow, Russia
+**Студия**
+- Адрес: 127015, Москва, Большая Новодмитровская улица, 23, Дизайн-завод «Флакон»
+- Telegram: <https://t.me/universe_design_studio>
+- [Instagram](https://www.instagram.com/universe_design_studio)
+- [Behance](https://www.behance.net/dimahoc)
+- [Vimeo](https://vimeo.com/user28929903)
+- [Dprofile](https://dprofile.ru/universe_design)
+
+## Языки
+
+- Русская версия (эта): <https://universe-design.com/>
+- English version: <https://universe-design.com/en/>

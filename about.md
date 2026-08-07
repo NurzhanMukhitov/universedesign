@@ -1,44 +1,47 @@
-# About — UNIVERSE DESIGN
+# О нас — UNIVERSE DESIGN
 
-> A studio specialising in volumetric LED screens and their non-standard use in art,
-> advertising and event spaces.
+> Студия волюметрических экранов и их нестандартного применения в искусстве, рекламе
+> и event-пространствах.
 
-Markdown mirror of <https://universe-design.com/about.html>.
+Markdown-зеркало страницы <https://universe-design.com/about.html>.
 
-UNIVERSE design is a studio that combines art, technology and innovation. We create media art
-installations that transform space, engage the viewer and open up new boundaries of perception.
+UNIVERSE design — студия, объединяющая искусство, технологии и инновации. Мы создаём
+медиаарт-инсталляции, которые трансформируют пространство, вовлекают зрителя и открывают
+новые границы восприятия.
 
-Our key specialization is volumetric LED screens and their non-standard use in art, advertising
-and event spaces. We do not just use ready-made solutions that meet standards, we experiment with
-forms and develop original methods for introducing volumetric LED screens into large-scale projects.
+Наша ключевая специализация — волюметрические экраны и их нестандартное применение
+в искусстве, рекламе и event-пространствах. Мы не просто используем готовые решения,
+соответствующие стандартам, — мы экспериментируем с формами и разрабатываем авторские
+методы внедрения волюметрического экрана в масштабные проекты.
 
-Our projects are not just a "screen with a picture" — a dynamic environment where light, volume
-and digital storytelling are an emotional experience. We believe that media art is the language
-of the future, and we find unexpected forms for it.
+Наши проекты — это не просто «экран с картинкой», а динамичная среда, где свет, объём
+и цифровое повествование становятся эмоциональным опытом. Мы верим, что медиаискусство —
+язык будущего, и находим для него неожиданные формы.
 
-## Why us
+## Почему мы
 
-**Deep technical knowledge.** Our team combines knowledge in the field of engineering,
-programming and media design, which allows us to create complex turnkey installations.
+**Глубокие технические знания.** Наша команда сочетает знания в области инженерии,
+программирования и медиадизайна, что позволяет создавать сложные инсталляции под ключ.
 
-**Broad range of clients.** We work with art galleries, music festivals, commercial brands
-and architectural spaces, adapting technologies to any tasks.
+**Широкий круг заказчиков.** Мы работаем с арт-галереями, музыкальными фестивалями,
+коммерческими брендами и архитектурными пространствами, адаптируя технологии под любые задачи.
 
-**Research approach.** We test new ways of interaction — sensors, generative content — so that
-the viewer becomes part of the installation.
+**Исследовательский подход.** Тестируем новые способы взаимодействия — сенсоры,
+генеративный контент, — чтобы зритель стал частью инсталляции.
 
-**Full production cycle.** From concept and 3D visualization to production of the installation
-and content creation.
+**Полный цикл производства.** От концепции и 3D-визуализации до производства инсталляции
+и создания контента.
 
-## Areas of expertise
+## Направления работы
 
-- Media art
-- LED screens
-- Motion design
-- Digital storytelling
+- Медиаарт
+- Волюметрические LED-экраны
+- Моушн-дизайн
+- Цифровое повествование
 
-## Elsewhere on this site
+## Другие страницы сайта
 
-- Projects: <https://universe-design.com/projects.md>
-- Home and contacts: <https://universe-design.com/index.md>
-- Site index for agents: <https://universe-design.com/llms.txt>
+- [Главная](https://universe-design.com/index.md)
+- [Проекты](https://universe-design.com/projects.md)
+- [Контакты](https://universe-design.com/contacts.md)
+- [English version](https://universe-design.com/en/about.md)

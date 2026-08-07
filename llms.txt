@@ -5,16 +5,26 @@
 > perception. Our key specialization is volumetric LED screens and their non-standard
 > use in art, advertising and event spaces.
 
-The site is a portfolio. Every page has a plain-Markdown mirror at the same path with a
-`.md` extension — prefer those over the HTML, which is media-heavy and carries almost no
-text. The HTML pages render galleries and embedded video via JavaScript; the Markdown
-mirrors list the same media as direct URLs.
+The site is a portfolio. It exists in two languages: **Russian is primary** and lives at the
+root (`/about.html`), English lives under `/en/` (`/en/about.html`). The two are linked with
+`hreflang`; the Russian version is the `x-default`.
 
-## Studio
+Every page has a plain-Markdown mirror at the same path with a `.md` extension — prefer those
+over the HTML, which is media-heavy and carries almost no text. Russian mirrors sit at the root,
+English mirrors under `/en/`. The HTML pages render galleries and embedded video via JavaScript;
+the Markdown mirrors list the same media as direct URLs.
+
+## Studio (Russian — primary)
 
 - [About the studio](https://universe-design.com/about.md): specialization, approach, capabilities
 - [Contacts](https://universe-design.com/contacts.md): studio address in Moscow, phones, email, Telegram
 - [Home](https://universe-design.com/index.md): entry point and contacts
+
+## Studio (English)
+
+- [About the studio](https://universe-design.com/en/about.md)
+- [Contacts](https://universe-design.com/en/contacts.md)
+- [Home](https://universe-design.com/en/index.md)
 
 ## Projects
 

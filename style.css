@@ -905,3 +905,55 @@ canvas {
         font-size: 16px;
     }
 }
+
+/* ---------- Переключатель языка ---------- */
+/* Один и тот же элемент на всех страницах, включая главную: левый край,
+   под бургером и стрелкой «назад», чтобы не перекрывать их и не прыгать
+   при переходах между разделами. */
+
+.lang-switch {
+    position: fixed;
+    top: 74px;
+    left: 22px;
+    z-index: 2100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: .14em;
+}
+
+.lang-switch a,
+.lang-switch .is-active,
+.lang-switch .sep {
+    text-decoration: none;
+    line-height: 1;
+}
+
+.lang-switch a {
+    color: rgba(255, 255, 255, .45);
+    transition: color .25s ease;
+}
+
+.lang-switch a:hover,
+.lang-switch a:focus-visible {
+    color: #fff;
+}
+
+.lang-switch .is-active {
+    color: #fff;
+}
+
+.lang-switch .sep {
+    color: rgba(255, 255, 255, .25);
+}
+
+
+@media screen and (max-width: 575px) {
+    .lang-switch {
+        top: 62px;
+        left: 18px;
+        font-size: 11px;
+    }
+}

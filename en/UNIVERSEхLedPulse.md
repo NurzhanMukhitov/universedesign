@@ -3,20 +3,20 @@
 > A collaborative project showcasing LED screen installations and media art,
 > produced by UNIVERSE DESIGN together with LedPulse.
 
-**Студия:** UNIVERSE DESIGN  
-**Страница проекта:** https://universe-design.com/UNIVERSE%D1%85LedPulse.html  
-**Локация:** Москва, Россия
+**Studio:** UNIVERSE DESIGN  
+**Project page:** https://universe-design.com/en/UNIVERSE%D1%85LedPulse.html  
+**Location:** Moscow, Russia
 
 Note: the HTML page filename contains a Cyrillic character (U+0445), percent-encoded
 as `%D1%85` in URLs.
 
-## О проекте
+## About
 
 A collaboration between UNIVERSE DESIGN and LedPulse on LED screen installations and
 media art. UNIVERSE DESIGN specializes in volumetric LED screens and their non-standard
 use in art, advertising and event spaces.
 
-## Медиа
+## Media
 
 - Video: https://universe-design.com/UNIVERSE%D1%85LedPulse/video.mp4
 - Photos: 10 images
@@ -34,12 +34,8 @@ use in art, advertising and event spaces.
 - https://universe-design.com/UNIVERSE%D1%85LedPulse/image9.jpeg
 - https://universe-design.com/UNIVERSE%D1%85LedPulse/image10.jpeg
 
-## Другие страницы сайта
+## Elsewhere on this site
 
-- All projects: https://universe-design.com/projects.md
-- About the studio: https://universe-design.com/about.md
+- All projects: https://universe-design.com/en/projects.md
+- About the studio: https://universe-design.com/en/about.md
 - Site index for agents: https://universe-design.com/llms.txt
-
-## Языки
-
-- English version: <https://universe-design.com/en/UNIVERSEхLedPulse.md>

@@ -1,75 +1,208 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Русская версия — основная, английская лежит в /en/.
+       Каждая запись несёт ссылки на обе языковые версии (xhtml:link). -->
 
   <url>
     <loc>https://universe-design.com/</loc>
-    <lastmod>2025-06-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/"/>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://universe-design.com/projects.html</loc>
-    <lastmod>2026-03-23</lastmod>
+    <loc>https://universe-design.com/en/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/"/>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://universe-design.com/about.html</loc>
-    <lastmod>2025-05-10</lastmod>
-    <changefreq>yearly</changefreq>
+    <loc>https://universe-design.com/projects.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://universe-design.com/en/projects.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://universe-design.com/contacts.html</loc>
+    <loc>https://universe-design.com/about.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/about.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/about.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/about.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://universe-design.com/en/about.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/about.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/about.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/about.html"/>
     <lastmod>2026-08-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://universe-design.com/projects/echo_2.0.html</loc>
-    <lastmod>2026-03-23</lastmod>
+    <loc>https://universe-design.com/contacts.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/contacts.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/contacts.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/contacts.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://universe-design.com/en/contacts.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/contacts.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/contacts.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/contacts.html"/>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://universe-design.com/projects/pre_event_outline_2025.html</loc>
-    <lastmod>2025-05-10</lastmod>
+    <loc>https://universe-design.com/projects/echo_2.0.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects/echo_2.0.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects/echo_2.0.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects/echo_2.0.html"/>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://universe-design.com/en/projects/echo_2.0.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects/echo_2.0.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects/echo_2.0.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects/echo_2.0.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://universe-design.com/projects/intervals2023.html</loc>
-    <lastmod>2025-05-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects/intervals2023.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects/intervals2023.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects/intervals2023.html"/>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://universe-design.com/en/projects/intervals2023.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects/intervals2023.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects/intervals2023.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects/intervals2023.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://universe-design.com/projects/pre_event_outline_2025.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects/pre_event_outline_2025.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects/pre_event_outline_2025.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects/pre_event_outline_2025.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://universe-design.com/en/projects/pre_event_outline_2025.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects/pre_event_outline_2025.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects/pre_event_outline_2025.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects/pre_event_outline_2025.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://universe-design.com/projects/t1_finopolis.html</loc>
-    <lastmod>2025-05-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects/t1_finopolis.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects/t1_finopolis.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects/t1_finopolis.html"/>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://universe-design.com/en/projects/t1_finopolis.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects/t1_finopolis.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects/t1_finopolis.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects/t1_finopolis.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://universe-design.com/projects/lada_vesta.html</loc>
-    <lastmod>2025-05-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects/lada_vesta.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects/lada_vesta.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects/lada_vesta.html"/>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- Cyrillic "х" (U+0445) in the filename is percent-encoded as %D1%85 -->
   <url>
-    <loc>https://universe-design.com/UNIVERSE%D1%85LedPulse.html</loc>
-    <lastmod>2025-05-10</lastmod>
+    <loc>https://universe-design.com/en/projects/lada_vesta.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/projects/lada_vesta.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/projects/lada_vesta.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/projects/lada_vesta.html"/>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://universe-design.com/UNIVERSE%D1%85LedPulse.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/UNIVERSE%D1%85LedPulse.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/UNIVERSE%D1%85LedPulse.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/UNIVERSE%D1%85LedPulse.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://universe-design.com/en/UNIVERSE%D1%85LedPulse.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://universe-design.com/UNIVERSE%D1%85LedPulse.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://universe-design.com/en/UNIVERSE%D1%85LedPulse.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://universe-design.com/UNIVERSE%D1%85LedPulse.html"/>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
 
 </urlset>

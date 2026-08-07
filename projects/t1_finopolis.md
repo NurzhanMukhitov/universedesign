@@ -2,19 +2,19 @@
 
 > Event design for the FINOPOLIS 2022 financial forum, created in collaboration with T1.
 
-**Studio:** UNIVERSE DESIGN  
-**Project page:** https://universe-design.com/projects/t1_finopolis.html  
-**Location:** Moscow, Russia
+**Студия:** UNIVERSE DESIGN  
+**Страница проекта:** https://universe-design.com/projects/t1_finopolis.html  
+**Локация:** Москва, Россия
 
-## About
+## О проекте
 
 Event design for the FINOPOLIS 2022 financial forum, created in collaboration with T1.
 
-UNIVERSE DESIGN specializes in volumetric LED screens and their non-standard use in
-art, advertising and event spaces, covering the full production cycle from concept and
-3D visualization through installation and content creation.
+UNIVERSE DESIGN специализируется на волюметрических LED-экранах и их нестандартном
+применении в искусстве, рекламе и event-пространствах, закрывая полный цикл производства —
+от концепции и 3D-визуализации до монтажа инсталляции и создания контента.
 
-## Media
+## Медиа
 
 - Vimeo video: https://vimeo.com/1065664056
 - Cover image: https://universe-design.com/projects/t1_finopolis/covers/cover.jpg
@@ -28,8 +28,12 @@ art, advertising and event spaces, covering the full production cycle from conce
 - https://universe-design.com/projects/t1_finopolis/gallery/image4.jpeg
 - https://universe-design.com/projects/t1_finopolis/gallery/image5.jpeg
 
-## Elsewhere on this site
+## Другие страницы сайта
 
 - All projects: https://universe-design.com/projects.md
 - About the studio: https://universe-design.com/about.md
 - Site index for agents: https://universe-design.com/llms.txt
+
+## Языки
+
+- English version: <https://universe-design.com/en/projects/t1_finopolis.md>

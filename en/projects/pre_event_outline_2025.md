@@ -2,19 +2,19 @@
 
 > Motion design and animations created for the PRE-EVENT OUTLINE 2025 event.
 
-**Студия:** UNIVERSE DESIGN  
-**Страница проекта:** https://universe-design.com/projects/pre_event_outline_2025.html  
-**Локация:** Москва, Россия
+**Studio:** UNIVERSE DESIGN  
+**Project page:** https://universe-design.com/en/projects/pre_event_outline_2025.html  
+**Location:** Moscow, Russia
 
-## О проекте
+## About
 
 Motion design and animations created for the PRE-EVENT OUTLINE 2025 event.
 
-UNIVERSE DESIGN специализируется на волюметрических LED-экранах и их нестандартном
-применении в искусстве, рекламе и event-пространствах, закрывая полный цикл производства —
-от концепции и 3D-визуализации до монтажа инсталляции и создания контента.
+UNIVERSE DESIGN specializes in volumetric LED screens and their non-standard use in
+art, advertising and event spaces, covering the full production cycle from concept and
+3D visualization through installation and content creation.
 
-## Медиа
+## Media
 
 - YouTube video: https://www.youtube.com/watch?v=ZksZf5z4mSA
 - Cover image: https://universe-design.com/projects/pre_event_outline_2025/covers/cover.jpg
@@ -48,12 +48,8 @@ UNIVERSE DESIGN специализируется на волюметрическ
 - https://universe-design.com/projects/pre_event_outline_2025/gallery/image15.png
 - https://universe-design.com/projects/pre_event_outline_2025/gallery/image16.png
 
-## Другие страницы сайта
+## Elsewhere on this site
 
-- All projects: https://universe-design.com/projects.md
-- About the studio: https://universe-design.com/about.md
+- All projects: https://universe-design.com/en/projects.md
+- About the studio: https://universe-design.com/en/about.md
 - Site index for agents: https://universe-design.com/llms.txt
-
-## Языки
-
-- English version: <https://universe-design.com/en/projects/pre_event_outline_2025.md>
