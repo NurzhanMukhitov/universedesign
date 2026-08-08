@@ -51,10 +51,6 @@ export function Menu() {
                     <img src={wordmarkUrl} alt="" width="220" height="55" />
                 </a>
             </div>
-
-            {/* Подсказка внизу: куб рассыпается от прокрутки, и об этом
-                надо сказать — иначе человек уйдёт, не тронув страницу. */}
-            <p className="scrollhint">Листайте вниз</p>
         </div>
     );
 }

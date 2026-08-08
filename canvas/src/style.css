@@ -198,15 +198,6 @@ body {
     height: auto;
 }
 
-.scrollhint {
-    font-family: var(--моно);
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--подпись);
-    margin: 0;
-}
-
 /* ---------- Кадр как земля ---------- */
 
 /* Изображение во весь экран, текст поверх. Землёй становится кадр,
@@ -535,7 +526,7 @@ body {
 .assemble-block {
     position: relative;
     z-index: 1;
-    width: min(26ch, 100%);
+    width: min(34ch, 100%);
     margin: 0 auto;
 }
 
@@ -546,7 +537,7 @@ body {
        Кегль уменьшен на шаг против прошлой версии. */
     font-size: clamp(20px, 2.7vw, 38px);
     font-weight: 300;
-    line-height: 1.24;
+    line-height: 1.3;
     letter-spacing: -0.01em;
     /* Абзац стоит посреди экрана, а не жмётся к левому краю: он здесь
        единственный житель, и прижимать его не к чему. */

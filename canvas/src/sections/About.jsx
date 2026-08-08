@@ -87,8 +87,6 @@ export function About() {
                 центрируется по своей ширине, и подпись уезжает от текста. */}
             <div className="section__inner">
                 <div className="assemble-block">
-                <p className="section__index">01 · О нас</p>
-
                 <p
                     className="assemble"
                     style={{ '--p': reducedMotion ? 1 : eased }}
