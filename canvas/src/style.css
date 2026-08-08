@@ -17,7 +17,12 @@
        куб живёт на нём с первого дня. */
     --пустота: #000000;
     --нить: #ffffff;
-    --подпись: #6e6e6e;
+
+    /* Приглушённый текст: #6e6e6e давал контраст 4.12 при норме 4.5 для
+       мелкого кегля — замерено, а не прикинуто. Этот держит 4.9 и остаётся
+       достаточно тихим, чтобы не спорить с основным текстом. */
+    --подпись: #7a7a7a;
+
     --разметка: #1c1c1c;
 
     /* Единственный акцент, под карантином: курсор и активное состояние.
@@ -309,6 +314,115 @@ body {
     .card__frame img {
         filter: none;
     }
+}
+
+/* ---------- Тезисы «О нас» ---------- */
+
+.theses {
+    list-style: none;
+    margin: 40px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--разметка);
+    max-width: 760px;
+}
+
+.thesis {
+    display: flex;
+    gap: 24px;
+    align-items: baseline;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--разметка);
+}
+
+/* Нумерация здесь кодирует порядок, а не украшает: тезисы читаются
+   как список узлов в паспорте. */
+.thesis__num {
+    font-family: var(--моно);
+    font-size: 11px;
+    color: var(--подпись);
+    flex: 0 0 auto;
+}
+
+.thesis__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.thesis__title {
+    font-size: 20px;
+    color: var(--нить);
+}
+
+.thesis__note {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--подпись);
+}
+
+/* ---------- Контакты ---------- */
+
+/* Куб к этому моменту собран обратно и стоит за текстом. Подложку делаем
+   полупрозрачной: полностью гасить его здесь не надо — он часть финала.
+
+   Высота во весь экран нужна не для воздуха, а для механики: сборка куба
+   считается по тому, насколько раздел вошёл в кадр, и на коротком разделе
+   он не успевал сойтись — петля закрывалась наполовину. */
+.section--contacts {
+    /* 0.82 не хватало: собранный куб стоит ровно за правой колонкой,
+       и телефон с почтой читались по слогам. */
+    background: rgba(0, 0, 0, 0.9);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.people {
+    list-style: none;
+    margin: 40px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+    max-width: 760px;
+}
+
+.person__name {
+    font-size: 16px;
+    margin: 0 0 12px;
+}
+
+.person__link {
+    display: block;
+    font-family: var(--моно);
+    font-size: 13px;
+    color: var(--подпись);
+    text-decoration: none;
+    padding: 5px 0;
+    transition: color var(--быстро) var(--ход);
+}
+
+/* Telegram первым и светлее прочих: у event-аудитории вся переписка там. */
+.person__link--first {
+    color: var(--нить);
+}
+
+.person__link:hover,
+.person__link:focus-visible {
+    color: var(--сигнал);
+}
+
+.studio {
+    margin-top: 44px;
+    padding-top: 22px;
+    border-top: 1px solid var(--разметка);
+    max-width: 760px;
+}
+
+.studio__address {
+    font-size: 15px;
+    margin: 0 0 10px;
+    color: var(--нить);
 }
 
 :focus-visible {

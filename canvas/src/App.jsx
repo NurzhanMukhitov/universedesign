@@ -3,8 +3,14 @@ import { Routes, Route, Link, useLocation } from 'react-router';
 
 import { ClientOnly } from './lib/ClientOnly.jsx';
 import { Cube } from './cube/Cube.jsx';
-import { useScrollProgress, useReducedMotion } from './lib/useScrollProgress.js';
+import {
+    useScrollProgress,
+    useEnterProgress,
+    useReducedMotion,
+} from './lib/useScrollProgress.js';
 import { Projects } from './sections/Projects.jsx';
+import { About } from './sections/About.jsx';
+import { Contacts } from './sections/Contacts.jsx';
 
 /*
  * Шаг 3: куб и разлёт по скроллу. Остальные разделы полотна появятся дальше.
@@ -12,8 +18,16 @@ import { Projects } from './sections/Projects.jsx';
 
 function Stage() {
     const stageRef = useRef(null);
-    const progress = useScrollProgress(stageRef);
+    const contactsRef = useRef(null);
     const reducedMotion = useReducedMotion();
+
+    // Разлёт на первом экране и обратная сборка на контактах — один и тот же
+    // параметр, только с разных концов полотна. Куб уходит в облако, пока
+    // читают полотно, и собирается обратно к контактам: петля закрывается
+    // там же, где открылась.
+    const scatter = useScrollProgress(stageRef);
+    const gather = useEnterProgress(contactsRef);
+    const progress = Math.max(0, Math.min(1, scatter - gather));
 
     return (
         <>
@@ -87,6 +101,8 @@ function Stage() {
             </section>
 
             <Projects />
+            <About />
+            <Contacts ref={contactsRef} />
         </>
     );
 }

@@ -56,6 +56,52 @@ export function useScrollProgress(ref) {
     return progress;
 }
 
+/**
+ * Прогресс появления элемента: 0 — верх элемента у нижней кромки окна,
+ * 1 — верх элемента дошёл до верхней кромки.
+ *
+ * Отличается от useScrollProgress тем, что мерит вход в кадр, а не прокрутку
+ * внутри. Для секции короче экрана прокрутки внутри не бывает вовсе — там
+ * первая мера всегда даёт ноль, и завязанная на неё анимация не запускается.
+ */
+export function useEnterProgress(ref) {
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return;
+
+        let frame = null;
+
+        const measure = () => {
+            frame = null;
+
+            const { top } = element.getBoundingClientRect();
+            const height = window.innerHeight;
+            const value = (height - top) / height;
+
+            setProgress(Math.max(0, Math.min(1, value)));
+        };
+
+        const onScroll = () => {
+            if (frame !== null) return;
+            frame = requestAnimationFrame(measure);
+        };
+
+        measure();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+
+        return () => {
+            if (frame !== null) cancelAnimationFrame(frame);
+            window.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', onScroll);
+        };
+    }, [ref]);
+
+    return progress;
+}
+
 /** Следит за системной настройкой «меньше движения». */
 export function useReducedMotion() {
     const [reduced, setReduced] = useState(false);
