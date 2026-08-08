@@ -29,7 +29,11 @@ export default defineConfig({
          */
         vitePrerenderPlugin({
             renderTarget: '#root',
-            additionalPrerenderRoutes: ['/404'],
+
+            // Список страниц задан явно, а не собран краулером по ссылкам:
+            // он должен совпадать с sitemap, и лучше держать его на виду.
+            // Пополняется по мере появления разделов.
+            additionalPrerenderRoutes: ['/', '/404'],
 
             // Отдельный файл, а не entry с атрибутом prerender: иначе код
             // сборки уезжает в браузерный бандл вместе с ленивыми ссылками

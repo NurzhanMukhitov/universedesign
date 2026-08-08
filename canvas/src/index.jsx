@@ -1,6 +1,7 @@
 import { createRoot, hydrateRoot } from 'react-dom/client';
 
 import { Root } from './Root.jsx';
+import './style.css';
 
 /*
  * Клиентский вход. Ничего серверного здесь быть не должно.
