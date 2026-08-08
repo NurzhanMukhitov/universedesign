@@ -181,20 +181,14 @@ body {
 }
 
 .wordmark {
-    font-family: var(--моно);
-    font-size: 15px;
-    letter-spacing: 0.26em;
-    text-align: right;
-    margin: 0;
-    color: var(--нить);
+    display: block;
+    flex: 0 0 auto;
 }
 
-.wordmark__sub {
+.wordmark img {
     display: block;
-    font-size: 9px;
-    letter-spacing: 0.42em;
-    color: var(--подпись);
-    margin-top: 2px;
+    width: clamp(130px, 13vw, 190px);
+    height: auto;
 }
 
 .scrollhint {

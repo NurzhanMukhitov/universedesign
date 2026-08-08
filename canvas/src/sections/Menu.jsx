@@ -1,3 +1,5 @@
+import { wordmarkUrl } from '../lib/media.js';
+
 /*
  * Первый экран: раскрытое меню слева, логотип справа, куб по центру —
  * так же, как на боевом сайте, только пункты крупнее.
@@ -37,10 +39,12 @@ export function Menu() {
                     </ul>
                 </nav>
 
-                <p className="wordmark">
-                    UNIVERSE
-                    <span className="wordmark__sub">design</span>
-                </p>
+                {/* Настоящий логотип студии, а не набранный шрифтом:
+                    начертание авторское, имитация выдаёт себя расстояниями
+                    между буквами. */}
+                <a className="wordmark" href="/" aria-label="UNIVERSE DESIGN, на главную">
+                    <img src={wordmarkUrl} alt="" width="220" height="55" />
+                </a>
             </div>
 
             {/* Подсказка внизу: куб рассыпается от прокрутки, и об этом
