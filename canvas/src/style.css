@@ -213,6 +213,104 @@ body {
     margin: 0;
 }
 
+/* ---------- Лента проектов ---------- */
+
+.tape {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+    margin: 0;
+    padding: 0 32px 40px;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    /* Прокрутка нативная: на телефоне это обычный свайп, который система уже
+       умеет. scroll-snap не ставим — полотно должно течь, а не щёлкать. */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--разметка) transparent;
+}
+
+/* Зазор задаётся gap, а не отступами карточек: при отступах у первой
+   не было левого, она выходила шире остальных, и её кадр из-за
+   aspect-ratio получался выше — подписи вставали на разные линии.
+   Хайрлайна здесь нет намеренно: линии несут работу в таблице
+   характеристик, а ленте хватает воздуха. */
+.tape__item {
+    flex: 0 0 clamp(240px, 26vw, 340px);
+}
+
+.card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.card__frame {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--разметка);
+}
+
+.card__frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+
+    /* Кадры лежат приглушёнными и оживают под курсором — цвет работает
+       прожектором, а не оформлением. На тач-устройствах ховера нет,
+       поэтому там они сразу в полную силу (см. медиазапрос ниже). */
+    filter: grayscale(1) brightness(0.72);
+    transition:
+        filter var(--медленно) var(--ход),
+        transform var(--медленно) var(--ход);
+}
+
+.card:hover .card__frame img,
+.card:focus-visible .card__frame img {
+    filter: grayscale(0) brightness(1);
+    transform: scale(1.02);
+}
+
+/* Индекс проекта поверх кадра — как инвентарный номер на оборудовании. */
+.card__index {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-family: var(--моно);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--нить);
+    mix-blend-mode: difference;
+}
+
+.card__title {
+    font-size: 15px;
+    margin: 12px 0 6px;
+    color: var(--нить);
+}
+
+.card__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--моно);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--подпись);
+    margin: 0;
+}
+
+@media (hover: none) {
+    /* Без мыши прожектора не будет — показываем кадры как есть. */
+    .card__frame img {
+        filter: none;
+    }
+}
+
 :focus-visible {
     outline: 2px solid var(--сигнал);
     outline-offset: 3px;

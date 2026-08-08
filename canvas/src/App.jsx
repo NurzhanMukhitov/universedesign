@@ -4,6 +4,7 @@ import { Routes, Route, Link, useLocation } from 'react-router';
 import { ClientOnly } from './lib/ClientOnly.jsx';
 import { Cube } from './cube/Cube.jsx';
 import { useScrollProgress, useReducedMotion } from './lib/useScrollProgress.js';
+import { Projects } from './sections/Projects.jsx';
 
 /*
  * Шаг 3: куб и разлёт по скроллу. Остальные разделы полотна появятся дальше.
@@ -84,6 +85,8 @@ function Stage() {
                     </div>
                 </div>
             </section>
+
+            <Projects />
         </>
     );
 }
