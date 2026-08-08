@@ -28,28 +28,35 @@ function Stage() {
 
             <section className="stage" ref={stageRef}>
                 <div className="stage__inner">
+                    {/*
+                     * Центр экрана отдан кубу целиком. Текст прижат
+                     * к краям: в паспорте оборудования чертёж стоит
+                     * в поле, а подписи идут по периметру — они его
+                     * не перекрывают.
+                     */}
                     <div className="meta">
                         <span>UNIVERSE DESIGN</span>
-                        <span>Москва</span>
+                        <span>Москва · с 2019</span>
                     </div>
 
-                    <div>
+                    <div className="hero">
                         <h1 className="title">Свет, который стоит в объёме</h1>
                         <p className="lede">
                             Студия медиаарта. Проектируем и собираем
                             волюметрические LED-экраны, делаем для них контент.
                         </p>
-                    </div>
 
-                    <div className="meta">
-                        <Link to="/projects/refraction">Проекты</Link>
-                        <span>RU / EN</span>
+                        <div className="meta hero__nav">
+                            <Link to="/projects/refraction">Проекты</Link>
+                            <span>RU / EN</span>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section className="stage__inner" style={{ position: 'relative' }}>
-                <div>
+            <section className="section">
+                <div className="section__inner">
+                    <p className="section__index">01 · Оборудование</p>
                     <h2 className="title">Dragon O²</h2>
                     <p className="lede">
                         Волюметрический LED-экран. Светодиодные нити расставлены
@@ -84,17 +91,21 @@ function Stage() {
 function Project() {
     const { pathname } = useLocation();
     return (
-        <main className="stage__inner" style={{ position: 'relative' }}>
-            <h1 className="title">Проект</h1>
-            <p className="lede">{pathname}</p>
+        <main className="section">
+            <div className="section__inner">
+                <h1 className="title">Проект</h1>
+                <p className="lede">{pathname}</p>
+            </div>
         </main>
     );
 }
 
 function NotFound() {
     return (
-        <main className="stage__inner" style={{ position: 'relative' }}>
-            <h1 className="title">Такой страницы нет</h1>
+        <main className="section">
+            <div className="section__inner">
+                <h1 className="title">Такой страницы нет</h1>
+            </div>
         </main>
     );
 }
