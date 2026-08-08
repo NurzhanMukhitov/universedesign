@@ -55,11 +55,11 @@ function useScatteredWords(text) {
                 char,
                 key: letterIndex++,
                 // Откуда буква прилетает: далеко в сторону и по вертикали.
-                dx: Math.round((random() - 0.5) * 900),
-                dy: Math.round((random() - 0.5) * 620),
+                dx: Math.round((random() - 0.5) * 1300),
+                dy: Math.round((random() - 0.5) * 860),
                 rotate: Math.round((random() - 0.5) * 160),
                 // Разброс задержек: буквы садятся не строем, а волной.
-                delay: random() * 0.55,
+                delay: random() * 0.72,
             })),
         }));
     }, [text]);
@@ -74,7 +74,7 @@ export function About() {
     // где никакой прокрутки после прыжка может не быть вовсе.
     const progress = useReveal(ref, {
         duration: 5200,
-        threshold: 0.12,
+        threshold: 0.7,
         instant: reducedMotion,
     });
     const words = useScatteredWords(TEXT);
