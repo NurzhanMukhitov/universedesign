@@ -102,6 +102,12 @@ body {
     padding: 88px 32px 96px;
 }
 
+/* Раздел с кадрами во весь экран: собственных отступов у него нет,
+   изображение обязано доходить до края. */
+.section--ledpulse {
+    padding: 0;
+}
+
 /* Номер раздела моноширинным: в паспорте у каждого узла свой индекс. */
 .section__index {
     font-family: var(--моно);
@@ -110,6 +116,153 @@ body {
     text-transform: uppercase;
     color: var(--подпись);
     margin: 0 0 18px;
+}
+
+/* ---------- Первый экран: меню слева, логотип справа ---------- */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+}
+
+.lang {
+    font-family: var(--моно);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    margin: 0 0 46px;
+}
+
+.lang__current {
+    color: var(--нить);
+}
+
+.lang__sep {
+    color: var(--разметка);
+}
+
+.lang__other {
+    color: var(--подпись);
+    text-decoration: none;
+    transition: color var(--быстро) var(--ход);
+}
+
+.lang__other:hover,
+.lang__other:focus-visible {
+    color: var(--нить);
+}
+
+.nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Пункты крупные — по просьбе владельца. На боевом сайте они были 15px
+   и терялись рядом с кубом; здесь меню держит левую часть экрана. */
+.nav__link {
+    display: inline-block;
+    font-size: clamp(26px, 3.2vw, 46px);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 1.16;
+    color: var(--подпись);
+    text-decoration: none;
+    transition: color var(--быстро) var(--ход);
+}
+
+.nav__link:hover,
+.nav__link:focus-visible {
+    color: var(--нить);
+}
+
+.wordmark {
+    font-family: var(--моно);
+    font-size: 15px;
+    letter-spacing: 0.26em;
+    text-align: right;
+    margin: 0;
+    color: var(--нить);
+}
+
+.wordmark__sub {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.42em;
+    color: var(--подпись);
+    margin-top: 2px;
+}
+
+.scrollhint {
+    font-family: var(--моно);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--подпись);
+    margin: 0;
+}
+
+/* ---------- Кадр как земля ---------- */
+
+/* Изображение во весь экран, текст поверх. Землёй становится кадр,
+   а не цвет фона: студия делает то, что смотрят глазами. */
+.hero-frame {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+}
+
+.hero-frame__media,
+.hero-frame__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Затемнение снизу, чтобы текст читался поверх кадра. Не сплошная маска:
+   верх кадра остаётся чистым. */
+.hero-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.92) 0%,
+        rgba(0, 0, 0, 0.55) 38%,
+        rgba(0, 0, 0, 0.1) 72%
+    );
+}
+
+.hero-frame__text {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    padding: 0 32px 76px;
+}
+
+.wide-frame {
+    position: relative;
+    margin-top: 8px;
+}
+
+.wide-frame__media img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.subtitle {
+    font-size: clamp(22px, 2.6vw, 34px);
+    font-weight: 500;
+    margin: 0 0 12px;
 }
 
 /* Служебная строка: всё, что данные — моноширинным. */
@@ -313,6 +466,96 @@ body {
     /* Без мыши прожектора не будет — показываем кадры как есть. */
     .card__frame img {
         filter: none;
+    }
+}
+
+/* ---------- «О нас»: сборка текста из букв ---------- */
+
+.section--about {
+    /* Высота раздела — это длина прокрутки, за которую собирается текст. */
+    min-height: 200vh;
+
+    /* overflow здесь ставить нельзя, хотя и хочется: любое значение кроме
+       visible отключает position: sticky у потомка, и закреплённый абзац
+       начинает уезжать вместе со страницей. Разлёт держим в границах не
+       обрезкой, а величиной разброса — он задан так, чтобы буквы не
+       покидали экран. */
+}
+
+/* Текст закреплён в центре экрана, пока раздел прокручивается мимо.
+   Без этого сборка проходила за кадром: буквы летели, когда абзац был
+   ещё ниже экрана, а к моменту появления он был уже собран. */
+.section--about .section__inner {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.assemble {
+    /* Крупно — по просьбе: буквы читаются как объект, а не как абзац.
+       Но не крупнее, чем влезает: при 68px и колонке в 20 знаков абзац
+       выходил выше экрана, и верхние строки собирались за кадром. */
+    font-size: clamp(22px, 3.1vw, 44px);
+    font-weight: 300;
+    line-height: 1.22;
+    letter-spacing: -0.01em;
+    max-width: 24ch;
+    margin: 30px 0 0;
+    color: var(--нить);
+}
+
+/*
+ * Каждая буква едет из своей точки к нулю. Весь расчёт — в CSS: JavaScript
+ * меняет одну переменную --p на абзаце, остальное браузер считает сам,
+ * на композиторе. Двести с лишним обновлений стиля за кадр из React
+ * не пережил бы ни один телефон.
+ */
+/* Слово переносится целиком. Без этой обёртки строка ломается между любыми
+   двумя буквами — выходит «сту / дия» и «иск / усство». */
+.assemble__word {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.assemble__word:not(:last-child)::after {
+    content: ' ';
+    white-space: pre;
+}
+
+.assemble__letter {
+    display: inline-block;
+
+    /* Своя фаза для каждой буквы: пока не дошла очередь — стоит на старте,
+       дальше идёт быстрее общего прогресса и садится на место.
+       clamp держит результат в границах 0…1 без единой строчки JS. */
+    --l: clamp(0, calc((var(--p) - var(--delay)) / 0.45), 1);
+
+    transform: translate3d(
+            calc(var(--dx) * (1 - var(--l))),
+            calc(var(--dy) * (1 - var(--l))),
+            0
+        )
+        rotate(calc(var(--rot) * (1 - var(--l))));
+
+    /* Размытие уходит вместе с расстоянием — буквы наводятся на резкость. */
+    filter: blur(calc(10px * (1 - var(--l))));
+    opacity: calc(0.15 + 0.85 * var(--l));
+
+    /* Обещание браузеру: элемент будет двигаться, держи его на своём слое. */
+    will-change: transform, filter, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* Никакого полёта: текст просто стоит на месте. */
+    .assemble__letter {
+        transform: none;
+        filter: none;
+        opacity: 1;
     }
 }
 

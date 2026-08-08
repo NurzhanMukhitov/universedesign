@@ -46,6 +46,35 @@ const covers = import.meta.glob(
     },
 );
 
+/*
+ * Кадры раздела UNIVERSE × LedPulse. Лежат в корне репозитория, в папке
+ * с кириллической «х» в имени — она осталась с боевого сайта, и трогать
+ * её нельзя: на неё ссылаются живые страницы.
+ *
+ * Ширины крупнее, чем у обложек: эти кадры идут во весь экран.
+ */
+const ledpulseFrames = import.meta.glob(
+    '../../../UNIVERSEхLedPulse/*.jpeg',
+    {
+        eager: true,
+        query: {
+            w: '960;1440;1920',
+            format: 'avif;webp;jpg',
+            as: 'picture',
+            withoutEnlargement: true,
+        },
+        import: 'default',
+    },
+);
+
+/** Кадры LedPulse по имени файла без расширения: image3, image7 и так далее. */
+export const ledpulse = Object.fromEntries(
+    Object.entries(ledpulseFrames).map(([path, value]) => [
+        path.split('/').pop().replace('.jpeg', ''),
+        value,
+    ]),
+);
+
 /** Достаёт slug проекта из пути вида ../../../projects/<slug>/covers/cover.jpg */
 function slugOf(path) {
     return path.split('/projects/')[1]?.split('/')[0] ?? '';

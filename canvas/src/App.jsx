@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router';
+import { Routes, Route, useLocation } from 'react-router';
 
 import { ClientOnly } from './lib/ClientOnly.jsx';
 import { Cube } from './cube/Cube.jsx';
@@ -8,23 +8,28 @@ import {
     useEnterProgress,
     useReducedMotion,
 } from './lib/useScrollProgress.js';
-import { Projects } from './sections/Projects.jsx';
+import { Menu } from './sections/Menu.jsx';
 import { About } from './sections/About.jsx';
+import { LedPulse } from './sections/LedPulse.jsx';
+import { Projects } from './sections/Projects.jsx';
 import { Contacts } from './sections/Contacts.jsx';
 
 /*
- * Шаг 3: куб и разлёт по скроллу. Остальные разделы полотна появятся дальше.
+ * Полотно.
+ *
+ * Первый экран повторяет боевой сайт: раскрытое меню слева, логотип справа,
+ * куб по центру. Дальше по прокрутке куб рассыпается той же механикой, что
+ * и раньше, а из-под него выходят разделы — в порядке, заданном владельцем:
+ * о нас, технология, проекты, контакты.
  */
-
 function Stage() {
     const stageRef = useRef(null);
     const contactsRef = useRef(null);
     const reducedMotion = useReducedMotion();
 
     // Разлёт на первом экране и обратная сборка на контактах — один и тот же
-    // параметр, только с разных концов полотна. Куб уходит в облако, пока
-    // читают полотно, и собирается обратно к контактам: петля закрывается
-    // там же, где открылась.
+    // параметр с разных концов полотна: куб уходит в облако, пока читают
+    // страницу, и собирается обратно к контактам.
     const scatter = useScrollProgress(stageRef);
     const gather = useEnterProgress(contactsRef);
     const progress = Math.max(0, Math.min(1, scatter - gather));
@@ -33,75 +38,20 @@ function Stage() {
         <>
             {/*
              * Куб внутри ClientOnly: сборка гоняет страницу через
-             * renderToString в Node, где WebGL и canvas отсутствуют.
-             * В пререндеренном HTML остаётся текст ниже — то, что читают
-             * поисковики.
+             * renderToString в Node, где canvas отсутствует. В пререндеренном
+             * HTML остаётся текст разделов — то, что читают поисковики.
              */}
             <ClientOnly>
                 <Cube t={progress} reducedMotion={reducedMotion} />
             </ClientOnly>
 
             <section className="stage" ref={stageRef}>
-                <div className="stage__inner">
-                    {/*
-                     * Центр экрана отдан кубу целиком. Текст прижат
-                     * к краям: в паспорте оборудования чертёж стоит
-                     * в поле, а подписи идут по периметру — они его
-                     * не перекрывают.
-                     */}
-                    <div className="meta">
-                        <span>UNIVERSE DESIGN</span>
-                        <span>Москва · с 2019</span>
-                    </div>
-
-                    <div className="hero">
-                        <h1 className="title">Свет, который стоит в объёме</h1>
-                        <p className="lede">
-                            Студия медиаарта. Проектируем и собираем
-                            волюметрические LED-экраны, делаем для них контент.
-                        </p>
-
-                        <div className="meta hero__nav">
-                            <Link to="/projects/refraction">Проекты</Link>
-                            <span>RU / EN</span>
-                        </div>
-                    </div>
-                </div>
+                <Menu />
             </section>
 
-            <section className="section">
-                <div className="section__inner">
-                    <p className="section__index">01 · Оборудование</p>
-                    <h2 className="title">Dragon O²</h2>
-                    <p className="lede">
-                        Волюметрический LED-экран. Светодиодные нити расставлены
-                        не в плоскости, а в объёме — изображение остаётся
-                        трёхмерным с любой точки зала и без очков.
-                    </p>
-
-                    <div className="spec">
-                        <div className="spec__cell">
-                            <p className="spec__label">Шаг нити</p>
-                            <p className="spec__value">5 см</p>
-                        </div>
-                        <div className="spec__cell">
-                            <p className="spec__label">Органический шаг</p>
-                            <p className="spec__value">2,5 см</p>
-                        </div>
-                        <div className="spec__cell">
-                            <p className="spec__label">Модуль</p>
-                            <p className="spec__value">500×500×3100 мм</p>
-                        </div>
-                        <div className="spec__cell">
-                            <p className="spec__label">Сборки</p>
-                            <p className="spec__value">9 · 12 · 16 · 36</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <Projects />
             <About />
+            <LedPulse />
+            <Projects />
             <Contacts ref={contactsRef} />
         </>
     );
