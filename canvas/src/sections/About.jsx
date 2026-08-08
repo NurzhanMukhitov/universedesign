@@ -73,8 +73,8 @@ export function About() {
     // запускает. Так текст соберётся и при переходе по ссылке из меню,
     // где никакой прокрутки после прыжка может не быть вовсе.
     const progress = useReveal(ref, {
-        duration: 2200,
-        threshold: 0.3,
+        duration: 3400,
+        threshold: 0.12,
         instant: reducedMotion,
     });
     const words = useScatteredWords(TEXT);
