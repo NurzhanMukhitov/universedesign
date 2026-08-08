@@ -2,6 +2,7 @@ import { useMemo, useRef } from 'react';
 
 import { useReducedMotion } from '../lib/useScrollProgress.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useAssembleLoop } from '../lib/useAssembleLoop.js';
 
 /*
  * «О нас»: текст прилетает буквами и собирается на глазах.
@@ -19,6 +20,16 @@ import { useReveal } from '../lib/useReveal.js';
  * ровно одну переменную на контейнере. Дальше всё считает браузер
  * средствами CSS, на композиторе, без участия JavaScript.
  */
+
+/*
+ * Временный режим: текст собирается и рассыпается по кругу, чтобы можно было
+ * разглядеть эффект не прокручивая страницу туда-сюда.
+ *
+ * Для сайта это выключается — постоянное движение рядом с текстом, который
+ * надо прочитать, читать мешает. Поставить false, и всё вернётся к сборке
+ * один раз при появлении раздела.
+ */
+const LOOP = true;
 
 const TEXT =
     'UNIVERSE design — студия, объединяющая искусство, технологии ' +
@@ -84,11 +95,14 @@ export function About() {
     // Сборка идёт сама, как только раздел показался: прокрутка её лишь
     // запускает. Так текст соберётся и при переходе по ссылке из меню,
     // где никакой прокрутки после прыжка может не быть вовсе.
-    const progress = useReveal(ref, {
+    const once = useReveal(ref, {
         duration: 5200,
         threshold: 0.7,
-        instant: reducedMotion,
+        instant: reducedMotion || LOOP,
     });
+    const looped = useAssembleLoop(LOOP && !reducedMotion);
+
+    const progress = LOOP && !reducedMotion ? looped : once;
     const words = useScatteredWords(TEXT);
 
     const eased = progress;
