@@ -6,22 +6,15 @@
 
 name: canvas preview
 
-# Только ручной запуск. Пока показывать нечего, сервер держать поднятым
-# незачем: nginx на нём остановлен, и машина слушает наружу один SSH.
-#
-# Чтобы вернуть автоматическую выкладку, нужно два действия — поднять nginx
-# (`systemctl enable --now nginx`) и раскомментировать блок push ниже.
-#
-# on:
-#   push:
-#     branches: [feature/canvas]
-#     paths:
-#       - 'canvas/**'
-#       - '.github/workflows/canvas-deploy.yml'
-#       # Исходники картинок: vite-imagetools берёт их из соседних папок
-#       # репозитория, поэтому их правка тоже требует пересборки.
-#       - 'projects/**'
 on:
+  push:
+    branches: [feature/canvas]
+    paths:
+      - 'canvas/**'
+      - '.github/workflows/canvas-deploy.yml'
+      # Исходники картинок: vite-imagetools берёт их из соседних папок
+      # репозитория, поэтому их правка тоже требует пересборки.
+      - 'projects/**'
   workflow_dispatch:
 
 concurrency:
