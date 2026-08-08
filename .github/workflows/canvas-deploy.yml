@@ -1,0 +1,92 @@
+# Сборка и выкладка превью альтернативной версии сайта.
+#
+# Работает только на ветке feature/canvas и только при изменениях внутри
+# canvas/ — боевой сайт лежит в main и деплоится GitHub Pages, эти два
+# пути не пересекаются.
+
+name: canvas preview
+
+on:
+  push:
+    branches: [feature/canvas]
+    paths:
+      - 'canvas/**'
+      - '.github/workflows/canvas-deploy.yml'
+      # Исходники картинок: vite-imagetools берёт их из соседних папок
+      # репозитория, поэтому их правка тоже требует пересборки.
+      - 'projects/**'
+  workflow_dispatch:
+
+concurrency:
+  # Быстрые правки подряд не должны толкаться в rsync: побеждает последняя.
+  group: canvas-preview
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: canvas/package-lock.json
+
+      # npm ci, а не install: версии запинены точно, и сборка обязана
+      # ставить ровно их, иначе смысл пинов теряется.
+      - name: Установить зависимости
+        working-directory: canvas
+        run: npm ci
+
+      - name: Собрать
+        working-directory: canvas
+        run: npm run build
+
+      # Бюджет из плана — 400 КБ gzip на то, что грузит браузер. Проверяем
+      # на каждой сборке: один неаккуратный импорт из drei съедает его молча.
+      - name: Проверить вес бандла
+        working-directory: canvas
+        run: |
+          total=0
+          for f in dist/assets/*.js; do
+            size=$(gzip -9 -c "$f" | wc -c)
+            total=$((total + size))
+            printf '%-40s %8s байт gzip\n' "$(basename "$f")" "$size"
+          done
+          limit=409600
+          printf '\nИтого: %s байт при бюджете %s\n' "$total" "$limit"
+          if [ "$total" -gt "$limit" ]; then
+            echo "::error::Бандл превысил бюджет: $total > $limit байт gzip"
+            exit 1
+          fi
+
+      # Секреты идут через env, а не подстановкой в команду: так значение
+      # не попадает в строку запуска процесса.
+      - name: Настроить SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      # --delete убирает с сервера файлы, которых больше нет в сборке:
+      # хешированные имена иначе копились бы бесконечно.
+      # Папка /var/www/canvas-media/ живёт отдельно и сюда не попадает.
+      - name: Выложить на сервер
+        run: |
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=yes" \
+            canvas/dist/ deploy@169.58.96.104:/var/www/canvas/dist/
+
+      - name: Проверить, что превью отвечает
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 http://169.58.96.104/)
+          echo "HTTP $code"
+          [ "$code" = "200" ] || exit 1
