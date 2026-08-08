@@ -1,0 +1,112 @@
+{
+  "_comment": "Тексты проектов на двух языках. Поля intro — то, что уже опубликовано или дословно взято с баннеров. Поля draft — черновики, которые студия ещё не подтвердила; в вёрстку они не идут, пока не станут intro. year: null означает, что год неизвестен и выдумывать его нельзя.",
+
+  "order": [
+    "pre_event_outline_2025",
+    "intervals2023",
+    "t1_finopolis",
+    "lada_vesta",
+    "echo_2.0",
+    "refraction"
+  ],
+
+  "projects": {
+    "pre_event_outline_2025": {
+      "title": "Pre-event Outline 2025",
+      "year": 2024,
+      "city": { "ru": "Москва", "en": "Moscow" },
+      "credits": "SILA SVETA × Panterra × UNIVERSE design × LedPulse",
+      "intro": {
+        "en": "Ø is a large-scale pre-event for Outline, an annual event that brings together art and music enthusiasts ahead of the summer festival. On November 23, 2024, SILA SVETA, as a co-organizer of Outline and curator of the entire multimedia program, unveiled a unique stage design at ARMA — the Machine Learning installation. This project was created in collaboration with Panterra, UNIVERSE design, and LedPulse.",
+        "ru": "Ø — масштабный пре-ивент фестиваля Outline, ежегодного события, которое собирает любителей искусства и музыки перед летним фестивалем. 23 ноября 2024 года студия SILA SVETA, соорганизатор Outline и куратор всей мультимедийной программы, представила на площадке ARMA сценографию инсталляции Machine Learning. Проект создан в соавторстве с Panterra, UNIVERSE design и LedPulse."
+      },
+      "draft": {
+        "ru": "Наша часть работы — волюметрические LED-экраны и медиаконтент для сцены.",
+        "note": "Нужны факты студии: площадь экрана, сроки, количество модулей."
+      },
+      "venue": "ARMA",
+      "cover": "cover.jpg"
+    },
+
+    "intervals2023": {
+      "title": "INTERVALS 2023",
+      "subtitle": {
+        "en": "International Media Arts Festival",
+        "ru": "Международный фестиваль медиаискусства"
+      },
+      "year": 2023,
+      "city": { "ru": "Нижний Новгород", "en": "Nizhny Novgorod" },
+      "credits": "UNIVERSE design | -.618 | LedPulse",
+      "intro": {
+        "en": null,
+        "ru": null
+      },
+      "draft": {
+        "ru": "Аудиовизуальная инсталляция на международном фестивале медиаискусства INTERVALS в Нижнем Новгороде. Мы отвечали за волюметрические LED-экраны и генеративный медиаконтент — совместно с командами -.618 и LedPulse.",
+        "note": "Описания нет вообще — на баннере только название и город. Абзац нужен целиком."
+      },
+      "cover": "cover.jpg"
+    },
+
+    "t1_finopolis": {
+      "title": "FINOPOLIS 2022 | T1",
+      "year": 2022,
+      "city": { "ru": "Москва", "en": "Moscow" },
+      "credits": "UNIVERSE design | inty.pro | LedPulse — for LARNILANE",
+      "intro": {
+        "en": null,
+        "ru": null
+      },
+      "draft": {
+        "ru": "Оформление стенда группы Т1 на форуме инновационных финансовых технологий FINOPOLIS. Волюметрический LED-экран и медиаконтент для выставочного пространства. Работа выполнена для агентства LARNILANE совместно с inty.pro и LedPulse.",
+        "note": "Черновик по данным с баннера. Требует подтверждения студии."
+      },
+      "cover": "cover.jpg"
+    },
+
+    "lada_vesta": {
+      "title": "LADA VESTA SW CROSS",
+      "year": null,
+      "city": { "ru": "Москва", "en": "Moscow" },
+      "credits": "UNIVERSE design for LARNILANE",
+      "intro": {
+        "en": null,
+        "ru": null
+      },
+      "draft": {
+        "ru": "3D-визуализация автомобиля для презентации: экстерьер, интерьер и анимация для медиаэкранов выставочного стенда. Проект выполнен для агентства LARNILANE.",
+        "note": "Год неизвестен. Черновик требует подтверждения: возможно, работа была не только по 3D."
+      },
+      "cover": "cover.jpg"
+    },
+
+    "echo_2.0": {
+      "title": "ECHO 2.0",
+      "year": null,
+      "city": { "ru": "Москва", "en": "Moscow" },
+      "credits": "UNIVERSE design × SONEURO × Sila Sveta × Никита Забелин",
+      "intro": {
+        "en": "A collaboration born at the junction of neural networks, human consciousness and stage acting. The project focuses on a neural network that is trained in real time based on the participants' brain activity. Consciousness becomes data. The data is provided by voice. A modern dialogue where neural networks of the human brain on the one hand and neural network algorithms on the other.",
+        "ru": "Коллаборация на стыке нейросетей, человеческого сознания и сценического действия. В центре проекта — нейросеть, которая обучается в реальном времени на основе мозговой активности участников. Сознание становится данными. Данные передаются голосом. Современный диалог, где с одной стороны — нейронные сети человеческого мозга, с другой — алгоритмы нейросети."
+      },
+      "draft": {
+        "ru": "Наша часть — волюметрический LED-экран и генеративный медиаконтент, реагирующий на данные в реальном времени.",
+        "note": "Год проекта неизвестен."
+      },
+      "cover": "cover.jpg"
+    },
+
+    "refraction": {
+      "title": "REFRACTION",
+      "year": null,
+      "city": { "ru": "Казань", "en": "Kazan" },
+      "venue": "NUR International Media Art Festival",
+      "credits": "media.tribe · при поддержке UNIVERSE DESIGN",
+      "intro": {
+        "en": "REFRACTION is an experiment with perception, where light and form lose their usual outlines. We hide the light source and leave it moving and distorted. The viewer no longer sees clear objects, only their reflections, refracted through physical and psychological filters. The installation makes you think: what do we actually see — the true world, or just a distorted version of it?",
+        "ru": "REFRACTION — это эксперимент с восприятием, где свет и форма теряют привычные очертания. Мы скрываем источник света и оставляем его движение и искажения. Зритель больше не видит чётких объектов, только их отражения, преломлённые через физические и психологические фильтры. Инсталляция заставляет задуматься: что мы на самом деле видим — истинный мир или лишь его искажённую версию?"
+      },
+      "cover": "cover.jpg"
+    }
+  }
+}
