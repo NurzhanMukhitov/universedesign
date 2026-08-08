@@ -15,3 +15,6 @@
 # Playwright MCP
 .playwright-mcp/
 .claude/
+
+# Рабочие документы — не публикуются на сайте
+ТЕКСТЫ-ПРОЕКТОВ.md

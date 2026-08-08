@@ -1,18 +1,24 @@
 # ECHO 2.0
 
-> Media visuals built from GIF sequences and video for a volumetric LED installation.
+> An audiovisual installation with generative content on a volumetric screen made
+> of LED filaments. Moscow.
 
-**Studio:** UNIVERSE DESIGN  
-**Project page:** https://universe-design.com/en/projects/echo_2.0.html  
+**Studio:** UNIVERSE design
+**Co-authors:** SONEURO × Sila Sveta × Nikita Zabelin
 **Location:** Moscow, Russia
+**Project page:** https://universe-design.com/en/projects/echo_2.0.html
 
 ## About
 
-Media visuals built from GIF sequences and video for a volumetric LED installation.
+A collaboration that arose at the junction of neural networks, human consciousness,
+and stagecraft. The project focuses on a neural network that learns in real time based
+on the participants' brain activity. Consciousness turns into data. The data is
+transmitted by voice. A modern dialogue involving neural networks of the human brain,
+on the one hand, and neural network algorithms, on the other.
 
-UNIVERSE DESIGN specializes in volumetric LED screens and their non-standard use in
-art, advertising and event spaces, covering the full production cycle from concept and
-3D visualization through installation and content creation.
+The technical component of the installation is a volumetric screen (LED filaments).
+With the help of all these technologies, an audiovisual installation with generative
+content was created.
 
 ## Media
 
