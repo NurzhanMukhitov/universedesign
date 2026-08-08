@@ -83,7 +83,10 @@ export function About() {
 
     return (
         <section className="section section--about" id="about" ref={ref}>
+            {/* Номер и абзац стоят в одной колонке: иначе каждый
+                центрируется по своей ширине, и подпись уезжает от текста. */}
             <div className="section__inner">
+                <div className="assemble-block">
                 <p className="section__index">01 · О нас</p>
 
                 <p
@@ -113,6 +116,7 @@ export function About() {
                         </span>
                     ))}
                 </p>
+                </div>
             </div>
         </section>
     );
