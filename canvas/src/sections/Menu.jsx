@@ -8,11 +8,16 @@ import { wordmarkUrl } from '../lib/media.js';
  * рассказ о студии, потом технология, потом работы, потом контакты.
  */
 
+/*
+ * Написание пунктов взято с боевого сайта дословно: капс стоит в самом
+ * тексте, а не в стилях, и «UNIVERSE х LedPulse» набран смешанным
+ * регистром с кириллической «х» — так же, как называется папка проекта.
+ */
 const ITEMS = [
-    { label: 'О нас', href: '#about' },
-    { label: 'UNIVERSE × LedPulse', href: '#ledpulse' },
-    { label: 'Проекты', href: '#projects' },
-    { label: 'Контакты', href: '#contacts' },
+    { label: 'О НАС', href: '#about' },
+    { label: 'UNIVERSE х LedPulse', href: '#ledpulse' },
+    { label: 'ПРОЕКТЫ', href: '#projects' },
+    { label: 'КОНТАКТЫ', href: '#contacts' },
 ];
 
 export function Menu() {

@@ -14,7 +14,7 @@ import { CubeEngine } from './engine.js';
  * крутим куб, повёл вверх или вниз — молча отдаём жест странице. Мышь крутит
  * всегда: мышью не прокручивают, для этого есть колесо.
  */
-export function Cube({ t = 0, reducedMotion = false }) {
+export function Cube({ scattered = false, reducedMotion = false }) {
     const canvasRef = useRef(null);
     const engineRef = useRef(null);
 
@@ -40,14 +40,21 @@ export function Cube({ t = 0, reducedMotion = false }) {
         };
     }, [reducedMotion]);
 
-    // Положение разлёта приходит снаружи — от скролла.
+    // Прокрутка не тянет куб за собой, а спускает курок: дальше он
+    // рассыпается или собирается сам, за полторы секунды. Так это работает
+    // на боевом сайте, и именно отсюда ощущение живого объекта.
     useEffect(() => {
         const engine = engineRef.current;
         if (!engine) return;
 
-        engine.setT(t);
-        if (reducedMotion) engine.render(performance.now());
-    }, [t, reducedMotion]);
+        if (reducedMotion) {
+            engine.setT(scattered ? 1 : 0);
+            engine.render(performance.now());
+            return;
+        }
+
+        engine.animateTo(scattered ? 1 : 0, 1500);
+    }, [scattered, reducedMotion]);
 
     // Жесты. Слушатели вешаем вручную, потому что touchmove нужен
     // неpassive: React вешает свои как passive, а из passive нельзя

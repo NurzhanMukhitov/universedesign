@@ -1,13 +1,10 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router';
 
 import { ClientOnly } from './lib/ClientOnly.jsx';
 import { Cube } from './cube/Cube.jsx';
-import {
-    useScrollProgress,
-    useEnterProgress,
-    useReducedMotion,
-} from './lib/useScrollProgress.js';
+import { useReducedMotion } from './lib/useScrollProgress.js';
+import { useHashScroll } from './lib/useHashScroll.js';
 import { Menu } from './sections/Menu.jsx';
 import { About } from './sections/About.jsx';
 import { LedPulse } from './sections/LedPulse.jsx';
@@ -22,17 +19,56 @@ import { Contacts } from './sections/Contacts.jsx';
  * и раньше, а из-под него выходят разделы — в порядке, заданном владельцем:
  * о нас, технология, проекты, контакты.
  */
+
+/**
+ * Следит, надо ли кубу быть рассыпанным.
+ *
+ * Порог взят с боевого сайта: там прокрутка копится в счётчике, и когда
+ * наберётся сотня, запускается анимация. Ниже первого экрана куб держим
+ * рассыпанным всегда, у самого верха — собранным: вернулся наверх, увидел
+ * куб на месте.
+ */
+function useScatterTrigger() {
+    const [scattered, setScattered] = useState(false);
+
+    useEffect(() => {
+        let frame = null;
+
+        const measure = () => {
+            frame = null;
+            // Сотня пикселей — тот же порог, что на боевом сайте.
+            setScattered(window.scrollY > 100);
+        };
+
+        const onScroll = () => {
+            if (frame !== null) return;
+            frame = requestAnimationFrame(measure);
+        };
+
+        measure();
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        return () => {
+            if (frame !== null) cancelAnimationFrame(frame);
+            window.removeEventListener('scroll', onScroll);
+        };
+    }, []);
+
+    return scattered;
+}
 function Stage() {
-    const stageRef = useRef(null);
     const contactsRef = useRef(null);
     const reducedMotion = useReducedMotion();
 
-    // Разлёт на первом экране и обратная сборка на контактах — один и тот же
-    // параметр с разных концов полотна: куб уходит в облако, пока читают
-    // страницу, и собирается обратно к контактам.
-    const scatter = useScrollProgress(stageRef);
-    const gather = useEnterProgress(contactsRef);
-    const progress = Math.max(0, Math.min(1, scatter - gather));
+    // Переходы по пунктам меню: разметку рисует JavaScript, и штатный
+    // переход браузера по якорю тут не срабатывает.
+    useHashScroll();
+
+    // Куб не привязан к полосе прокрутки. Прокрутка лишь спускает курок,
+    // дальше он рассыпается сам — полторы секунды, сколько бы человек ни
+    // крутил колесо. Так это сделано на боевом сайте, и оттуда ощущение
+    // живого объекта, а не ползунка.
+    const scattered = useScatterTrigger();
 
     return (
         <>
@@ -42,10 +78,10 @@ function Stage() {
              * HTML остаётся текст разделов — то, что читают поисковики.
              */}
             <ClientOnly>
-                <Cube t={progress} reducedMotion={reducedMotion} />
+                <Cube scattered={scattered} reducedMotion={reducedMotion} />
             </ClientOnly>
 
-            <section className="stage" ref={stageRef}>
+            <section className="stage">
                 <Menu />
             </section>
 

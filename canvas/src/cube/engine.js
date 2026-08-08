@@ -79,6 +79,9 @@ export class CubeEngine {
         // объект уезжает из-под руки.
         this.dragging = false;
 
+        // Текущий переход между собранным состоянием и разлётом, если идёт.
+        this.transition = null;
+
         this.points = [];
         this.highlighted = new Set();
         this.highlightIntensity = 0;
@@ -148,6 +151,54 @@ export class CubeEngine {
         if (!this.highlightEnabled) this.highlighted.clear();
     }
 
+    /**
+     * Плавно уводит куб к заданному состоянию за отведённое время.
+     *
+     * Так это работает на боевом сайте: прокрутка не тянет куб за собой,
+     * а лишь спускает курок — дальше он рассыпается сам, полторы секунды,
+     * сколько бы человек ни крутил колесо. Отсюда ощущение, что куб живой,
+     * а не привязан к полосе прокрутки.
+     *
+     * @param {number} target — 0 собрать, 1 рассыпать
+     * @param {number} duration — длительность, мс
+     */
+    animateTo(target, duration = 1500) {
+        if (Math.abs(this.t - target) < 0.001) return;
+
+        this.transition = {
+            from: this.t,
+            to: target,
+            duration,
+            // Отсчёт начнётся с первого же кадра: время берём из того же
+            // источника, что и rAF, иначе первый шаг получится рваным.
+            startedAt: null,
+        };
+    }
+
+    /** Двигает начатый переход. Вызывается из render каждый кадр. */
+    stepTransition(time) {
+        const move = this.transition;
+        if (!move) return;
+
+        if (move.startedAt === null) move.startedAt = time;
+
+        const passed = time - move.startedAt;
+        const ratio = Math.min(passed / move.duration, 1);
+
+        // Плавный вход и выход. На боевом сайте интерполяция линейная,
+        // но там анимация запускается рывком колеса и линейность незаметна;
+        // здесь курок спускает обычная прокрутка, и без сглаживания старт
+        // выглядит как подёргивание.
+        const eased =
+            ratio < 0.5
+                ? 4 * ratio * ratio * ratio
+                : 1 - Math.pow(-2 * ratio + 2, 3) / 2;
+
+        this.setT(move.from + (move.to - move.from) * eased);
+
+        if (ratio >= 1) this.transition = null;
+    }
+
     /** Поворот от жеста. dx и dy — смещение указателя в пикселях. */
     rotateBy(dx, dy) {
         this.rotationY += dx * 0.01;
@@ -185,6 +236,8 @@ export class CubeEngine {
 
         // Вкладка была в фоне — не наверстываем пропущенное рывком.
         if (delta > 100) delta = 100;
+
+        this.stepTransition(time);
 
         if (!this.dragging) {
             this.rotationY += AUTO_ROTATE_SPEED * delta;

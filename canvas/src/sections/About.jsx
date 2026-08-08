@@ -1,6 +1,7 @@
 import { useMemo, useRef } from 'react';
 
-import { useScrollProgress, useReducedMotion } from '../lib/useScrollProgress.js';
+import { useReducedMotion } from '../lib/useScrollProgress.js';
+import { useReveal } from '../lib/useReveal.js';
 
 /*
  * «О нас»: текст прилетает буквами и собирается на глазах.
@@ -66,16 +67,19 @@ function useScatteredWords(text) {
 
 export function About() {
     const ref = useRef(null);
-    // Прокрутка внутри раздела, а не вход раздела в кадр: абзац
-    // закреплён и стоит на месте, пока раздел едет мимо. Мера входа
-    // отсчитывала бы сборку, пока текста ещё не видно.
-    const progress = useScrollProgress(ref);
     const reducedMotion = useReducedMotion();
+
+    // Сборка идёт сама, как только раздел показался: прокрутка её лишь
+    // запускает. Так текст соберётся и при переходе по ссылке из меню,
+    // где никакой прокрутки после прыжка может не быть вовсе.
+    const progress = useReveal(ref, {
+        duration: 2200,
+        threshold: 0.3,
+        instant: reducedMotion,
+    });
     const words = useScatteredWords(TEXT);
 
-    // Сборка занимает первые три четверти прокрутки раздела, дальше текст
-    // просто стоит собранным — чтобы его успели прочитать.
-    const eased = Math.max(0, Math.min(1, progress / 0.75));
+    const eased = progress;
 
     return (
         <section className="section section--about" id="about" ref={ref}>
