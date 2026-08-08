@@ -73,7 +73,7 @@ export function About() {
     // запускает. Так текст соберётся и при переходе по ссылке из меню,
     // где никакой прокрутки после прыжка может не быть вовсе.
     const progress = useReveal(ref, {
-        duration: 3400,
+        duration: 5200,
         threshold: 0.12,
         instant: reducedMotion,
     });

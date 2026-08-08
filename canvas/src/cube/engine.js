@@ -20,8 +20,17 @@ const LETTERS = 'UNIVERSEDESIGN';
 const LINES_X = 14;
 const LINES_Y = 14;
 const FOCALE = 500;
-const DEFAULT_ROTATION_X = -0.4;
-const DEFAULT_ROTATION_Y = 0.5;
+/*
+ * Разворот собранного куба: строго в лоб.
+ *
+ * В оригинале это состояние возникает при возврате с внутренней страницы,
+ * и именно его владелец показал как эталонное — грани смотрят прямо,
+ * буквы выстраиваются ровными рядами, перспектива уводит лучи из центра.
+ * Наклон −0.4 / 0.5, который стоял здесь раньше, давал другой, случайный
+ * на вид ракурс.
+ */
+const DEFAULT_ROTATION_X = 0;
+const DEFAULT_ROTATION_Y = 0;
 const AUTO_ROTATE_SPEED = 0.0002;
 
 /** Длительность полного цикла подсветки букв, мс. */
@@ -165,9 +174,32 @@ export class CubeEngine {
     animateTo(target, duration = 1500) {
         if (Math.abs(this.t - target) < 0.001) return;
 
+        /*
+         * Собираясь, куб возвращается в исходный разворот.
+         *
+         * Между разлётом и сборкой проходит время, и всё это время работает
+         * автоповорот — к моменту сборки куб оказывался развёрнут случайно,
+         * каждый раз по-новому. Поэтому вместе с формой возвращаем и углы:
+         * собранный куб обязан выглядеть одинаково всегда.
+         *
+         * Приводим к ближайшему полному обороту, а не к нулю в лоб: иначе
+         * накрутившийся угол отматывался бы назад через несколько витков.
+         */
+        const turn = Math.PI * 2;
+        const rotationTarget =
+            target === 0
+                ? {
+                      x: 0,
+                      y: Math.round(this.rotationY / turn) * turn,
+                  }
+                : null;
+
         this.transition = {
             from: this.t,
             to: target,
+            fromRotationX: this.rotationX,
+            fromRotationY: this.rotationY,
+            rotationTarget,
             duration,
             // Отсчёт начнётся с первого же кадра: время берём из того же
             // источника, что и rAF, иначе первый шаг получится рваным.
@@ -199,6 +231,16 @@ export class CubeEngine {
         const eased = 1 - Math.pow(1 - ratio, 1.6);
 
         this.setT(move.from + (move.to - move.from) * eased);
+
+        // Заодно доводим разворот до исходного, если куб собирается.
+        if (move.rotationTarget) {
+            this.rotationX =
+                move.fromRotationX +
+                (move.rotationTarget.x - move.fromRotationX) * eased;
+            this.rotationY =
+                move.fromRotationY +
+                (move.rotationTarget.y - move.fromRotationY) * eased;
+        }
 
         if (ratio >= 1) this.transition = null;
     }
@@ -243,7 +285,15 @@ export class CubeEngine {
 
         this.stepTransition(time);
 
-        if (!this.dragging) {
+        /*
+         * Автоповорот работает только у разлетевшегося куба.
+         *
+         * Собранный обязан стоять ровно и одинаково: это его портрет,
+         * а не заставка. Пока он крутился всегда, каждая сборка приходила
+         * в новый разворот — и это же вращение перебивало угол, который
+         * задаёт переход, ведь оно применялось следующей строкой после него.
+         */
+        if (!this.dragging && !this.transition && this.t > 0.01) {
             this.rotationY += AUTO_ROTATE_SPEED * delta;
         }
 
